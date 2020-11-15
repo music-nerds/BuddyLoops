@@ -5,12 +5,13 @@ import './stepRow.css';
 interface Props {
   row: StepRow
   handleLaunch: () => void;
+  launchEnabled: boolean;
   ref: React.RefObject<HTMLButtonElement>;
 }
 
-const LaunchButton = React.forwardRef<HTMLButtonElement, Props>(({row, handleLaunch}, ref) => {
+const LaunchButton = React.forwardRef<HTMLButtonElement, Props>(({row, handleLaunch, launchEnabled}, ref) => {
   return (
-    <button className={`launch-btn ${row.shouldPlayNextLoop && 'active-launch'}`} onClick={handleLaunch} ref={ref}>
+    <button className={`launch-btn ${launchEnabled && 'active-launch'}`} onClick={handleLaunch} ref={ref}>
       {row.name}
     </button>
   )

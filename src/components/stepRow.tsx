@@ -14,7 +14,7 @@ const StepRow: React.FC<Row> = ({row}) => {
   const launch = useRef<HTMLButtonElement>(null);
   const {context} = useContext(ReactAudioContext);
   const [beat, setBeat] = useState(0);
-
+  const [launchEnabled, setLaunchEnabled] = useState(true);
   useEffect(() => {
     row.squares = div.current && div.current.children;
     context.subscribeSquares(setBeat);
@@ -36,10 +36,11 @@ const StepRow: React.FC<Row> = ({row}) => {
   }
   const handleLaunch = () => {
     row.shouldPlayNextLoop = !row.shouldPlayNextLoop;
+    setLaunchEnabled(row.shouldPlayNextLoop);
   }
   return (
     <div className='flex-row step-row'>
-      <LaunchButton row={row} handleLaunch={handleLaunch} ref={launch} />
+      <LaunchButton row={row} handleLaunch={handleLaunch} launchEnabled={launchEnabled} ref={launch} />
       <div className='flex-row step-squares' ref={div} >
         {
           new Array(16).fill(null).map((e, idx) => {
