@@ -1,0 +1,13 @@
+#transport {
+  display: flex;
+  justify-content: center;
+  width: 800px;
+  max-width: 100%;;
+}
+.transport-btn {
+  background-color: transparent;
+  outline: none;
+  border: none;
+  color: var(--text);
+  margin: 1rem;
+}

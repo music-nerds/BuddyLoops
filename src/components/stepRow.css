@@ -1,0 +1,33 @@
+.seq-square {
+  box-sizing: border-box;
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--gray);
+}
+
+.active-beat {
+  border: 2px solid var(--text);
+}
+
+.step-squares {
+  width: 800px;
+  max-width: 100%;
+}
+
+.step-row {
+  width: 1024px;
+  margin: 1rem 0 1rem 1rem;
+}
+
+.launch-btn {
+  height: 48px;
+  width: 96px;
+  outline: none;
+  background-color: var(--bg);
+  color: var(--text);
+  border: 2px solid var(--gray);
+}
+
+.active-launch {
+  border: 2px solid var(--green);
+}

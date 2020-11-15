@@ -4,7 +4,7 @@ export interface StepRow {
   name: string; // name of row - helps to find this later
   audioPath: RequestInfo; // path to sound file
   audioBuffer?: AudioBuffer; // decoded audio buffer
-  squares?: HTMLElement[] | null; // used in scheduleNote
+  squares?: HTMLCollection | null; // used in scheduleNote
   isPlaying: boolean; // conditional check in schedule note
   shouldPlayNextLoop: boolean; // toggled by launch button 
 }
@@ -29,6 +29,8 @@ export interface StepContext {
   scheduleAheadTime: number;
   lookAhead: number;
   timerId: number | undefined;
+  subscribeSquares: (fn: React.Dispatch<React.SetStateAction<number>>) => void;
+  subscribers: React.Dispatch<React.SetStateAction<number>>[];
 }
 
 export const createAudioContext = (): StepContext => {
@@ -48,5 +50,9 @@ export const createAudioContext = (): StepContext => {
     scheduleAheadTime: 0.1,
     lookAhead: 25.0,
     timerId: undefined,
+    subscribers: [],
+    subscribeSquares: function(fn: React.Dispatch<React.SetStateAction<number>>){
+      this.subscribers.push(fn);
+    },
   };
 }

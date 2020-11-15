@@ -1,0 +1,17 @@
+#indicators {
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.indicator {
+  box-sizing: border-box;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--gray);
+  background-color: var(--bg);
+}
+
+.active-indicator {
+  background-color: var(--green);
+}

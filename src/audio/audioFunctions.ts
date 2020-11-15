@@ -19,7 +19,7 @@ export const nextNote = (ctx: StepContext): void => {
 };
 
 export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
-
+  // handle which loops should play each cycle
   if (beatNumber === 0) {
     ctx.sequencers.forEach(seq => {
       if(seq.shouldPlayNextLoop){
@@ -29,11 +29,14 @@ export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
       }
     })
   }
+  // play the samples
   ctx.sequencers.forEach(seq => {
       if (seq.squares && seq.squares[beatNumber].getAttribute('aria-checked') === 'true' && seq.isPlaying && seq.audioBuffer) {
         playback(ctx, seq.audioBuffer, ctx.nextNoteTime);
       }
-  })
+    })
+  // paint the dom  
+  ctx.subscribers.forEach(fn => fn(beatNumber));
 };
 
 export const scheduler = (ctx: StepContext): void => {
@@ -46,12 +49,17 @@ export const scheduler = (ctx: StepContext): void => {
 };
 
 export const play = (ctx: StepContext): void => {
-  ctx.isPlaying = !ctx.isPlaying;
-  if (ctx.isPlaying) {
+  if (!ctx.isPlaying) {
+    ctx.isPlaying = true;
     ctx.currentNote = 0;
     ctx.nextNoteTime = ctx.context.currentTime;
     scheduler(ctx);
-  } else {
-    window.clearTimeout(ctx.timerId);
   }
 };
+
+export const stop = (ctx: StepContext): void => {
+  if(ctx.isPlaying) {
+    ctx.isPlaying = false;
+    window.clearTimeout(ctx.timerId);
+  }
+}
