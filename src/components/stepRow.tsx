@@ -26,12 +26,13 @@ const StepRow: React.FC<Row> = ({row}) => {
 
   const handleToggle = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLDivElement;
+    const index = target.getAttribute('data-index')!;
     if (target.getAttribute('aria-checked') === 'false') {
       target.setAttribute('aria-checked', 'true');
-      target.style.backgroundColor = 'var(--green)';
+      row.pattern[Number(index)] = 1;
     } else {
       target.setAttribute('aria-checked', 'false');
-      target.style.backgroundColor = 'var(--bg)';
+      row.pattern[Number(index)] = 0;
     }
   }
   const handleLaunch = () => {
@@ -43,9 +44,9 @@ const StepRow: React.FC<Row> = ({row}) => {
       <LaunchButton row={row} handleLaunch={handleLaunch} launchEnabled={launchEnabled} ref={launch} />
       <div className='flex-row step-squares' ref={div} >
         {
-          new Array(16).fill(null).map((e, idx) => {
+          row.pattern.map((e, idx) => {
             return (
-              <div key={idx} className={`seq-square ${beat === idx ? context.isPlaying ? 'active-beat' : '' : ''}`} aria-checked='false' onClick={handleToggle} />
+              <div key={idx} className={`seq-square ${beat === idx ? context.isPlaying ? 'active-beat' : '' : ''}`} aria-checked={e === 1 ? 'true' : 'false'} data-index={idx} onClick={handleToggle} />
             )
           })
         }

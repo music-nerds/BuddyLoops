@@ -4,7 +4,9 @@
   height: 48px;
   border: 2px solid var(--gray);
 }
-
+.seq-square[aria-checked='true'] {
+  background-color: var(--green);
+}
 .active-beat {
   border: 2px solid var(--text);
 }

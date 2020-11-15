@@ -7,12 +7,14 @@ export interface StepRow {
   squares?: HTMLCollection | null; // used in scheduleNote
   isPlaying: boolean; // conditional check in schedule note
   shouldPlayNextLoop: boolean; // toggled by launch button 
+  pattern: (0|1)[]; // rhythmic pattern as an array
 }
 
-const initializeRow = (name: string, audioPath: RequestInfo): StepRow => {
+const initializeRow = (name: string, audioPath: RequestInfo, pattern: (0|1)[]): StepRow => {
   return {
     name,
     audioPath,
+    pattern,
     isPlaying: true,
     shouldPlayNextLoop: true
   }
@@ -38,11 +40,12 @@ export const createAudioContext = (): StepContext => {
   const audioCtx = window.AudioContext || window.webkitAudioContext;
   const context: AudioContext = new audioCtx();
   const destination: AudioDestinationNode = context.destination;
-
+  const kickPattern: (1|0)[] = [1,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0];
+  const hatPattern: (1|0)[] = [0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0];
   return {
     context,
     destination,
-    sequencers: [initializeRow('kick', sounds[0]), initializeRow('hat', sounds[1]),],
+    sequencers: [initializeRow('kick', sounds[0], kickPattern), initializeRow('hat', sounds[1], hatPattern),],
     isPlaying: false,
     tempo: 180,
     currentNote: 0,
