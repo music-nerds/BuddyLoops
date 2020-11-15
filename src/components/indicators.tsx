@@ -13,7 +13,7 @@ const Indicators: React.FC = () => {
       {
         new Array(16).fill(null).map((e, idx) => {
           return (
-            <div key={idx} className={`indicator ${beat === idx && 'active-indicator'}`}></div>
+            <div key={idx} className={`indicator ${beat === idx ? 'active-indicator' : ''}`}></div>
           )
         })
       }

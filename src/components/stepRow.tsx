@@ -45,7 +45,7 @@ const StepRow: React.FC<Row> = ({row}) => {
         {
           new Array(16).fill(null).map((e, idx) => {
             return (
-              <div key={idx} className={`seq-square ${beat === idx && context.isPlaying && 'active-beat'}`} aria-checked='false' onClick={handleToggle} />
+              <div key={idx} className={`seq-square ${beat === idx ? context.isPlaying ? 'active-beat' : '' : ''}`} aria-checked='false' onClick={handleToggle} />
             )
           })
         }
