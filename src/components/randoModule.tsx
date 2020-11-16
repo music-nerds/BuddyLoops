@@ -9,13 +9,12 @@ const Rando: React.FC = () => {
   const {context, setContext} = useContext(ReactAudioContext);
 
   useEffect(() => {
-    console.log(context);
     context.sequencers.forEach(seq => {
       fetch(seq.audioPath)
         .then(data => data.arrayBuffer())
         .then(arrayBuffer => context.context.decodeAudioData(arrayBuffer))
         .then(decodeAudioData => seq.audioBuffer = decodeAudioData)
-        .then(() => console.log(seq))
+        .then(() => console.log(context))
     })
   }, [])
 

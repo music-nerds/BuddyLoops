@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useContext, useState} from 'react';
+import React, {useRef, useEffect, useContext, useState, useMemo} from 'react';
 import { ReactAudioContext } from '../app';
 import './stepRow.css';
 import LaunchButton from './launchBtn';
@@ -15,6 +15,7 @@ const StepRow: React.FC<Row> = ({row}) => {
   const {context} = useContext(ReactAudioContext);
   const [beat, setBeat] = useState(0);
   const [launchEnabled, setLaunchEnabled] = useState(true);
+  
   useEffect(() => {
     row.squares = div.current && div.current.children;
     context.subscribeSquares(setBeat);
@@ -35,6 +36,7 @@ const StepRow: React.FC<Row> = ({row}) => {
       row.pattern[Number(index)] = 0;
     }
   }
+
   const handleLaunch = () => {
     row.shouldPlayNextLoop = !row.shouldPlayNextLoop;
     setLaunchEnabled(row.shouldPlayNextLoop);

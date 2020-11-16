@@ -40,12 +40,16 @@ export const createAudioContext = (): StepContext => {
   const audioCtx = window.AudioContext || window.webkitAudioContext;
   const context: AudioContext = new audioCtx();
   const destination: AudioDestinationNode = context.destination;
-  const kickPattern: (1|0)[] = [1,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0];
-  const hatPattern: (1|0)[] = [0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0];
+  const hatPattern: (1|0)[] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
+  const snarePattern: (1|0)[] = [0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0];
+  const kickPattern: (1|0)[] = [1,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0];
+  const hat = initializeRow('hat', sounds.hat, hatPattern);
+  const snare = initializeRow('snare', sounds.snare, snarePattern);
+  const kick = initializeRow('kick', sounds.kick, kickPattern);
   return {
     context,
     destination,
-    sequencers: [initializeRow('kick', sounds[0], kickPattern), initializeRow('hat', sounds[1], hatPattern),],
+    sequencers: [hat, snare, kick],
     isPlaying: false,
     tempo: 180,
     currentNote: 0,
