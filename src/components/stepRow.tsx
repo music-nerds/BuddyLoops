@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useContext, useState, useMemo} from 'react';
+import React, {useRef, useEffect, useContext, useState} from 'react';
 import { ReactAudioContext } from '../app';
 import { useHistory } from 'react-router-dom';
 import './stepRow.css';
@@ -7,6 +7,7 @@ import io from 'socket.io-client';
 
 const SOCKET_URL = 'http://localhost:3000';
 
+import SeqSquare from './seqSquare';
 import { StepRow } from '../audio/createContext';
 
 interface Row {
@@ -26,10 +27,6 @@ const StepRow: React.FC<Row> = ({row}) => {
   useEffect(() => {
     row.squares = div.current && div.current.children;
     context.subscribeSquares(setBeat);
-    fetch(row.audioPath)
-        .then(data => data.arrayBuffer())
-        .then(arrayBuffer => context.context.decodeAudioData(arrayBuffer))
-        .then(decodeAudioData => row.audioBuffer = decodeAudioData)
   },[context, row])
 
   const handleToggle = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -69,9 +66,14 @@ const StepRow: React.FC<Row> = ({row}) => {
       <LaunchButton row={row} handleLaunch={handleLaunch} launchEnabled={launchEnabled} ref={launch} />
       <div className='flex-row step-squares' ref={div} >
         {
-          row.pattern.map((e, idx) => {
+          row.pattern.map((enabled, idx) => {
             return (
-              <div key={idx} className={`seq-square ${beat === idx ? context.isPlaying ? 'active-beat' : '' : ''}`} aria-checked={e === 1 ? 'true' : 'false'} data-index={idx} onClick={handleToggle} />
+              <SeqSquare 
+                handleToggle={handleToggle}
+                enabled={enabled}
+                index={idx}
+                beat={beat}
+              />
             )
           })
         }

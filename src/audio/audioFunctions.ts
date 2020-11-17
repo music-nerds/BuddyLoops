@@ -1,10 +1,10 @@
 import { StepContext } from './createContext';
 
-export const playback = (ctx: StepContext, sound: AudioBuffer, time: number): void => {
+export const playback = (ctx: StepContext, sound: AudioBuffer): void => {
   const playSound = ctx.context.createBufferSource();
   playSound.buffer = sound;
   playSound.connect(ctx.destination);
-  playSound.start(time);
+  playSound.start(ctx.nextNoteTime);
 };
 
 export const nextNote = (ctx: StepContext): void => {
@@ -32,7 +32,7 @@ export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
   // play the samples
   ctx.sequencers.forEach(seq => {
       if (seq.squares && seq.squares[beatNumber].getAttribute('aria-checked') === 'true' && seq.isPlaying && seq.audioBuffer) {
-        playback(ctx, seq.audioBuffer, ctx.nextNoteTime);
+        playback(ctx, seq.audioBuffer);
       }
     })
   // paint the dom  
@@ -40,7 +40,6 @@ export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
 };
 
 export const scheduler = (ctx: StepContext): void => {
-  // console.log(ctx);
   while (ctx.nextNoteTime < ctx.context.currentTime + ctx.scheduleAheadTime) {
     scheduleNote(ctx, ctx.currentNote);
     nextNote(ctx);
@@ -49,6 +48,9 @@ export const scheduler = (ctx: StepContext): void => {
 };
 
 export const play = (ctx: StepContext): void => {
+  if(ctx.context.state !== 'running'){
+    ctx.context.resume();
+  }
   if (!ctx.isPlaying) {
     ctx.isPlaying = true;
     ctx.currentNote = 0;
