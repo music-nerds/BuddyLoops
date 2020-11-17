@@ -19,10 +19,6 @@ const StepRow: React.FC<Row> = ({row}) => {
   useEffect(() => {
     row.squares = div.current && div.current.children;
     context.subscribeSquares(setBeat);
-    fetch(row.audioPath)
-        .then(data => data.arrayBuffer())
-        .then(arrayBuffer => context.context.decodeAudioData(arrayBuffer))
-        .then(decodeAudioData => row.audioBuffer = decodeAudioData)
   },[context, row])
 
   const handleToggle = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
