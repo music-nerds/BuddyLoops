@@ -1,8 +1,8 @@
-import React, {useRef, useEffect, useContext, useState, useMemo} from 'react';
+import React, {useRef, useEffect, useContext, useState} from 'react';
 import { ReactAudioContext } from '../app';
 import './stepRow.css';
 import LaunchButton from './launchBtn';
-
+import SeqSquare from './seqSquare';
 import { StepRow } from '../audio/createContext';
 
 interface Row {
@@ -46,9 +46,14 @@ const StepRow: React.FC<Row> = ({row}) => {
       <LaunchButton row={row} handleLaunch={handleLaunch} launchEnabled={launchEnabled} ref={launch} />
       <div className='flex-row step-squares' ref={div} >
         {
-          row.pattern.map((e, idx) => {
+          row.pattern.map((enabled, idx) => {
             return (
-              <div key={idx} className={`seq-square ${beat === idx ? context.isPlaying ? 'active-beat' : '' : ''}`} aria-checked={e === 1 ? 'true' : 'false'} data-index={idx} onClick={handleToggle} />
+              <SeqSquare 
+                handleToggle={handleToggle}
+                enabled={enabled}
+                index={idx}
+                beat={beat}
+              />
             )
           })
         }

@@ -8,7 +8,7 @@ export interface StepRow {
   isPlaying: boolean; // conditional check in schedule note
   shouldPlayNextLoop: boolean; // toggled by launch button 
   pattern: (0|1)[]; // rhythmic pattern as an array
-  loadSample: (ctx: AudioContext) => void;//
+  loadSample: (ctx: AudioContext) => void; // load the sample and assign to audioBuffer property
 }
 
 const initializeRow = (name: string, audioPath: RequestInfo, pattern: (0|1)[]): StepRow => {
@@ -18,7 +18,7 @@ const initializeRow = (name: string, audioPath: RequestInfo, pattern: (0|1)[]): 
     loadSample: function(context: AudioContext){
       fetch(audioPath)
       .then(data => data.arrayBuffer())
-      .then(arrayBuffer => context.decodeAudioData(arrayBuffer))
+      .then(arrayBuffer => context.decodeAudioData(arrayBuffer)) // TODO: Refactor for iOS support
       .then(decodedAudioData => this.audioBuffer = decodedAudioData)
     },
     pattern,
