@@ -1,9 +1,9 @@
-import { StepContext } from './createContext';
+import { StepContext, StepRow } from './createContext';
 
-export const playback = (ctx: StepContext, sound: AudioBuffer): void => {
+export const playback = (ctx: StepContext, seq: StepRow): void => {
   const playSound = ctx.context.createBufferSource();
-  playSound.buffer = sound;
-  playSound.connect(ctx.destination);
+  playSound.buffer = seq.audioBuffer;
+  playSound.connect(seq.gain);
   playSound.start(ctx.nextNoteTime);
 };
 
@@ -32,7 +32,7 @@ export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
   // play the samples
   ctx.sequencers.forEach(seq => {
       if (seq.squares && seq.squares[beatNumber].getAttribute('aria-checked') === 'true' && seq.isPlaying && seq.audioBuffer) {
-        playback(ctx, seq.audioBuffer);
+        playback(ctx, seq);
       }
     })
   // paint the dom  

@@ -3,19 +3,24 @@ import { sounds } from './sounds';
 export interface StepRow {
   name: string; // name of row - helps to find this later
   audioPath: RequestInfo; // path to sound file
-  audioBuffer?: AudioBuffer; // decoded audio buffer
+  audioBuffer: AudioBuffer | null; // decoded audio buffer
+  gain: GainNode; // volume for this row - after buffer, before destination
   squares?: HTMLCollection | null; // used in scheduleNote
   isPlaying: boolean; // conditional check in schedule note
   shouldPlayNextLoop: boolean; // toggled by launch button 
   pattern: (0|1)[]; // rhythmic pattern as an array
-  loadSample: (ctx: AudioContext) => void; // load the sample and assign to audioBuffer property
+  loadSample: () => void; // load the sample and assign to audioBuffer property
 }
 
-const initializeRow = (name: string, audioPath: RequestInfo, pattern: (0|1)[]): StepRow => {
+const initializeRow = (context: AudioContext, name: string, audioPath: RequestInfo, pattern: (0|1)[]): StepRow => {
+  const gain: GainNode = context.createGain();
+  gain.connect(context.destination);
   return {
     name,
     audioPath,
-    loadSample: function(context: AudioContext){
+    audioBuffer: null,
+    gain,
+    loadSample: function(){
       fetch(audioPath)
       .then(data => data.arrayBuffer())
       .then(arrayBuffer => context.decodeAudioData(arrayBuffer)) // TODO: Refactor for iOS support
@@ -50,9 +55,9 @@ export const createAudioContext = (): StepContext => {
   const hatPattern: (1|0)[] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
   const snarePattern: (1|0)[] = [0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0];
   const kickPattern: (1|0)[] = [1,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0];
-  const hat = initializeRow('hat', sounds.hat, hatPattern);
-  const snare = initializeRow('snare', sounds.snare, snarePattern);
-  const kick = initializeRow('kick', sounds.kick, kickPattern);
+  const hat = initializeRow(context, 'hat', sounds.hat, hatPattern);
+  const snare = initializeRow(context, 'snare', sounds.snare, snarePattern);
+  const kick = initializeRow(context, 'kick', sounds.kick, kickPattern);
   return {
     context,
     destination,

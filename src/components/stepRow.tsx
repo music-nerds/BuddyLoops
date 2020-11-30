@@ -1,6 +1,7 @@
 import React, {useRef, useEffect, useContext, useState} from 'react';
 import { ReactAudioContext } from '../app';
 import { useHistory } from 'react-router-dom';
+import { StepRow } from '../audio/createContext';
 import './stepRow.css';
 import LaunchButton from './launchBtn';
 import io from 'socket.io-client';
@@ -8,7 +9,7 @@ import io from 'socket.io-client';
 const SOCKET_URL = 'http://localhost:3000';
 
 import SeqSquare from './seqSquare';
-import { StepRow } from '../audio/createContext';
+import Knob from './knob';
 
 interface Row {
   row: StepRow;
@@ -37,13 +38,13 @@ const StepRow: React.FC<Row> = ({row}) => {
 
   const handleToggle = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLDivElement;
-    const index = target.getAttribute('data-index')!;
+    const index = Number(target.getAttribute('data-index'))!;
     if (target.getAttribute('aria-checked') === 'false') {
       target.setAttribute('aria-checked', 'true');
-      row.pattern[Number(index)] = 1;
+      row.pattern[index] = 1;
     } else {
       target.setAttribute('aria-checked', 'false');
-      row.pattern[Number(index)] = 0;
+      row.pattern[index] = 0;
     }
     socket.emit('patternChange', pathname.slice(1), { name: row.name, pattern: row.pattern, id: pathname.slice(1) })
   }
@@ -55,11 +56,11 @@ const StepRow: React.FC<Row> = ({row}) => {
     })
 
     socket.on('patternChange', (data: PatternChange) => {
-      const something = context.sequencers.find(seq => seq.name === data.name);
-      if (something) {
-        something.pattern = data.pattern;
+      const seq = context.sequencers.find(seq => seq.name === data.name);
+      if (seq) {
+        seq.pattern = data.pattern;
       }
-      setContext({...context})
+      setContext({...context});
     })
   }, [])
 
@@ -79,10 +80,12 @@ const StepRow: React.FC<Row> = ({row}) => {
                 enabled={enabled}
                 index={idx}
                 beat={beat}
+                key={idx}
               />
             )
           })
         }
+        <Knob row={row} />
       </div>
     </div>
   )

@@ -18,9 +18,8 @@ const Rando: React.FC = () => {
 
   useEffect(() => {
     context.sequencers.forEach(seq => {
-      seq.loadSample(context.context);
+      seq.loadSample();
     })
-    console.log(context)
   }, [])
 
   // useEffect(() => {
