@@ -14,6 +14,12 @@ interface Row {
   row: StepRow;
 }
 
+interface PatternChange {
+  name: string;
+  pattern: (0|1)[];
+  id: string;
+}
+
 const StepRow: React.FC<Row> = ({row}) => {
   const div = useRef<HTMLDivElement>(null);
   const launch = useRef<HTMLButtonElement>(null);
@@ -48,7 +54,7 @@ const StepRow: React.FC<Row> = ({row}) => {
       socket.emit('handshake', pathname.slice(1));
     })
 
-    socket.on('patternChange', (data) => {
+    socket.on('patternChange', (data: PatternChange) => {
       const something = context.sequencers.find(seq => seq.name === data.name);
       if (something) {
         something.pattern = data.pattern;
