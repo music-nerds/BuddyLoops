@@ -59,7 +59,7 @@ const StepRow: React.FC<Row> = ({row}) => {
       if (something) {
         something.pattern = data.pattern;
       }
-      // setContext({...context})
+      setContext({...context})
     })
   }, [])
 
