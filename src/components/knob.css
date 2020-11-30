@@ -1,0 +1,19 @@
+.knob {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--gray);
+  border-radius: 50%;
+  margin-left: 1em;
+  box-sizing: border-box;
+  position: relative;
+}
+.knob::after {
+  position: absolute;
+  content: '';
+  width: 4px;
+  height: 24px;
+  top: -4px;
+  left: 16px;
+  border-radius: 50% 50% 0 0;
+  background-color: var(--blue);
+}

@@ -4,8 +4,8 @@
   height: 48px;
   border: 2px solid var(--gray);
 }
-.seq-square[aria-checked='true'] {
-  background-color: var(--green);
+.seq-square[aria-checked="true"] {
+  background-color: var(--blue);
 }
 .active-beat {
   border: 2px solid var(--text);
@@ -28,8 +28,9 @@
   background-color: var(--bg);
   color: var(--text);
   border: 2px solid var(--gray);
+  user-select: none;
 }
 
 .active-launch {
-  border: 2px solid var(--green);
+  border: 2px solid var(--blue);
 }
