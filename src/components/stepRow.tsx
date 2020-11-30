@@ -18,7 +18,7 @@ interface Row {
 interface PatternChange {
   name: string;
   pattern: (0|1)[];
-  pathname: string;
+  id: string;
 }
 
 const StepRow: React.FC<Row> = ({row}) => {
