@@ -2,6 +2,7 @@ import React, { createContext, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-dom';
 import Rando from './components/randoModule';
+import Landing from './components/landing';
 import { createAudioContext, StepContext } from './audio/createContext'
 import './app.css';
 
@@ -23,11 +24,8 @@ const App: React.FC = () => {
         basename="/"
         >
         <Switch>
-          <Route 
-            exact 
-            path="/" 
-            component={Rando} 
-            />
+          <Route exact path="/" component={Landing} />
+          <Route path="/:id" component={Rando} />
           <Redirect to="/" />
         </Switch>
       </Router>

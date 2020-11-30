@@ -1,7 +1,12 @@
 import React, {useRef, useEffect, useContext, useState} from 'react';
 import { ReactAudioContext } from '../app';
+import { useHistory } from 'react-router-dom';
 import './stepRow.css';
 import LaunchButton from './launchBtn';
+import io from 'socket.io-client';
+
+const SOCKET_URL = 'http://localhost:3000';
+
 import SeqSquare from './seqSquare';
 import { StepRow } from '../audio/createContext';
 
@@ -12,10 +17,13 @@ interface Row {
 const StepRow: React.FC<Row> = ({row}) => {
   const div = useRef<HTMLDivElement>(null);
   const launch = useRef<HTMLButtonElement>(null);
-  const {context} = useContext(ReactAudioContext);
+  const {context, setContext} = useContext(ReactAudioContext);
   const [beat, setBeat] = useState(0);
   const [launchEnabled, setLaunchEnabled] = useState(true);
-  
+  const { location: { pathname } } = useHistory();
+
+  const socket = io(SOCKET_URL);
+
   useEffect(() => {
     row.squares = div.current && div.current.children;
     context.subscribeSquares(setBeat);
@@ -31,7 +39,23 @@ const StepRow: React.FC<Row> = ({row}) => {
       target.setAttribute('aria-checked', 'false');
       row.pattern[Number(index)] = 0;
     }
+    socket.emit('patternChange', pathname.slice(1), { name: row.name, pattern: row.pattern, id: pathname.slice(1) })
   }
+
+  useEffect(() => {
+
+    socket.on('connect', () => {
+      socket.emit('handshake', pathname.slice(1));
+    })
+
+    socket.on('patternChange', (data) => {
+      const something = context.sequencers.find(seq => seq.name === data.name);
+      if (something) {
+        something.pattern = data.pattern;
+      }
+      // setContext({...context})
+    })
+  }, [])
 
   const handleLaunch = () => {
     row.shouldPlayNextLoop = !row.shouldPlayNextLoop;
