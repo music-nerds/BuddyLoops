@@ -1,18 +1,16 @@
 import React, {useRef, useEffect, useContext, useState} from 'react';
-import { ReactAudioContext } from '../app';
+import { ReactAudioContext, SocketContext } from '../app';
 import { useHistory } from 'react-router-dom';
 import { StepRow } from '../audio/createContext';
 import './stepRow.css';
 import LaunchButton from './launchBtn';
-import io from 'socket.io-client';
-
-const SOCKET_URL = 'http://localhost:3000';
 
 import SeqSquare from './seqSquare';
 import Knob from './knob';
 
 interface Row {
   row: StepRow;
+  id: string;
 }
 
 interface PatternChange {
@@ -21,15 +19,15 @@ interface PatternChange {
   id: string;
 }
 
-const StepRow: React.FC<Row> = ({row}) => {
+const StepRow: React.FC<Row> = ({row, id}) => {
   const div = useRef<HTMLDivElement>(null);
   const launch = useRef<HTMLButtonElement>(null);
   const {context, setContext} = useContext(ReactAudioContext);
+  const socket = useContext(SocketContext);
+
   const [beat, setBeat] = useState(0);
   const [launchEnabled, setLaunchEnabled] = useState(true);
   const { location: { pathname } } = useHistory();
-
-  const socket = io(SOCKET_URL);
 
   useEffect(() => {
     row.squares = div.current && div.current.children;
@@ -46,14 +44,14 @@ const StepRow: React.FC<Row> = ({row}) => {
       target.setAttribute('aria-checked', 'false');
       row.pattern[index] = 0;
     }
-    socket.emit('patternChange', pathname.slice(1), { name: row.name, pattern: row.pattern, id: pathname.slice(1) })
+    socket.emit('patternChange', id, { name: row.name, pattern: row.pattern, id })
   }
 
   useEffect(() => {
 
-    socket.on('connect', () => {
-      socket.emit('handshake', pathname.slice(1));
-    })
+    // socket.on('connect', () => {
+    //   socket.emit('handshake', pathname.slice(1));
+    // })
 
     socket.on('patternChange', (data: PatternChange) => {
       const seq = context.sequencers.find(seq => seq.name === data.name);
