@@ -23,9 +23,14 @@ const Transport: React.FC<Props> = (props: Props) => {
   }
 
   useEffect(() => {
+    console.log(context.context.state)
     socket.on('receivePlay', (target: number) => {
-      console.log('received', target)
+      console.log('received play', target)
       playAtTime(target);
+    })
+    socket.on('receiveStop', () => {
+      console.log('received stop', Date.now())
+      stop(context);
     })
   }, [])
 
@@ -35,7 +40,8 @@ const Transport: React.FC<Props> = (props: Props) => {
   }
 
   const handleStop = (): void => {
-    stop(context);
+    socket.emit('sendStop', id)
+    // stop(context);
   }
   return (
     <div id='transport'>

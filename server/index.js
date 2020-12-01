@@ -44,6 +44,14 @@ io.on('connection', socket => {
     io.to(id).emit('receivePlay', target);
   })
 
+  socket.on('sendStop', (id) => {
+    io.to(id).emit('receiveStop');
+  })
+  
+  socket.on('sendRowLaunch', (id, name) => {
+    io.to(id).emit('receiveRowLaunch', name);
+  })
+
   socket.on('patternChange', (id, data) => {
     console.log('ID',id);
     console.log('DATA',data);

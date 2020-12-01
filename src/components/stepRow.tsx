@@ -49,10 +49,6 @@ const StepRow: React.FC<Row> = ({row, id}) => {
 
   useEffect(() => {
 
-    // socket.on('connect', () => {
-    //   socket.emit('handshake', pathname.slice(1));
-    // })
-
     socket.on('patternChange', (data: PatternChange) => {
       const seq = context.sequencers.find(seq => seq.name === data.name);
       if (seq) {
@@ -60,11 +56,16 @@ const StepRow: React.FC<Row> = ({row, id}) => {
       }
       setContext({...context});
     })
+    socket.on('receiveRowLaunch', (name: string) => {
+      if(name === row.name){
+        row.shouldPlayNextLoop = !row.shouldPlayNextLoop;
+        setLaunchEnabled(row.shouldPlayNextLoop);
+      }
+    })
   }, [])
 
   const handleLaunch = () => {
-    row.shouldPlayNextLoop = !row.shouldPlayNextLoop;
-    setLaunchEnabled(row.shouldPlayNextLoop);
+    socket.emit('sendRowLaunch', id, row.name)
   }
   return (
     <div className='flex-row step-row'>
