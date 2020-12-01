@@ -1,15 +1,39 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PlayArrowSharpIcon from '@material-ui/icons/PlayArrowSharp';
 import StopSharpIcon from '@material-ui/icons/StopSharp';
-import { ReactAudioContext } from '../app';
+import { ReactAudioContext, SocketContext } from '../app';
 import { play, stop } from '../audio/audioFunctions'
 import './transport.css';
 
-const Transport: React.FC = () => {
+interface Props {
+  id: string;
+}
+
+const Transport: React.FC<Props> = (props: Props) => {
   const { context } = useContext(ReactAudioContext);
-  const handlePlay = (): void => {
-    play(context);
+  const socket = useContext(SocketContext);
+  const {id} = props;
+
+  const playAtTime = (target: number) => {
+    const now = Date.now();
+    const delay = target - now;
+    setTimeout(() => {
+      play(context)
+    }, delay);
   }
+
+  useEffect(() => {
+    socket.on('receivePlay', (target: number) => {
+      console.log('received', target)
+      playAtTime(target);
+    })
+  }, [])
+
+  const handlePlay = (): void => {
+    // play(context);
+    socket.emit('sendPlay', id);
+  }
+
   const handleStop = (): void => {
     stop(context);
   }

@@ -33,8 +33,15 @@ app.get('/*', (req, res) => {
 io.on('connection', socket => {
 
   socket.on('handshake', (id) => {
-    // console.log(id);
+    console.log('joined', id);
     socket.join(id);
+  })
+
+  socket.on('sendPlay', (id) => {
+    console.log(id)
+    const now = Date.now();
+    const target = now + 1000;
+    io.to(id).emit('receivePlay', target);
   })
 
   socket.on('patternChange', (id, data) => {
