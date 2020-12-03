@@ -12,7 +12,7 @@ export interface StepRow {
   loadSample: () => void; // load the sample and assign to audioBuffer property
 }
 
-const initializeRow = (context: AudioContext, name: string, audioPath: RequestInfo, pattern: (0|1)[]): StepRow => {
+const initializeRow = (context: AudioContext, name: string, audioPath: string, pattern: (0|1)[]): StepRow => {
   const gain: GainNode = context.createGain();
   gain.connect(context.destination);
   return {
@@ -20,11 +20,25 @@ const initializeRow = (context: AudioContext, name: string, audioPath: RequestIn
     audioPath,
     audioBuffer: null,
     gain,
-    loadSample: function(){
-      fetch(audioPath)
-      .then(data => data.arrayBuffer())
-      .then(arrayBuffer => context.decodeAudioData(arrayBuffer)) // TODO: Refactor for iOS support
-      .then(decodedAudioData => this.audioBuffer = decodedAudioData)
+    loadSample: async function(){
+      // @ts-ignore 
+      // check if iOS and use callback syntax
+      if(window.webkitAudioContext){
+        const data = await fetch(audioPath);
+        const arrayBuffer = await data.arrayBuffer();
+        context.decodeAudioData(arrayBuffer, (buffer) => {
+          this.audioBuffer = buffer;
+        }, (err) => {
+          console.error(err);
+        })
+      } else {
+      // not iOS
+        fetch(audioPath)
+        .then(data => data.arrayBuffer())
+        .then(arrayBuffer => context.decodeAudioData(arrayBuffer))
+        .then(decodedAudioData => this.audioBuffer = decodedAudioData)
+        .catch(console.error)
+      }
     },
     pattern,
     isPlaying: true,
@@ -51,6 +65,8 @@ export const createAudioContext = (): StepContext => {
   // @ts-ignore
   const audioCtx = window.AudioContext || window.webkitAudioContext;
   const context: AudioContext = new audioCtx();
+  context.onstatechange = () => console.log(context.state); 
+
   const destination: AudioDestinationNode = context.destination;
   const hatPattern: (1|0)[] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
   const snarePattern: (1|0)[] = [0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0];
