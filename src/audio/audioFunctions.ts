@@ -48,9 +48,6 @@ export const scheduler = (ctx: StepContext): void => {
 };
 
 export const play = (ctx: StepContext): void => {
-  if(ctx.context.state !== 'running'){
-    ctx.context.resume();
-  }
   if (!ctx.isPlaying) {
     ctx.isPlaying = true;
     ctx.currentNote = 0;
