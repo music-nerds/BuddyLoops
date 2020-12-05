@@ -41,14 +41,12 @@ io.on('connection', socket => {
   })
 
   socket.on('notifyTime', (id, timeObj) => {
-    console.log('notify')
     // notify other users of time data
     io.to(id).emit('notifyTime', timeObj);
   })
 
   socket.on('sendPlay', (id, timeArr) => {
     // start playing
-    console.log(id, timeArr)
     const now = Date.now();
     let delay = Math.max(...timeArr.map(timeData => timeData.roundTripTime)) * 2;
     console.log(delay)
@@ -69,8 +67,6 @@ io.on('connection', socket => {
 
   socket.on('patternChange', (id, data) => {
     // change pattern
-    console.log('ID',id);
-    console.log('DATA',data);
     socket.to(id).emit('patternChange', data);
   })
 })

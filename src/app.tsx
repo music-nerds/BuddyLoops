@@ -3,13 +3,14 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-dom';
 import Rando from './components/randoModule';
 import Landing from './components/landing';
+import ContextOverlay from './components/contextOverlay'
 import { createAudioContext, StepContext } from './audio/createContext';
 import { v4 as uuidv4 } from 'uuid';
 import './app.css';
 import io from 'socket.io-client';
 
 // this must be standardized
-const SOCKET_URL = '192.168.1.8:3000';
+const SOCKET_URL = '192.168.1.7:3000';
 const socket = io(SOCKET_URL);
 
 export interface TimeObj {
