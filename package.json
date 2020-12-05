@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "build": "webpack --mode=\"production\"",
+    "start": "node server",
     "dev": "webpack serve",
     "start:dev": "webpack --watch & nodemon server",
     "test": "echo \"Error: no test specified\" && exit 1"
