@@ -10,7 +10,7 @@ import './app.css';
 import io from 'socket.io-client';
 
 // this must be standardized
-const SOCKET_URL = '192.168.1.7:3000';
+const SOCKET_URL = 'poopyloops.herokuapp.com';
 const socket = io(SOCKET_URL);
 
 export interface TimeObj {
