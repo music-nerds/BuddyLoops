@@ -11,7 +11,6 @@ interface SquareProps {
 
 const SeqSquare: React.FC<SquareProps> = ({beat, index, handleToggle, enabled}) => {
   const { context } = useContext(ReactAudioContext);
-  console.log("SQUARE CONTEXT.ISPLAYING",context)
   return (
     <div 
       data-index={index}
