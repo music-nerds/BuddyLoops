@@ -7,13 +7,13 @@ import './transport.css';
 
 interface Props {
   id: string;
+  setBeat: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const Transport: React.FC<Props> = (props: Props) => {
+const Transport: React.FC<Props> = ({id, setBeat}) => {
   const { context } = useContext(ReactAudioContext);
   const socket = useContext(SocketContext);
   const timeArr = useContext(Timing);
-  const {id} = props;
 
   const playAtTime = (target: number) => {
     const offset = timeArr[0].offset || 0;
@@ -51,6 +51,7 @@ const Transport: React.FC<Props> = (props: Props) => {
     if(context.context.state !== 'running'){
       context.context.resume();
     }
+    setBeat(-1);
     socket.emit('sendStop', id)
     // stop(context);
   }

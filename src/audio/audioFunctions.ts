@@ -36,7 +36,9 @@ export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
       }
     })
   // paint the dom  
-  ctx.subscribers.forEach(fn => fn(beatNumber));
+  ctx.subscribers.forEach(fn => {
+    fn(beatNumber);
+  });
 };
 
 export const scheduler = (ctx: StepContext): void => {
@@ -53,6 +55,7 @@ export const play = (ctx: StepContext): void => {
     ctx.currentNote = 0;
     ctx.nextNoteTime = ctx.context.currentTime;
     scheduler(ctx);
+    console.log('PLAY CONTEXT.ISPLAYING', ctx.isPlaying)
   }
 };
 

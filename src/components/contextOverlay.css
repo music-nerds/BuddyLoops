@@ -1,0 +1,20 @@
+.no-overlay {
+  display: none;
+}
+.context-overlay {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 10;
+}
+.context-overlay button {
+  color: whitesmoke;
+  border: 2px solid whitesmoke;
+}
