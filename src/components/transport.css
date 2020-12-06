@@ -1,13 +1,57 @@
 #transport {
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 800px;
-  max-width: 100%;;
+  max-width: 100%;
+  margin: 20px 0;
 }
 .transport-btn {
   background-color: transparent;
   outline: none;
   border: none;
   color: var(--text);
-  margin: 1rem;
+}
+
+.share-btn {
+  color: #ffffff;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+.tempo-container, .swing-adjust > label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.tempo-adjust {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swing-adjust {
+  width: 60%;
+}
+
+
+.tempo-input {
+  border-radius: 5px;
+  height: 30px;
+  width: 40px;
+  font-size: 1.2em;
+  color: var(--text);
+  background-color: var(--bg);
+  border: none;
+  text-align: center;
+}
+
+.tempo-input:focus {
+  outline: none;
 }

@@ -3,12 +3,24 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-dom';
 import Rando from './components/randoModule';
 import Landing from './components/landing';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 import ContextOverlay from './components/contextOverlay'
 import { createAudioContext, StepContext } from './audio/createContext';
 import { v4 as uuidv4 } from 'uuid';
 import './app.css';
 import io from 'socket.io-client';
 
+const theme = createMuiTheme({
+  palette: {
+    secondary: {
+      main: '#ffffff',
+    }
+  }
+})
+
+const SOCKET_URL = 'http://localhost:3000';
 const socket = io();
 
 export interface TimeObj {
@@ -65,4 +77,11 @@ const App: React.FC = () => {
 }
 
 const app: HTMLElement = document.getElementById('app')!;
-ReactDOM.render(<App />, app);
+ReactDOM.render(
+  <CssBaseline>
+    <MuiThemeProvider theme={theme}>
+      <App />
+    </MuiThemeProvider>
+  </CssBaseline>,
+  app)
+;

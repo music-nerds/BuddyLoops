@@ -9,14 +9,31 @@ export const playback = (ctx: StepContext, seq: StepRow): void => {
 };
 
 export const nextNote = (ctx: StepContext): void => {
-  const secondsPerBeat: number = (60 / ctx.tempo);
-
-  ctx.nextNoteTime += secondsPerBeat;
-
-  ctx.currentNote++;
-  if (ctx.currentNote === 16) {
-    ctx.currentNote = 0;
-  };
+  if (ctx.swing === 0) {
+    const secondsPerBeat: number = (60 / (ctx.tempo*2));
+  
+    ctx.nextNoteTime += secondsPerBeat;
+  
+    ctx.currentNote++;
+    if (ctx.currentNote === 16) {
+      ctx.currentNote = 0;
+    };
+  } else {
+    const secondsPerBeat: number = (60 / (ctx.tempo*2));
+    const maxSwing: number = secondsPerBeat / 3;
+    const swingPercent: number = ctx.swing / 100;
+    const swing = swingPercent * maxSwing; 
+    
+    if (ctx.currentNote % 2 === 0) {
+      ctx.nextNoteTime += (secondsPerBeat + swing);
+    } else {
+      ctx.nextNoteTime += (secondsPerBeat - swing);
+    }
+    ctx.currentNote++;
+    if (ctx.currentNote === 16) {
+      ctx.currentNote = 0;
+    };
+  }
 };
 
 export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
