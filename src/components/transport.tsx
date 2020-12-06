@@ -36,6 +36,7 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
     socket.on('receiveStop', () => {
       console.log('received stop', Date.now())
       stop(context);
+      setBeat(-1);
     })
   }, [])
 

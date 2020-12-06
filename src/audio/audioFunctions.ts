@@ -1,3 +1,4 @@
+import SeqSquare from '../components/seqSquare';
 import { StepContext, StepRow } from './createContext';
 
 export const playback = (ctx: StepContext, seq: StepRow): void => {

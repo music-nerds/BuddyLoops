@@ -9,9 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import './app.css';
 import io from 'socket.io-client';
 
-// this must be standardized
-const SOCKET_URL = 'poopyloops.herokuapp.com';
-const socket = io(SOCKET_URL);
+const socket = io();
 
 export interface TimeObj {
   deviceID: string;
