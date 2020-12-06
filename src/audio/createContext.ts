@@ -38,6 +38,7 @@ export interface StepContext {
   sequencers: StepRow[];
   isPlaying: boolean;
   tempo: number;
+  swing: number;
   currentNote: number;
   nextNoteTime: number;
   scheduleAheadTime: number;
@@ -45,6 +46,8 @@ export interface StepContext {
   timerId: number | undefined;
   subscribeSquares: (fn: React.Dispatch<React.SetStateAction<number>>) => void;
   subscribers: React.Dispatch<React.SetStateAction<number>>[];
+  updateTempo: (bpm: number) => void;
+  updateSwing: (swingValue: number) => void;
 }
 
 export const createAudioContext = (): StepContext => {
@@ -63,7 +66,8 @@ export const createAudioContext = (): StepContext => {
     destination,
     sequencers: [hat, snare, kick],
     isPlaying: false,
-    tempo: 180,
+    tempo: 90,
+    swing: 0,
     currentNote: 0,
     nextNoteTime: 0,
     scheduleAheadTime: 0.1,
@@ -73,5 +77,11 @@ export const createAudioContext = (): StepContext => {
     subscribeSquares: function(fn: React.Dispatch<React.SetStateAction<number>>){
       this.subscribers.push(fn);
     },
+    updateTempo: function(bpm: number) {
+      this.tempo = bpm;
+    },
+    updateSwing: function(swingValue: number) {
+      this.swing = swingValue;
+    }
   };
 }
