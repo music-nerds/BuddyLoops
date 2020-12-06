@@ -27,18 +27,9 @@
   color: var(--text);
 }
 
-.sessionStart {
-  background-color: var(--green);
-  border-style: none;
-  box-shadow: 2px 1px 10px 1px var(--blue);
-  font-size: 1.5em;
-  height: 3em;
-  cursor: pointer;
-  color: var(--text);
-  letter-spacing: 0.2em;
-  text-shadow: 1px 1px 3px grey;
-  padding: 0 20px;
-  font-family: 'Roboto', sans-serif;  
+button#sessionStart {
+  color: whitesmoke;
+  border: 2px solid whitesmoke;
 }
 
 .sessionStart:hover {

@@ -1,3 +1,4 @@
+import SeqSquare from '../components/seqSquare';
 import { StepContext, StepRow } from './createContext';
 
 export const playback = (ctx: StepContext, seq: StepRow): void => {
@@ -53,7 +54,9 @@ export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
       }
     })
   // paint the dom  
-  ctx.subscribers.forEach(fn => fn(beatNumber));
+  ctx.subscribers.forEach(fn => {
+    fn(beatNumber);
+  });
 };
 
 export const scheduler = (ctx: StepContext): void => {
@@ -65,14 +68,12 @@ export const scheduler = (ctx: StepContext): void => {
 };
 
 export const play = (ctx: StepContext): void => {
-  if(ctx.context.state !== 'running'){
-    ctx.context.resume();
-  }
   if (!ctx.isPlaying) {
     ctx.isPlaying = true;
     ctx.currentNote = 0;
     ctx.nextNoteTime = ctx.context.currentTime;
     scheduler(ctx);
+    console.log('PLAY CONTEXT.ISPLAYING', ctx.isPlaying)
   }
 };
 

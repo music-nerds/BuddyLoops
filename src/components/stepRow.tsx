@@ -11,6 +11,7 @@ import Knob from './knob';
 interface Row {
   row: StepRow;
   id: string;
+  beat: number
 }
 
 interface PatternChange {
@@ -19,20 +20,15 @@ interface PatternChange {
   id: string;
 }
 
-const StepRow: React.FC<Row> = ({row, id}) => {
+const StepRow: React.FC<Row> = ({row, id, beat}) => {
   const div = useRef<HTMLDivElement>(null);
   const launch = useRef<HTMLButtonElement>(null);
   const {context, setContext} = useContext(ReactAudioContext);
   const socket = useContext(SocketContext);
 
-  const [beat, setBeat] = useState(0);
+  
   const [launchEnabled, setLaunchEnabled] = useState(true);
   const { location: { pathname } } = useHistory();
-
-  useEffect(() => {
-    row.squares = div.current && div.current.children;
-    context.subscribeSquares(setBeat);
-  },[context, row])
 
   const handleToggle = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLDivElement;
@@ -62,15 +58,20 @@ const StepRow: React.FC<Row> = ({row, id}) => {
         setLaunchEnabled(row.shouldPlayNextLoop);
       }
     })
+    row.squares = div.current && div.current.children;
+
   }, [])
 
   const handleLaunch = () => {
     socket.emit('sendRowLaunch', id, row.name)
   }
   return (
-    <div className='flex-row step-row'>
-      <LaunchButton row={row} handleLaunch={handleLaunch} launchEnabled={launchEnabled} ref={launch} />
-      <div className='flex-row step-squares' ref={div} >
+    <div className='step-row'>
+      <div className="row-controls">
+        <LaunchButton row={row} handleLaunch={handleLaunch} launchEnabled={launchEnabled} ref={launch} />
+        <p>Other controls here</p>
+      </div>
+      <div className='step-squares' ref={div} >
         {
           row.pattern.map((enabled, idx) => {
             return (
@@ -84,7 +85,7 @@ const StepRow: React.FC<Row> = ({row, id}) => {
             )
           })
         }
-        <Knob row={row} />
+        {/* <Knob row={row} /> */}
       </div>
     </div>
   )

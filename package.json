@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "build": "webpack --mode=\"production\"",
+    "start": "node server",
     "dev": "webpack serve",
     "start:dev": "webpack --watch & nodemon server",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,7 +17,9 @@
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.57",
+    "axios": "^0.21.0",
     "chalk": "^4.1.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "material-ui": "^0.20.2",
     "nodemon": "^2.0.6",
@@ -29,6 +32,7 @@
     "uuidv4": "^6.2.5"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/material-ui": "^0.21.8",
     "@types/react": "^16.9.55",
     "@types/react-dom": "^16.9.9",

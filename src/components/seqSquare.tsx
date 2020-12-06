@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { ReactAudioContext } from '../app';
 import { StepRow } from '../audio/createContext';
 
@@ -10,15 +10,14 @@ interface SquareProps {
 }
 
 const SeqSquare: React.FC<SquareProps> = ({beat, index, handleToggle, enabled}) => {
-  const {context} = useContext(ReactAudioContext);
+  const { context } = useContext(ReactAudioContext);
   return (
     <div 
       data-index={index}
-      className={`seq-square ${beat === index ? context.isPlaying ? 'active-beat' : '' : ''}`}
+      className={`seq-square ${beat === index ? 'active-beat' : ''}`}
       aria-checked={enabled === 1 ? 'true' : 'false'}
       onClick={handleToggle}
     />
-
   )
 }
 
