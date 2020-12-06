@@ -7,7 +7,6 @@ import StopSharpIcon from '@material-ui/icons/StopSharp';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import GroupIcon from '@material-ui/icons/Group';
-import { ReactAudioContext, SocketContext } from '../app';
 import { ReactAudioContext, SocketContext, Timing } from '../app';
 import { play, stop } from '../audio/audioFunctions'
 import Button from '@material-ui/core/Button';
@@ -99,7 +98,7 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
 
   const updateSwing = (event: any, newValue: number | number[]) => {
     setSwing(newValue as number);
-    context.updateSwing(newValue)
+    context.updateSwing(newValue as number);
   };
 
   return (
