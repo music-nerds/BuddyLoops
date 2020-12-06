@@ -8,6 +8,7 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import GroupIcon from '@material-ui/icons/Group';
 import { ReactAudioContext, SocketContext, Timing } from '../app';
+import { StepContext } from '../audio/createContext';
 import { play, stop } from '../audio/audioFunctions'
 import Button from '@material-ui/core/Button';
 import './transport.css';
@@ -21,26 +22,21 @@ interface Props {
 
 const Transport: React.FC<Props> = ({id, setBeat}) => {
   const [open, setOpen] = useState(false);
-  const { context } = useContext(ReactAudioContext);
+  const { context, setContext } = useContext(ReactAudioContext);
   const [tempo, setTempo] = useState<number>(context.tempo);
   const [swing, setSwing] = useState<number>(0);
   const socket = useContext(SocketContext);
   const timeArr = useContext(Timing);
-
   const playAtTime = (target: number) => {
     const offset = timeArr[0].offset || 0;
     const now = Date.now();
     const delay = target + offset - now;
-    // console.log('TARGET', target)
-    // console.log("NOW", now)
-    // console.log('DELAY', delay)
     setTimeout(() => {
       play(context)
+      console.log("PLAY AT TIME",Date.now())
     }, delay);
   }
-
   useEffect(() => {
-    console.log(context.context.state)
     socket.on('receivePlay', (target: number) => {
       console.log('received play', target)
       playAtTime(target);
@@ -50,7 +46,11 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
       stop(context);
       setBeat(-1);
     })
-  }, [])
+    return () => {
+      socket.off('receivePlay');
+      socket.off('receiveStop');
+    }
+  }, [context])
 
   const handlePlay = (): void => {
     if(context.context.state !== 'running'){
@@ -97,8 +97,10 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
   }
 
   const updateSwing = (event: any, newValue: number | number[]) => {
+    // console.log('UPDATE SWING',newValue)
     setSwing(newValue as number);
     context.updateSwing(newValue as number);
+    setContext({...context})
   };
 
   return (
