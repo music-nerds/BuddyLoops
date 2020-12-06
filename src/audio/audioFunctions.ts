@@ -9,16 +9,6 @@ export const playback = (ctx: StepContext, seq: StepRow): void => {
 };
 
 export const nextNote = (ctx: StepContext): void => {
-  if (ctx.swing === 0) {
-    const secondsPerBeat: number = (60 / (ctx.tempo*2));
-  
-    ctx.nextNoteTime += secondsPerBeat;
-  
-    ctx.currentNote++;
-    if (ctx.currentNote === 16) {
-      ctx.currentNote = 0;
-    };
-  } else {
     const secondsPerBeat: number = (60 / (ctx.tempo*2));
     const maxSwing: number = secondsPerBeat / 3;
     const swingPercent: number = ctx.swing / 100;
@@ -33,12 +23,12 @@ export const nextNote = (ctx: StepContext): void => {
     if (ctx.currentNote === 16) {
       ctx.currentNote = 0;
     };
-  }
 };
 
 export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
   // handle which loops should play each cycle
-  if (beatNumber === 0) {
+  const quantizeLength = 8;
+  if (beatNumber % quantizeLength === 0) {
     ctx.sequencers.forEach(seq => {
       if(seq.shouldPlayNextLoop){
         seq.isPlaying = true;
