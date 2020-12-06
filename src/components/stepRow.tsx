@@ -66,9 +66,12 @@ const StepRow: React.FC<Row> = ({row, id, beat}) => {
     socket.emit('sendRowLaunch', id, row.name)
   }
   return (
-    <div className='flex-row step-row'>
-      <LaunchButton row={row} handleLaunch={handleLaunch} launchEnabled={launchEnabled} ref={launch} />
-      <div className='flex-row step-squares' ref={div} >
+    <div className='step-row'>
+      <div className="row-controls">
+        <LaunchButton row={row} handleLaunch={handleLaunch} launchEnabled={launchEnabled} ref={launch} />
+        <p>Other controls here</p>
+      </div>
+      <div className='step-squares' ref={div} >
         {
           row.pattern.map((enabled, idx) => {
             return (
@@ -82,7 +85,7 @@ const StepRow: React.FC<Row> = ({row, id, beat}) => {
             )
           })
         }
-        <Knob row={row} />
+        {/* <Knob row={row} /> */}
       </div>
     </div>
   )

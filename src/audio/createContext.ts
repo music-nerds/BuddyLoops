@@ -27,6 +27,7 @@ const initializeRow = (context: AudioContext, name: string, audioPath: string, p
         const data = await fetch(audioPath);
         const arrayBuffer = await data.arrayBuffer();
         context.decodeAudioData(arrayBuffer, (buffer) => {
+
           this.audioBuffer = buffer;
         }, (err) => {
           console.error(err);
@@ -71,9 +72,9 @@ export const createAudioContext = (): StepContext => {
   const hatPattern: (1|0)[] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
   const snarePattern: (1|0)[] = [0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0];
   const kickPattern: (1|0)[] = [1,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0];
-  const hat = initializeRow(context, 'hat', sounds.hat, hatPattern);
-  const snare = initializeRow(context, 'snare', sounds.snare, snarePattern);
-  const kick = initializeRow(context, 'kick', sounds.kick, kickPattern);
+  const hat = initializeRow(context,'hat', sounds.hat, hatPattern);
+  const snare = initializeRow(context,'snare', sounds.snare, snarePattern);
+  const kick = initializeRow(context,'kick', sounds.kick, kickPattern);
   return {
     context,
     destination,
