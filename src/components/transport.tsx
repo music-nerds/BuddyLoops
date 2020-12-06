@@ -33,7 +33,6 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
     const delay = target + offset - now;
     setTimeout(() => {
       play(context)
-      console.log("PLAY AT TIME",Date.now())
     }, delay);
   }
   useEffect(() => {
@@ -48,22 +47,16 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
     })
     return () => {
       socket.off('receivePlay');
-      socket.off('receiveStop');
+      // socket.off('receiveStop');
     }
   }, [context])
 
   const handlePlay = (): void => {
-    if(context.context.state !== 'running'){
-      context.context.resume();
-    }
     // play(context)
     socket.emit('sendPlay', id, timeArr);
   }
 
   const handleStop = (): void => {
-    if(context.context.state !== 'running'){
-      context.context.resume();
-    }
     setBeat(-1);
     socket.emit('sendStop', id)
     // stop(context);
@@ -97,10 +90,8 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
   }
 
   const updateSwing = (event: any, newValue: number | number[]) => {
-    // console.log('UPDATE SWING',newValue)
     setSwing(newValue as number);
     context.updateSwing(newValue as number);
-    setContext({...context})
   };
 
   return (

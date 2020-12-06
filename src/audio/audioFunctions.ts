@@ -63,7 +63,6 @@ export const play = (ctx: StepContext): void => {
     ctx.currentNote = 0;
     ctx.nextNoteTime = ctx.context.currentTime;
     scheduler(ctx);
-    console.log('PLAY CONTEXT.ISPLAYING', ctx.isPlaying)
   }
 };
 
