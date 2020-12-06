@@ -21,8 +21,6 @@ const theme = createMuiTheme({
 })
 
 const SOCKET_URL = 'http://localhost:3000';
-const socket = io(SOCKET_URL);
-
 const socket = io();
 
 export interface TimeObj {
