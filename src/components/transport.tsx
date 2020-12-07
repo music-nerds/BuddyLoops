@@ -8,7 +8,6 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import GroupIcon from '@material-ui/icons/Group';
 import { ReactAudioContext, SocketContext, Timing } from '../app';
-import { StepContext } from '../audio/createContext';
 import { play, stop } from '../audio/audioFunctions'
 import Button from '@material-ui/core/Button';
 import './transport.css';
@@ -22,20 +21,22 @@ interface Props {
 
 const Transport: React.FC<Props> = ({id, setBeat}) => {
   const [open, setOpen] = useState(false);
-  const { context, setContext } = useContext(ReactAudioContext);
+  const { context } = useContext(ReactAudioContext);
   const [tempo, setTempo] = useState<number>(context.tempo);
   const [swing, setSwing] = useState<number>(0);
   const socket = useContext(SocketContext);
   const timeArr = useContext(Timing);
-  const playAtTime = (target: number) => {
-    const offset = timeArr[0].offset || 0;
-    const now = Date.now();
-    const delay = target + offset - now;
-    setTimeout(() => {
-      play(context)
-    }, delay);
-  }
+
   useEffect(() => {
+    let timeoutID: NodeJS.Timeout;
+    const playAtTime = (target: number) => {
+      const offset = timeArr[0].offset || 0;
+      const now = Date.now();
+      const delay = target + offset - now;
+      timeoutID = setTimeout(() => {
+        play(context)
+      }, delay);
+    }
     socket.on('receivePlay', (target: number) => {
       console.log('received play', target)
       playAtTime(target);
@@ -47,9 +48,10 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
     })
     return () => {
       socket.off('receivePlay');
-      // socket.off('receiveStop');
+      socket.off('receiveStop');
+      clearTimeout(timeoutID);
     }
-  }, [context])
+  }, [timeArr, context, play, stop])
 
   const handlePlay = (): void => {
     // play(context)
