@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import Slider from '@material-ui/core/Slider';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
@@ -8,6 +9,7 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import GroupIcon from '@material-ui/icons/Group';
 import { ReactAudioContext, SocketContext, Timing } from '../app';
+import { AppState } from './randoModule';
 import { play, stop } from '../audio/audioFunctions'
 import Button from '@material-ui/core/Button';
 import './transport.css';
@@ -21,9 +23,11 @@ interface Props {
 
 const Transport: React.FC<Props> = ({id, setBeat}) => {
   const [open, setOpen] = useState(false);
-  const { context } = useContext(ReactAudioContext);
+  const { context, setContext } = useContext(ReactAudioContext);
   const [tempo, setTempo] = useState<number>(context.tempo);
   const [swing, setSwing] = useState<number>(0);
+  const {location: {pathname}} = useHistory();
+  const socketID = pathname.slice(1);  
   const socket = useContext(SocketContext);
   const timeArr = useContext(Timing);
 
@@ -45,6 +49,11 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
       console.log('received stop', Date.now())
       stop(context);
       setBeat(-1);
+    })
+    socket.on('receiveState', (hostState: AppState) => {
+      setSwing(hostState.swing);
+      setTempo(hostState.tempo);
+      console.log('TRANSPORT RECEIVE STATE', hostState)
     })
     return () => {
       socket.off('receivePlay');
@@ -83,18 +92,38 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
     const newTempo: number = context.tempo+1
     context.updateTempo(newTempo)
     setTempo(newTempo)
+    socket.emit('tempoChange', socketID, newTempo);
   }
 
   const tempoDown = (): void => {
     const newTempo: number = context.tempo-1;
     context.updateTempo(newTempo)
     setTempo(newTempo);
+    socket.emit('tempoChange', socketID, newTempo);
   }
 
   const updateSwing = (event: any, newValue: number | number[]) => {
     setSwing(newValue as number);
     context.updateSwing(newValue as number);
+    socket.emit('swingChange', socketID, newValue as number);
   };
+
+  useEffect(() => {
+    socket.on('swingChange', (value: number) => {
+      console.log("SWING CHANGE")
+      setSwing(value);
+      context.updateSwing(value);
+    })
+    socket.on('tempoChange', (value: number) => {
+      console.log("TEMPO CHANGE")
+      setTempo(value);
+      context.updateTempo(value);
+    })
+    return () => {
+      socket.off('swingChange');
+      socket.off('tempoChange');
+    }
+  },[swing,tempo])
 
   return (
     <div id='transport'>
