@@ -123,7 +123,7 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
       socket.off('swingChange');
       socket.off('tempoChange');
     }
-  },[swing,tempo])
+  },[context])
 
   return (
     <div id='transport'>
