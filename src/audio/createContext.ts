@@ -61,6 +61,7 @@ export interface StepContext {
   swing: number;
   currentNote: number;
   nextNoteTime: number;
+  nextCycleTime?: number;
   scheduleAheadTime: number;
   lookAhead: number;
   timerId: number | undefined;

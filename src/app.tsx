@@ -52,6 +52,7 @@ export const Timing = createContext<TimeObj[]>(timeArr);
 
 const App: React.FC = () => {
   const [context, setContext] = useState(audioCtx);
+  const [ready, setReady] = useState(false);
   useEffect(() => {
     socket.on('connect', () => {
       console.log('connect event')
@@ -66,8 +67,8 @@ const App: React.FC = () => {
                 basename="/"
               >
                 <Switch>
-                  <Route exact path="/" component={Landing} />
-                  <Route path="/:id" component={Rando} />
+                  <Route exact path="/" render={() => <Landing setReady={setReady} />} />
+                  <Route path="/:id" render={() => <Rando ready={ready} setReady={setReady} />} />
                   <Redirect to="/" />
                 </Switch>
               </Router>

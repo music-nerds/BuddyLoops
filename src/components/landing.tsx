@@ -5,8 +5,12 @@ import { ReactAudioContext, DeviceID } from '../app';
 import { v4 as uuidv4 } from 'uuid';
 import './landing.css';
 
-const Landing: React.FC = () => {
-  const { context, setContext } = useContext(ReactAudioContext);
+interface Props {
+  setReady: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Landing: React.FC<Props> = ({setReady}) => {
+  const { context } = useContext(ReactAudioContext);
   const deviceID = useContext(DeviceID);
   const handleStart = () => {
     // if you're hitting this button, you're the host
@@ -15,7 +19,7 @@ const Landing: React.FC = () => {
       context.context.resume()
         .then(() => {
           // triggers re-render to avoid context overlay
-          setContext({...context})
+          setReady(true);
         })
     }
   }

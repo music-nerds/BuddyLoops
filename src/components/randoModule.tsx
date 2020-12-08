@@ -4,6 +4,8 @@ import { ReactAudioContext, SocketContext, DeviceID, TimeObj, Timing } from '../
 import ContextOverlay from './contextOverlay';
 import Transport from './transport';
 import StepRow from './stepRow';
+import { play } from '../audio/audioFunctions'
+
 // import Indicators from './indicators';
 // import { Step } from '@material-ui/core';
 
@@ -18,12 +20,17 @@ interface SeqData {
 }
 export interface AppState {
   isPlaying: boolean;
+  nextCycleTime?: number;
   tempo: number;
   swing: number;
   seqData: SeqData[];
 }
 
-const Rando: React.FC = () => {
+interface Props {
+  ready: boolean;
+  setReady: React.Dispatch<React.SetStateAction<boolean>>;
+}
+const Rando: React.FC<Props> = ({ready, setReady}) => {
   const {context, setContext} = useContext(ReactAudioContext);
   const [beat, setBeat] = useState(-1);
   const socket = useContext(SocketContext);
@@ -69,6 +76,7 @@ const Rando: React.FC = () => {
         timeArr.push(timeObj);
       }
       if(timeArr.length > 1) {
+        // person on the longest becomes the host
         timeArr.sort((a,b) => Number(a.deviceReceiveTime) - Number(b.deviceReceiveTime));
         timeArr[0].isHost = true;
         if(deviceID === timeArr[0].deviceID){
@@ -79,21 +87,22 @@ const Rando: React.FC = () => {
               name: seq.name
             }
           });
-          const { tempo, isPlaying, swing } = context;
+          const { tempo, isPlaying, swing, nextCycleTime } = context;
           socket.emit('sendState', socketID, {
+            nextCycleTime: nextCycleTime as number - Number(timeArr[0].offset),
             seqData,
             tempo,
             isPlaying,
             swing
           });
-          console.log("I'm The HOST")
         }
       }
       console.log("NOTIFY TIME",timeArr);
     })
+    let timeoutID: number;
     socket.on('receiveState',(hostContext: AppState) => {
-      // setContext(hostContext);
-      context.isPlaying = hostContext.isPlaying;
+      // context.isPlaying = hostContext.isPlaying;
+      context.nextCycleTime = hostContext.nextCycleTime;
       context.tempo = hostContext.tempo;
       context.swing = hostContext.swing;
       hostContext.seqData.forEach(seq => {
@@ -102,8 +111,9 @@ const Rando: React.FC = () => {
           sameSeq.pattern = seq.pattern;
         }
       })
-      console.log(hostContext.seqData)
-      setContext({...context});
+      if(!context.isPlaying){
+        setContext({...context});
+      }
       console.log("receiveState", hostContext);
     })
     socket.on('userJoined', (data: NewUser) => {
@@ -127,14 +137,15 @@ const Rando: React.FC = () => {
       socket.off('userLeft');
       socket.off('receiveState');
       socket.off('receiveServerTime');
+      clearTimeout(timeoutID);
     }
-  }, [timeArr, context])
+  }, [timeArr, context, play])
   
   return (
     <div className='fullPage'>
       <div className="container">
         {
-          context.context.state !== "running"  && <ContextOverlay />
+          !ready  && <ContextOverlay setReady={setReady} />
         }
         <Transport id={socketID} setBeat={setBeat} />
         {

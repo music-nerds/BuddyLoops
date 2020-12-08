@@ -30,7 +30,7 @@ io.on('connection', socket => {
 
   socket.on('handshake', (id) => {
     // establish connection with socketID
-    console.log('handshake ', id);
+    console.log(chalk.cyan('HANDSHAKE', `roomID: ${id}`));
     socket.join(id);
     io.to(id).emit('userJoined', {id: socket.client.id, timeStamp: Date.now()})
   })
@@ -49,11 +49,10 @@ io.on('connection', socket => {
   socket.on('notifyTime', (id, timeObj) => {
     // notify other users of time data
     socket.to(id).emit('notifyTime', timeObj);
-     
-    console.log(socket.client.id, Date.now());
   })
 
   socket.on('sendState', (id, hostState) => {
+    // from host to other users
     socket.to(id).emit('receiveState', hostState);
   })
 
@@ -61,7 +60,7 @@ io.on('connection', socket => {
     // start playing
     const now = Date.now();
     let delay = Math.max(...timeArr.map(timeData => timeData.roundTripTime)) * 2;
-    console.log(delay)
+    console.log(chalk.yellow(`DELAY: ${delay}ms`));
     if(delay > 1000) delay = 1000;
     const target = now + delay;
     io.to(id).emit('receivePlay', target);
@@ -90,5 +89,5 @@ io.on('connection', socket => {
 })
 
 http.listen(PORT, () => {
-  console.log(chalk.cyan(`App is listening on port ${PORT}`));
+  console.log(chalk.gray(`App is listening on port ${PORT}`));
 });

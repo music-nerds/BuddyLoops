@@ -1,4 +1,3 @@
-import SeqSquare from '../components/seqSquare';
 import { StepContext, StepRow } from './createContext';
 
 export const playback = (ctx: StepContext, seq: StepRow): void => {
@@ -25,6 +24,15 @@ export const nextNote = (ctx: StepContext): void => {
     };
 };
 
+export const calculateFullCycleTime = (ctx: StepContext) => {
+  return Math.floor((ctx.nextNoteTime + ((60000 / (ctx.tempo*2)) * 16)));
+}
+
+export const calculateNextCycleTime = (ctx: StepContext) => {
+  return Date.now() + calculateFullCycleTime(ctx);
+
+}
+
 export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
   // handle which loops should play each cycle
   const quantizeLength = 8;
@@ -47,6 +55,10 @@ export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
   ctx.subscribers.forEach(fn => {
     fn(beatNumber);
   });
+  if(beatNumber === 0){
+    // next note time plus 16 beats converted to ms
+    ctx.nextCycleTime = calculateNextCycleTime(ctx);
+  }
 };
 
 export const scheduler = (ctx: StepContext): void => {
