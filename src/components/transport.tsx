@@ -8,7 +8,7 @@ import StopSharpIcon from '@material-ui/icons/StopSharp';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import GroupIcon from '@material-ui/icons/Group';
-import { ReactAudioContext, SocketContext, Timing } from '../app';
+import { ReactAudioContext, SocketContext, Timing, DeviceID } from '../app';
 import { AppState } from './randoModule';
 import { play, stop } from '../audio/audioFunctions'
 import Button from '@material-ui/core/Button';
@@ -30,11 +30,13 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
   const socketID = pathname.slice(1);  
   const socket = useContext(SocketContext);
   const timeArr = useContext(Timing);
+  const deviceID = useContext(DeviceID);
 
   useEffect(() => {
     let timeoutID: NodeJS.Timeout;
     const playAtTime = (target: number) => {
-      const offset = timeArr[0].offset || 0;
+      const myTimeObj = timeArr.find(obj => obj.deviceID === deviceID);
+      const offset = myTimeObj?.offset || 0;
       const now = Date.now();
       const delay = target + offset - now;
       timeoutID = setTimeout(() => {
@@ -53,6 +55,13 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
     socket.on('receiveState', (hostState: AppState) => {
       setSwing(hostState.swing);
       setTempo(hostState.tempo);
+      // if(hostState.isPlaying) {
+      //   timeoutID = setTimeout(() => {
+      //     console.log(context.context.state);
+      //     play(context);
+      //   }, hostState.nextCycleTime as number - Date.now())
+      //   // playAtTime(hostState.nextCycleTime as number);
+      // }
       console.log('TRANSPORT RECEIVE STATE', hostState)
     })
     return () => {
