@@ -55,13 +55,6 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
     socket.on('receiveState', (hostState: AppState) => {
       setSwing(hostState.swing);
       setTempo(hostState.tempo);
-      // if(hostState.isPlaying) {
-      //   timeoutID = setTimeout(() => {
-      //     console.log(context.context.state);
-      //     play(context);
-      //   }, hostState.nextCycleTime as number - Date.now())
-      //   // playAtTime(hostState.nextCycleTime as number);
-      // }
       console.log('TRANSPORT RECEIVE STATE', hostState)
     })
     return () => {
@@ -72,14 +65,12 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
   }, [timeArr, context, play, stop])
 
   const handlePlay = (): void => {
-    // play(context)
     socket.emit('sendPlay', id, timeArr);
   }
 
   const handleStop = (): void => {
     setBeat(-1);
     socket.emit('sendStop', id)
-    // stop(context);
   }
 
   const clipboard = async (): Promise<void> => {

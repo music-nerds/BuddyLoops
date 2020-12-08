@@ -29,7 +29,6 @@ const ContextOverlay: React.SFC<Props> = ({setReady}) => {
               delay = delay + calculateFullCycleTime(context);
             }
             setTimeout(() => {
-              console.log(context.context.state)
               play(context)
             }, delay);
           }

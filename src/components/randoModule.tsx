@@ -4,7 +4,7 @@ import { ReactAudioContext, SocketContext, DeviceID, TimeObj, Timing } from '../
 import ContextOverlay from './contextOverlay';
 import Transport from './transport';
 import StepRow from './stepRow';
-import { play, calculateFullCycleTime } from '../audio/audioFunctions'
+import { play } from '../audio/audioFunctions'
 
 // import Indicators from './indicators';
 // import { Step } from '@material-ui/core';
