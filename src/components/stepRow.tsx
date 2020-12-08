@@ -42,15 +42,20 @@ const StepRow: React.FC<Row> = ({row, id, beat}) => {
     }
     socket.emit('patternChange', id, { name: row.name, pattern: row.pattern, id })
   }
-
   useEffect(() => {
-
+    row.squares = div.current && div.current.children;
+  },[row])
+  useEffect(() => {
     socket.on('patternChange', (data: PatternChange) => {
       const seq = context.sequencers.find(seq => seq.name === data.name);
       if (seq) {
         seq.pattern = data.pattern;
       }
-      setContext({...context});
+      if(!context.isPlaying){
+        // causes bug if isPlaying is true
+        // stop button loses reference to context
+        setContext({...context});
+      }
     })
     socket.on('receiveRowLaunch', (name: string) => {
       if(name === row.name){
@@ -58,9 +63,11 @@ const StepRow: React.FC<Row> = ({row, id, beat}) => {
         setLaunchEnabled(row.shouldPlayNextLoop);
       }
     })
-    row.squares = div.current && div.current.children;
-
-  }, [])
+    return () => {
+      socket.off('patternChange');
+      socket.off('receiveRowLaunch')
+    }
+  }, [context, context.sequencers, row])
 
   const handleLaunch = () => {
     socket.emit('sendRowLaunch', id, row.name)

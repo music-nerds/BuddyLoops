@@ -24,11 +24,14 @@ const socket = io();
 
 export interface TimeObj {
   deviceID: string;
+  socketDeviceID?: string;
   deviceSendTime: number;
   deviceReceiveTime?: number;
   serverTime: number;
   roundTripTime?: number;
   offset?: number;
+  context?: StepContext;
+  isHost?: boolean;
 }
 
 const timeArr: TimeObj[] = [];

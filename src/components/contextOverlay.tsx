@@ -14,13 +14,11 @@ const ContextOverlay: React.SFC = () => {
           setContext({...context})
         })
     } else {
-      // because firefox
+      // because firefox - triggers rerender to remove overlay
       setContext({...context})
     }
   }
-  useEffect(() => {
-    //necessary to trigger rerender in firefox
-  },[context])
+
   return ( 
     <div className={context.context.state === 'running' ? 'no-overlay' : 'context-overlay'}>
       <Button 

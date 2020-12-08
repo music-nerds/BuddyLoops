@@ -32,17 +32,29 @@ io.on('connection', socket => {
     // establish connection with socketID
     console.log('handshake ', id);
     socket.join(id);
+    io.to(id).emit('userJoined', {id: socket.client.id, timeStamp: Date.now()})
   })
-
+  socket.on('disconnecting', function(){
+    this.rooms.forEach(room => {
+      io.to(room).emit('userLeft', socket.client.id)
+    })
+});
   socket.on('getOffset', (id, timeObj) => {
     // get time data
     timeObj.serverTime = Date.now();
+    timeObj.socketDeviceID = socket.client.id;
     io.to(id).emit('receiveServerTime', timeObj);
   })
 
   socket.on('notifyTime', (id, timeObj) => {
     // notify other users of time data
-    io.to(id).emit('notifyTime', timeObj);
+    socket.to(id).emit('notifyTime', timeObj);
+     
+    console.log(socket.client.id, Date.now());
+  })
+
+  socket.on('sendState', (id, hostState) => {
+    socket.to(id).emit('receiveState', hostState);
   })
 
   socket.on('sendPlay', (id, timeArr) => {
@@ -68,6 +80,12 @@ io.on('connection', socket => {
   socket.on('patternChange', (id, data) => {
     // change pattern
     socket.to(id).emit('patternChange', data);
+  })
+  socket.on('swingChange', (id, value) => {
+    socket.to(id).emit('swingChange', value)
+  })
+  socket.on('tempoChange', (id, value) => {
+    socket.to(id).emit('tempoChange', value)
   })
 })
 

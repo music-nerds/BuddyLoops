@@ -24,3 +24,8 @@ on play button
 io.emit('playSent')
 
 */
+
+/*
+  on get started - get deviceID set as context.hostID
+  when receiving time array, if context.hostID is undefined, 
+*/

@@ -9,7 +9,8 @@ export interface StepRow {
   isPlaying: boolean; // conditional check in schedule note
   shouldPlayNextLoop: boolean; // toggled by launch button 
   pattern: (0|1)[]; // rhythmic pattern as an array
-  loadSample: () => void; // load the sample and assign to audioBuffer property
+  loadSample: () => Promise<void>; // load the sample and assign to audioBuffer property
+  errMsg: string;
 }
 
 const initializeRow = (context: AudioContext, name: string, audioPath: string, pattern: (0|1)[]): StepRow => {
@@ -27,9 +28,9 @@ const initializeRow = (context: AudioContext, name: string, audioPath: string, p
         const data = await fetch(audioPath);
         const arrayBuffer = await data.arrayBuffer();
         context.decodeAudioData(arrayBuffer, (buffer) => {
-
           this.audioBuffer = buffer;
         }, (err) => {
+          this.errMsg = err.message;
           console.error(err);
         })
       } else {
@@ -38,12 +39,16 @@ const initializeRow = (context: AudioContext, name: string, audioPath: string, p
         .then(data => data.arrayBuffer())
         .then(arrayBuffer => context.decodeAudioData(arrayBuffer))
         .then(decodedAudioData => this.audioBuffer = decodedAudioData)
-        .catch(console.error)
+        .catch((err) => {
+          this.errMsg = err.message;
+          console.error(err);
+        })
       }
     },
     pattern,
     isPlaying: true,
-    shouldPlayNextLoop: true
+    shouldPlayNextLoop: true,
+    errMsg: ''
   }
 }
 
@@ -63,6 +68,7 @@ export interface StepContext {
   subscribers: React.Dispatch<React.SetStateAction<number>>[];
   updateTempo: (bpm: number) => void;
   updateSwing: (swingValue: number) => void;
+  hostID?: string;
 }
 
 export const createAudioContext = (): StepContext => {
