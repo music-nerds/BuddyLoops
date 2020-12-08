@@ -88,18 +88,24 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
     setOpen(false);
   };
 
-  const tempoUp = (): void => {
-    const newTempo: number = context.tempo+1
-    context.updateTempo(newTempo)
-    setTempo(newTempo)
-    socket.emit('tempoChange', socketID, newTempo);
-  }
+  // const tempoUp = (): void => {
+  //   const newTempo: number = context.tempo+1
+  //   context.updateTempo(newTempo)
+  //   setTempo(newTempo)
+  //   socket.emit('tempoChange', socketID, newTempo);
+  // }
 
-  const tempoDown = (): void => {
-    const newTempo: number = context.tempo-1;
-    context.updateTempo(newTempo)
-    setTempo(newTempo);
-    socket.emit('tempoChange', socketID, newTempo);
+  // const tempoDown = (): void => {
+  //   const newTempo: number = context.tempo-1;
+  //   context.updateTempo(newTempo)
+  //   setTempo(newTempo);
+  //   socket.emit('tempoChange', socketID, newTempo);
+  // }
+
+  const updateTempo = (event: any, newValue: number | number[]) => {
+    context.updateTempo(newValue as number);
+    setTempo(newValue as number);
+    socket.emit('tempoChange', socketID, newValue);
   }
 
   const updateSwing = (event: any, newValue: number | number[]) => {
@@ -127,49 +133,41 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
 
   return (
     <div id='transport'>
-      <Button 
-        color='secondary'
-        onClick={handlePlay}
-      >
-        <PlayArrowSharpIcon style={{ fontSize: 64 }} />
-      </Button>
-      <Button 
-        color='secondary'
-        onClick={handleStop}
-      >
-        <StopSharpIcon style={{ fontSize: 64 }} />
-      </Button>
-      <div className='tempo-container'>
+      <div className='transport-bottom-row'>
         <div className='tempo-adjust'>
-          <Button onClick={tempoDown}>
-            <RemoveIcon color='secondary' />
-          </Button>
-          <label style={{ color: 'var(--text)'}}>
-            <input className='tempo-input' type='number' value={tempo} readOnly></input>
-            bpm
-          </label>
-          <Button onClick={tempoUp}>
-            <AddIcon color='secondary' />
-          </Button>
+          <span>{tempo} bpm</span>
+          <Slider value={tempo} onChange={updateTempo} color='secondary' min={50} max={280}/>
         </div>
         <div className='swing-adjust'>
-          <label style={{ color: 'var(--text)' }}>
-            <Slider value={swing} onChange={updateSwing} color='secondary' />
-            Swing
-          </label>
+          <span>Swing {swing}%</span>
+          <Slider value={swing} onChange={updateSwing} color='secondary' />
         </div>
       </div>
-      <Button
-        startIcon={<GroupIcon fontSize='large' />}
-        className='share-btn'
-        color='secondary'
-        variant='contained'
-        size='small'
-        style={{ height: 50, verticalAlign: 'center' }}
-        onClick={clipboard}
-      >
-        Jam with a friend
-      </Button>
+      <div className='transport-top-row'>
+        <Button 
+          color='secondary'
+          onClick={handlePlay}
+        >
+          <PlayArrowSharpIcon style={{ fontSize: 64 }} />
+        </Button>
+        <Button 
+          color='secondary'
+          onClick={handleStop}
+        >
+          <StopSharpIcon style={{ fontSize: 64 }} />
+        </Button>
+        <Button
+          startIcon={<GroupIcon fontSize='large' />}
+          className='share-btn'
+          color='secondary'
+          variant='contained'
+          size='small'
+          style={{ height: 50, verticalAlign: 'center', padding: '0 8px' }}
+          onClick={clipboard}
+        >
+          Share
+        </Button>
+      </div>
       <Snackbar open={open} autoHideDuration={5000} onClose={close}>
         <Alert onClose={close} severity='success'>
           Link copied to clipboard, send to a friend!
