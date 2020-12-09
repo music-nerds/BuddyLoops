@@ -1,10 +1,18 @@
 #transport {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   width: 800px;
+  min-width: 800px;
   max-width: 100%;
   margin: 20px 0;
+}
+
+.transport-top-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
 }
 .transport-btn {
   background-color: transparent;
@@ -23,35 +31,27 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0; 
 }
 
-.tempo-container, .swing-adjust > label {
+
+.transport-bottom-row {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-}
-
-.tempo-adjust {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.swing-adjust {
-  width: 60%;
-}
-
-
-.tempo-input {
-  border-radius: 5px;
-  height: 30px;
-  width: 40px;
-  font-size: 1.2em;
+  margin: 0 20px;
+  min-width: 300px;
   color: var(--text);
-  background-color: var(--bg);
-  border: none;
-  text-align: center;
 }
 
-.tempo-input:focus {
-  outline: none;
+.transport-bottom-row > div {
+  width: 100%;
+  margin: 0 10px;
+}
+
+@media screen and (max-width: 1088px) {
+  #transport {
+    flex-direction: column-reverse;
+  }
+  .transport-top-row {
+    justify-content: center;
+    align-items: center;
+  }
 }
