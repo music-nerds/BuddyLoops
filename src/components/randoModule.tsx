@@ -4,6 +4,7 @@ import { ReactAudioContext, SocketContext, DeviceID, TimeObj, Timing } from '../
 import ContextOverlay from './contextOverlay';
 import Transport from './transport';
 import StepRow from './stepRow';
+import Sampler from './sampler';
 import { play } from '../audio/audioFunctions'
 
 // import Indicators from './indicators';
@@ -37,7 +38,9 @@ const Rando: React.FC<Props> = ({ready, setReady}) => {
   const deviceID = useContext(DeviceID);
   let timeArr = useContext(Timing);
   const {location: {pathname}} = useHistory();
-  const socketID = pathname.slice(1);  
+  const socketID = pathname.slice(1);
+  const [currPattern, setCurrPattern] = useState(0);
+  const [view, setView] = useState('soundbank')
 
   useEffect(() => {
     context.sequencers.forEach(seq => {
@@ -140,6 +143,16 @@ const Rando: React.FC<Props> = ({ready, setReady}) => {
       clearTimeout(timeoutID);
     }
   }, [timeArr, context, play])
+
+  const selectPattern = (pattern: number): void => {
+    setView('pattern');
+    setCurrPattern(pattern);
+  }
+
+  const toggleView = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const target = event.target as Element;
+    setView(target.id);
+  }
   
   return (
     <div className='fullPage'>
@@ -148,11 +161,7 @@ const Rando: React.FC<Props> = ({ready, setReady}) => {
           !ready  && <ContextOverlay setReady={setReady} />
         }
         <Transport id={socketID} setBeat={setBeat} />
-        {
-          context.sequencers.map((seq, idx) => (
-            <StepRow row={seq} key={idx} id={socketID} beat={beat} />
-            ))
-        }
+        <Sampler socketID={socketID} beat={beat} selectPattern={selectPattern} currPattern={currPattern} view={view} toggleView={toggleView}/>
       </div>
     </div>
   )

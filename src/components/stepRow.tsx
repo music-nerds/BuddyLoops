@@ -14,21 +14,51 @@ interface Row {
   beat: number
 }
 
-interface PatternChange {
-  name: string;
-  pattern: (0|1)[];
-  id: string;
-}
+// interface PatternChange {
+//   name: string;
+//   pattern: (0|1)[];
+//   id: string;
+// }
 
 const StepRow: React.FC<Row> = ({row, id, beat}) => {
-  const div = useRef<HTMLDivElement>(null);
+  // const div = useRef<HTMLDivElement>(null);
   const launch = useRef<HTMLButtonElement>(null);
   const {context, setContext} = useContext(ReactAudioContext);
   const socket = useContext(SocketContext);
-
-  
-  const [launchEnabled, setLaunchEnabled] = useState(true);
   const { location: { pathname } } = useHistory();
+  // const [launchEnabled, setLaunchEnabled] = useState(true);
+
+  // useEffect(() => {
+  //   row.squares = div.current && div.current.children;
+  // },[row])
+
+  // useEffect(() => {
+  //   socket.on('patternChange', (data: PatternChange) => {
+  //     const seq = context.sequencers.find(seq => seq.name === data.name);
+  //     if (seq) {
+  //       seq.pattern = data.pattern;
+  //     }
+  //     if(!context.isPlaying){
+  //       // causes bug if isPlaying is true
+  //       // stop button loses reference to context
+  //       setContext({...context});
+  //     }
+  //   })
+  //   socket.on('receiveRowLaunch', (name: string) => {
+  //     if(name === row.name){
+  //       row.shouldPlayNextLoop = !row.shouldPlayNextLoop;
+  //       setLaunchEnabled(row.shouldPlayNextLoop);
+  //     }
+  //   })
+  //   return () => {
+  //     socket.off('patternChange');
+  //     socket.off('receiveRowLaunch')
+  //   }
+  // }, [context, context.sequencers, row])
+
+  // const handleLaunch = () => {
+  //   socket.emit('sendRowLaunch', id, row.name)
+  // }
 
   const handleToggle = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLDivElement;
@@ -42,43 +72,10 @@ const StepRow: React.FC<Row> = ({row, id, beat}) => {
     }
     socket.emit('patternChange', id, { name: row.name, pattern: row.pattern, id })
   }
-  useEffect(() => {
-    row.squares = div.current && div.current.children;
-  },[row])
-  useEffect(() => {
-    socket.on('patternChange', (data: PatternChange) => {
-      const seq = context.sequencers.find(seq => seq.name === data.name);
-      if (seq) {
-        seq.pattern = data.pattern;
-      }
-      if(!context.isPlaying){
-        // causes bug if isPlaying is true
-        // stop button loses reference to context
-        setContext({...context});
-      }
-    })
-    socket.on('receiveRowLaunch', (name: string) => {
-      if(name === row.name){
-        row.shouldPlayNextLoop = !row.shouldPlayNextLoop;
-        setLaunchEnabled(row.shouldPlayNextLoop);
-      }
-    })
-    return () => {
-      socket.off('patternChange');
-      socket.off('receiveRowLaunch')
-    }
-  }, [context, context.sequencers, row])
 
-  const handleLaunch = () => {
-    socket.emit('sendRowLaunch', id, row.name)
-  }
   return (
-    <div className='step-row'>
-      <div className="row-controls">
-        <LaunchButton row={row} handleLaunch={handleLaunch} launchEnabled={launchEnabled} ref={launch} />
-        <p>Other controls here</p>
-      </div>
-      <div className='step-squares' ref={div} >
+      // <div className='step-squares' ref={div} >
+      <div>
         {
           row.pattern.map((enabled, idx) => {
             return (
@@ -92,9 +89,7 @@ const StepRow: React.FC<Row> = ({row, id, beat}) => {
             )
           })
         }
-        {/* <Knob row={row} /> */}
       </div>
-    </div>
   )
 }
 
