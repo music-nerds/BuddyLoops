@@ -24,7 +24,8 @@
 }
 
 .sampler-tab {
-  background-color: var(--sampler);
+  /* background-color: var(--sampler); */
+  background-color: var(--gray);
   color: var(--text);
   display: flex;
   justify-content: center;
@@ -39,7 +40,8 @@
 }
 
 .tab-selected {
-  transform: scale(.97);
+  /* transform: scale(.97); */
+  background-color: var(--sampler);
 }
 
 .sampler-tab:hover {
