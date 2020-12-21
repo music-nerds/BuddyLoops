@@ -1,4 +1,5 @@
-import React, {useRef, useEffect, useContext, useState} from 'react';
+import React, {useRef, useEffect, useContext, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { ReactAudioContext, SocketContext } from '../app';
 import { StepRow } from '../audio/createContext';
 import './stepRow.css';

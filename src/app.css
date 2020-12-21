@@ -45,6 +45,6 @@ body {
 
 @media screen and (max-width: 800px) {
   .fullPage {
-    overflow: hidden;
+    /* overflow: hidden; */
   }
 }
