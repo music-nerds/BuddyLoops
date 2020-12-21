@@ -8,10 +8,14 @@
   box-sizing: border-box;
   color: var(--text);
   border: 2px solid var(--gray);
+  position: relative;
 }
 
 .seq-square > span {
   margin: 5px;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
 }
 
 .seq-square[aria-checked="true"] {
