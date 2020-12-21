@@ -11,6 +11,7 @@
 .sampler-container::after {
   content: "";
   display: block;
+  /* display: inline-block; */
   padding-bottom: 100%;
 }
 
