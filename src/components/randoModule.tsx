@@ -151,6 +151,8 @@ const Rando: React.FC<Props> = ({ready, setReady}) => {
       clearTimeout(timeoutID);
     }
 
+  }, [timeArr, context, deviceID, socket, socketID, setContext, play])
+  
   const selectPattern = (pattern: number): void => {
     setView('pattern');
     setCurrPattern(pattern);
@@ -160,8 +162,6 @@ const Rando: React.FC<Props> = ({ready, setReady}) => {
     const target = event.target as Element;
     setView(target.id);
   }
-
-  }, [timeArr, context, deviceID, socket, socketID, setContext, play])
   
   return (
     <div className='fullPage'>
