@@ -47,7 +47,8 @@ export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
   }
   // play the samples
   ctx.sequencers.forEach(seq => {
-      if (seq.squares && seq.squares[beatNumber].getAttribute('aria-checked') === 'true' && seq.isPlaying && seq.audioBuffer) {
+      // if (seq.squares && seq.squares[beatNumber].getAttribute('aria-checked') === 'true' && seq.isPlaying && seq.audioBuffer) {
+      if (seq.pattern[beatNumber] && seq.isPlaying && seq.audioBuffer) {
         playback(ctx, seq);
       }
     })

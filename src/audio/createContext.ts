@@ -91,7 +91,7 @@ export const createAudioContext = (): StepContext => {
   return {
     context,
     destination,
-    sequencers: [hat, snare, kick],
+    sequencers: [kick, snare, hat],
     synth,
     isPlaying: false,
     tempo: 90,
