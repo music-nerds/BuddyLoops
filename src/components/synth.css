@@ -1,0 +1,76 @@
+#synth {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#mono-synth-controls {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: #111;
+  margin-bottom: 0.5rem;
+  width: 100%;
+  max-width: 1024px;
+  box-sizing: border-box;
+}
+.synth-sliders {
+  display: flex;
+  flex-wrap: wrap;
+  width: 600px;
+}
+.synth-param {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  color: whitesmoke;
+  box-sizing: border-box;
+}
+.synth-wave {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: whitesmoke;
+  box-sizing: border-box;
+  width: 600px;
+}
+.synth-param p.label {
+  flex: 1;
+  font-size: 0.6rem;
+}
+
+.label span {
+  color: var(--blue);
+}
+
+span .MuiTypography-root .MuiFormControlLabel-label .MuiTypography-body1 {
+  font-size: 0.6rem;
+}
+
+.synth-squares {
+  background-color: #111;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.synth-square-row {
+  display: flex;
+}
+
+.synth-square {
+  width: 64px;
+  height: 64px;
+  box-sizing: border-box;
+  border: 2px solid var(--blue);
+  margin: 0.125rem;
+}
+.synth-square.active-square {
+  background-color: var(--blue);
+}
+.synth-square.active-beat {
+  border: 2px solid whitesmoke;
+}

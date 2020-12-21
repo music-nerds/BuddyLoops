@@ -1,12 +1,10 @@
 import React, {useRef, useEffect, useContext, useState} from 'react';
 import { ReactAudioContext, SocketContext } from '../app';
-import { useHistory } from 'react-router-dom';
 import { StepRow } from '../audio/createContext';
 import './stepRow.css';
 import LaunchButton from './launchBtn';
 
 import SeqSquare from './seqSquare';
-import Knob from './knob';
 
 interface Row {
   row: StepRow;
@@ -20,7 +18,7 @@ interface PatternChange {
   id: string;
 }
 
-const StepRow: React.FC<Row> = ({row, id, beat}) => {
+const StepSeqRow: React.FC<Row> = ({row, id, beat}) => {
   const div = useRef<HTMLDivElement>(null);
   const launch = useRef<HTMLButtonElement>(null);
   const {context, setContext} = useContext(ReactAudioContext);
@@ -28,7 +26,6 @@ const StepRow: React.FC<Row> = ({row, id, beat}) => {
 
   
   const [launchEnabled, setLaunchEnabled] = useState(true);
-  const { location: { pathname } } = useHistory();
 
   const handleToggle = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLDivElement;
@@ -67,7 +64,7 @@ const StepRow: React.FC<Row> = ({row, id, beat}) => {
       socket.off('patternChange');
       socket.off('receiveRowLaunch')
     }
-  }, [context, context.sequencers, row])
+  }, [context, setContext, socket, row])
 
   const handleLaunch = () => {
     socket.emit('sendRowLaunch', id, row.name)
@@ -98,4 +95,4 @@ const StepRow: React.FC<Row> = ({row, id, beat}) => {
   )
 }
 
-export default StepRow;
+export default StepSeqRow;
