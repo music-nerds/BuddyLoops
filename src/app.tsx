@@ -6,7 +6,6 @@ import Landing from './components/landing';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
-import ContextOverlay from './components/contextOverlay'
 import { createAudioContext, StepContext } from './audio/createContext';
 import { v4 as uuidv4 } from 'uuid';
 import './app.css';
@@ -14,10 +13,13 @@ import io from 'socket.io-client';
 
 const theme = createMuiTheme({
   palette: {
+    primary: {
+      main: '#1a8b9d'
+    },
     secondary: {
       main: '#ffffff',
-    }
-  }
+    },
+  },
 })
 
 const socket = io();
