@@ -1,4 +1,5 @@
 import { sounds } from './sounds';
+import { MonoSynth } from './synth';
 
 export interface StepRow {
   name: string; // name of row - helps to find this later
@@ -56,6 +57,7 @@ export interface StepContext {
   context: AudioContext;
   destination: AudioDestinationNode;
   sequencers: StepRow[];
+  synth: MonoSynth;
   isPlaying: boolean;
   tempo: number;
   swing: number;
@@ -85,10 +87,12 @@ export const createAudioContext = (): StepContext => {
   const hat = initializeRow(context,'hat', sounds.hat, hatPattern);
   const snare = initializeRow(context,'snare', sounds.snare, snarePattern);
   const kick = initializeRow(context,'kick', sounds.kick, kickPattern);
+  const synth = new MonoSynth(context, "sawtooth");
   return {
     context,
     destination,
     sequencers: [kick, snare, hat],
+    synth,
     isPlaying: false,
     tempo: 90,
     swing: 0,

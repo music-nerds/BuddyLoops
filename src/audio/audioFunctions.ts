@@ -52,6 +52,16 @@ export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
         playback(ctx, seq);
       }
     })
+    const hasNote = ctx.synth.pattern[beatNumber].includes(1);
+    if(hasNote){
+      ctx.synth.pattern[beatNumber].forEach((note,i) => {
+        if(note === 1){
+          ctx.synth.playNote(ctx.synth.scale[i] * ctx.synth.octave, ctx.nextNoteTime, ctx.tempo);
+        } 
+      })
+    } else {
+      ctx.synth.stopNote();
+    }
   // paint the dom  
   ctx.subscribers.forEach(fn => {
     fn(beatNumber);
@@ -84,4 +94,5 @@ export const stop = (ctx: StepContext): void => {
     ctx.isPlaying = false;
     window.clearTimeout(ctx.timerId);
   }
+  ctx.synth.stopNote();
 }

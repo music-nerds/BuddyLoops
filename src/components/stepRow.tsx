@@ -1,12 +1,10 @@
 import React, {useRef, useEffect, useContext, useState} from 'react';
 import { ReactAudioContext, SocketContext } from '../app';
-import { useHistory } from 'react-router-dom';
 import { StepRow } from '../audio/createContext';
 import './stepRow.css';
 import LaunchButton from './launchBtn';
 
 import SeqSquare from './seqSquare';
-import Knob from './knob';
 
 interface Row {
   row: StepRow;

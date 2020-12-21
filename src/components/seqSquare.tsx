@@ -1,6 +1,4 @@
-import React, { useContext } from 'react';
-import { ReactAudioContext } from '../app';
-import { StepRow } from '../audio/createContext';
+import React from 'react';
 
 interface SquareProps {
   beat: number;
@@ -10,7 +8,6 @@ interface SquareProps {
 }
 
 const SeqSquare: React.FC<SquareProps> = ({beat, index, handleToggle, enabled}) => {
-  const { context } = useContext(ReactAudioContext);
   return (
     <div 
       data-index={index}

@@ -5,8 +5,6 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import PlayArrowSharpIcon from '@material-ui/icons/PlayArrowSharp';
 import StopSharpIcon from '@material-ui/icons/StopSharp';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
 import GroupIcon from '@material-ui/icons/Group';
 import { ReactAudioContext, SocketContext, Timing, DeviceID } from '../app';
 import { AppState } from './randoModule';
@@ -23,7 +21,7 @@ interface Props {
 
 const Transport: React.FC<Props> = ({id, setBeat}) => {
   const [open, setOpen] = useState(false);
-  const { context, setContext } = useContext(ReactAudioContext);
+  const { context } = useContext(ReactAudioContext);
   const [tempo, setTempo] = useState<number>(context.tempo);
   const [swing, setSwing] = useState<number>(0);
   const {location: {pathname}} = useHistory();
@@ -62,7 +60,7 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
       socket.off('receiveStop');
       clearTimeout(timeoutID);
     }
-  }, [timeArr, context, play, stop])
+  }, [timeArr, context, socket, deviceID, setBeat])
 
   const handlePlay = (): void => {
     socket.emit('sendPlay', id, timeArr);
@@ -129,7 +127,7 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
       socket.off('swingChange');
       socket.off('tempoChange');
     }
-  },[context])
+  },[context, socket])
 
   return (
     <div id='transport'>
@@ -159,10 +157,10 @@ const Transport: React.FC<Props> = ({id, setBeat}) => {
         <Button
           startIcon={<GroupIcon fontSize='large' />}
           className='share-btn'
-          color='secondary'
+          color='primary'
           variant='contained'
           size='small'
-          style={{ height: 50, verticalAlign: 'center', padding: '0 8px' }}
+          style={{ height: 24, verticalAlign: 'center', padding: '0 8px' }}
           onClick={clipboard}
         >
           Share

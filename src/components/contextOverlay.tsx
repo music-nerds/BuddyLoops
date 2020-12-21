@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ReactAudioContext, Timing, DeviceID } from '../app';
 import { play, calculateFullCycleTime } from '../audio/audioFunctions'
 
@@ -9,12 +9,16 @@ interface Props {
   setReady: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const ContextOverlay: React.SFC<Props> = ({setReady}) => {
-  const { context, setContext } = useContext(ReactAudioContext);
+  const { context } = useContext(ReactAudioContext);
   const timeArr = useContext(Timing);
   const deviceID = useContext(DeviceID);
-
-  console.log(context.context.state)
-
+  useEffect(() => {
+    // prevents uneccessary renders if browser allows audiocontext to start
+    // on refresh as this component is conditionally rendered according to ready
+    if(context.context.state === 'running') {
+      setReady(true);
+    }
+  }, [context.context.state, setReady])
   const handleStart = () => {
     if(context.context.state !== 'running'){
       setReady(true);

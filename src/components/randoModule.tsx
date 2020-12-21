@@ -6,6 +6,9 @@ import Transport from './transport';
 import StepRow from './stepRow';
 import Sampler from './sampler';
 import { play } from '../audio/audioFunctions'
+import StepSeqRow from './stepRow';
+import Synth from './synth';
+// import { play } from '../audio/audioFunctions'
 
 // import Indicators from './indicators';
 // import { Step } from '@material-ui/core';
@@ -51,19 +54,19 @@ const Rando: React.FC<Props> = ({ready, setReady}) => {
           }
         })
     })
-    }, [context.sequencers])
-    useEffect(() => {
-      // This might get moved later as different instruments may have 
-      // different needs, but for now it's ok here.
-      context.subscribeSquares(setBeat);
-      // sync devices to each other
-      socket.emit('handshake', socketID); 
-      socket.emit('getOffset', socketID, {
-        deviceID,
-        deviceSendTime: Date.now(),
-        isHost: false
-      })
-    },[])
+  }, [context.sequencers])
+  useEffect(() => {
+    // This might get moved later as different instruments may have 
+    // different needs, but for now it's ok here.
+    context.subscribeSquares(setBeat);
+    // sync devices to each other
+    socket.emit('handshake', socketID); 
+    socket.emit('getOffset', socketID, {
+      deviceID,
+      deviceSendTime: Date.now(),
+      isHost: false
+    })
+    },[]);  // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     socket.on('receiveServerTime', (timeObj: TimeObj) => {
       timeObj.deviceReceiveTime = Date.now();
@@ -125,12 +128,17 @@ const Rando: React.FC<Props> = ({ready, setReady}) => {
     socket.on('userLeft', (id: string) => {
       console.log("USER LEFT",id)
       const host = timeArr.find(obj => obj.isHost === true);
-      if(host?.socketDeviceID === id) {
+      const hostIndex = timeArr.indexOf(host!);
+      // if the person who left is the host
+      if(timeArr[hostIndex].socketDeviceID === id) {
         // assign new host
-        timeArr = timeArr.filter(obj => obj.socketDeviceID !== id);
+        timeArr.splice(hostIndex,1);
         timeArr[0].isHost = true;
       } else {
-        timeArr = timeArr.filter(obj => obj.socketDeviceID !== id);
+        // find the person who left and splice them out
+        const userThatLeft = timeArr.find(obj => obj.socketDeviceID === id);
+        const userThatLeftIndex = timeArr.indexOf(userThatLeft!);
+        timeArr.splice(userThatLeftIndex, 1)
       }
       console.log(timeArr)
     })
@@ -142,7 +150,6 @@ const Rando: React.FC<Props> = ({ready, setReady}) => {
       socket.off('receiveServerTime');
       clearTimeout(timeoutID);
     }
-  }, [timeArr, context, play])
 
   const selectPattern = (pattern: number): void => {
     setView('pattern');
@@ -153,6 +160,8 @@ const Rando: React.FC<Props> = ({ready, setReady}) => {
     const target = event.target as Element;
     setView(target.id);
   }
+
+  }, [timeArr, context, deviceID, socket, socketID, setContext, play])
   
   return (
     <div className='fullPage'>
@@ -162,6 +171,7 @@ const Rando: React.FC<Props> = ({ready, setReady}) => {
         }
         <Transport id={socketID} setBeat={setBeat} />
         <Sampler socketID={socketID} beat={beat} selectPattern={selectPattern} currPattern={currPattern} view={view} toggleView={toggleView}/>
+        <Synth beat={beat} />
       </div>
     </div>
   )
