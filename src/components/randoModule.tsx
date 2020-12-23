@@ -1,13 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { ReactAudioContext, SocketContext, DeviceID, TimeObj, Timing } from '../app';
-import ContextOverlay from './contextOverlay';
-import Transport from './transport';
-import StepRow from './stepRow';
-import Sampler from './sampler';
-import { play } from '../audio/audioFunctions'
-import StepSeqRow from './stepRow';
-import Synth from './synth';
+import React, { useContext, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import {
+  ReactAudioContext,
+  SocketContext,
+  DeviceID,
+  TimeObj,
+  Timing,
+} from "../app";
+import ContextOverlay from "./contextOverlay";
+import Transport from "./transport";
+import Sampler from "./sampler";
+import Synth from "./synth";
 // import { play } from '../audio/audioFunctions'
 
 // import Indicators from './indicators';
@@ -20,7 +23,7 @@ interface NewUser {
 
 interface SeqData {
   name: string;
-  pattern: (0|1)[];
+  pattern: (0 | 1)[];
 }
 export interface AppState {
   isPlaying: boolean;
@@ -34,147 +37,160 @@ interface Props {
   ready: boolean;
   setReady: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const Rando: React.FC<Props> = ({ready, setReady}) => {
-  const {context, setContext} = useContext(ReactAudioContext);
+const Rando: React.FC<Props> = ({ ready, setReady }) => {
+  const { context, setContext } = useContext(ReactAudioContext);
   const [beat, setBeat] = useState(-1);
   const socket = useContext(SocketContext);
   const deviceID = useContext(DeviceID);
   let timeArr = useContext(Timing);
-  const {location: {pathname}} = useHistory();
+  const {
+    location: { pathname },
+  } = useHistory();
   const socketID = pathname.slice(1);
   const [currPattern, setCurrPattern] = useState(0);
-  const [view, setView] = useState('soundbank')
+  const [view, setView] = useState("soundbank");
 
   useEffect(() => {
-    context.sequencers.forEach(seq => {
-      seq.loadSample()
-        .then(() => {
-          if(seq.errMsg) {
-            // TODO: do something with the error
-          }
-        })
-    })
-  }, [context.sequencers])
+    context.sequencers.forEach((seq) => {
+      seq.loadSample().then(() => {
+        if (seq.errMsg) {
+          // TODO: do something with the error
+        }
+      });
+    });
+  }, [context.sequencers]);
   useEffect(() => {
-    // This might get moved later as different instruments may have 
+    // This might get moved later as different instruments may have
     // different needs, but for now it's ok here.
     context.subscribeSquares(setBeat);
     // sync devices to each other
-    socket.emit('handshake', socketID); 
-    socket.emit('getOffset', socketID, {
+    socket.emit("handshake", socketID);
+    socket.emit("getOffset", socketID, {
       deviceID,
       deviceSendTime: Date.now(),
-      isHost: false
-    })
-    },[]);  // eslint-disable-line react-hooks/exhaustive-deps
+      isHost: false,
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
-    socket.on('receiveServerTime', (timeObj: TimeObj) => {
+    socket.on("receiveServerTime", (timeObj: TimeObj) => {
       timeObj.deviceReceiveTime = Date.now();
-      timeObj.roundTripTime = timeObj.deviceReceiveTime - timeObj.deviceSendTime;
+      timeObj.roundTripTime =
+        timeObj.deviceReceiveTime - timeObj.deviceSendTime;
       timeObj.offset = timeObj.deviceReceiveTime - timeObj.serverTime;
       timeArr.push(timeObj);
-      console.log("RECEIVE SERVER TIME", timeArr)
-      socket.emit('notifyTime', socketID, timeArr[0]);
-    })
-    socket.on('notifyTime', (timeObj: TimeObj) => {
-      const deviceHasThisAlready = timeArr.find(obj => obj.deviceID === timeObj.deviceID);
-      if(!deviceHasThisAlready) {
+      console.log("RECEIVE SERVER TIME", timeArr);
+      socket.emit("notifyTime", socketID, timeArr[0]);
+    });
+    socket.on("notifyTime", (timeObj: TimeObj) => {
+      const deviceHasThisAlready = timeArr.find(
+        (obj) => obj.deviceID === timeObj.deviceID
+      );
+      if (!deviceHasThisAlready) {
         timeArr.push(timeObj);
       }
-      if(timeArr.length > 1) {
+      if (timeArr.length > 1) {
         // person on the longest becomes the host
-        timeArr.sort((a,b) => Number(a.deviceReceiveTime) - Number(b.deviceReceiveTime));
+        timeArr.sort(
+          (a, b) => Number(a.deviceReceiveTime) - Number(b.deviceReceiveTime)
+        );
         timeArr[0].isHost = true;
-        if(deviceID === timeArr[0].deviceID){
+        if (deviceID === timeArr[0].deviceID) {
           // I'm the host, send context
-          const seqData = context.sequencers.map(seq => {
+          const seqData = context.sequencers.map((seq) => {
             return {
-              pattern: seq.pattern, 
-              name: seq.name
-            }
+              pattern: seq.pattern,
+              name: seq.name,
+            };
           });
           const { tempo, isPlaying, swing, nextCycleTime } = context;
-          socket.emit('sendState', socketID, {
-            nextCycleTime: nextCycleTime as number - Number(timeArr[0].offset),
+          socket.emit("sendState", socketID, {
+            nextCycleTime:
+              (nextCycleTime as number) - Number(timeArr[0].offset),
             seqData,
             tempo,
             isPlaying,
-            swing
+            swing,
           });
         }
       }
-      console.log("NOTIFY TIME",timeArr);
-    })
+      console.log("NOTIFY TIME", timeArr);
+    });
     let timeoutID: number;
-    socket.on('receiveState',(hostContext: AppState) => {
+    socket.on("receiveState", (hostContext: AppState) => {
       // context.isPlaying = hostContext.isPlaying;
       context.nextCycleTime = hostContext.nextCycleTime;
       context.tempo = hostContext.tempo;
       context.swing = hostContext.swing;
-      hostContext.seqData.forEach(seq => {
-        const sameSeq = context.sequencers.find(ctxSeq => ctxSeq.name === seq.name);
-        if(sameSeq){
+      hostContext.seqData.forEach((seq) => {
+        const sameSeq = context.sequencers.find(
+          (ctxSeq) => ctxSeq.name === seq.name
+        );
+        if (sameSeq) {
           sameSeq.pattern = seq.pattern;
         }
-      })
-      if(!context.isPlaying){
-        setContext({...context});
+      });
+      if (!context.isPlaying) {
+        setContext({ ...context });
       }
       console.log("receiveState", hostContext);
-    })
-    socket.on('userJoined', (data: NewUser) => {
-      console.log("NEW USER", data)
-    })
-    socket.on('userLeft', (id: string) => {
-      console.log("USER LEFT",id)
-      const host = timeArr.find(obj => obj.isHost === true);
+    });
+    socket.on("userJoined", (data: NewUser) => {
+      console.log("NEW USER", data);
+    });
+    socket.on("userLeft", (id: string) => {
+      console.log("USER LEFT", id);
+      const host = timeArr.find((obj) => obj.isHost === true);
       const hostIndex = timeArr.indexOf(host!);
       // if the person who left is the host
-      if(timeArr[hostIndex].socketDeviceID === id) {
+      if (timeArr[hostIndex].socketDeviceID === id) {
         // assign new host
-        timeArr.splice(hostIndex,1);
+        timeArr.splice(hostIndex, 1);
         timeArr[0].isHost = true;
       } else {
         // find the person who left and splice them out
-        const userThatLeft = timeArr.find(obj => obj.socketDeviceID === id);
+        const userThatLeft = timeArr.find((obj) => obj.socketDeviceID === id);
         const userThatLeftIndex = timeArr.indexOf(userThatLeft!);
-        timeArr.splice(userThatLeftIndex, 1)
+        timeArr.splice(userThatLeftIndex, 1);
       }
-      console.log(timeArr)
-    })
+      console.log(timeArr);
+    });
     // console.log("USEEFFECT", context)
     return () => {
-      socket.off('notifyTime');
-      socket.off('userLeft');
-      socket.off('receiveState');
-      socket.off('receiveServerTime');
+      socket.off("notifyTime");
+      socket.off("userLeft");
+      socket.off("receiveState");
+      socket.off("receiveServerTime");
       clearTimeout(timeoutID);
-    }
+    };
+  }, [timeArr, context, deviceID, socket, socketID, setContext]);
 
-  }, [timeArr, context, deviceID, socket, socketID, setContext, play])
-  
   const selectPattern = (pattern: number): void => {
-    setView('pattern');
+    setView("pattern");
     setCurrPattern(pattern);
-  }
+  };
 
   const toggleView = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = event.target as Element;
     setView(target.id);
-  }
-  
+  };
+
   return (
-    <div className='fullPage'>
+    <div className="fullPage">
       <div className="container">
-        {
-          !ready  && <ContextOverlay setReady={setReady} />
-        }
+        {!ready && <ContextOverlay setReady={setReady} />}
         <Transport id={socketID} setBeat={setBeat} />
-        <Sampler socketID={socketID} beat={beat} selectPattern={selectPattern} currPattern={currPattern} view={view} toggleView={toggleView}/>
+        <Sampler
+          socketID={socketID}
+          beat={beat}
+          selectPattern={selectPattern}
+          currPattern={currPattern}
+          view={view}
+          toggleView={toggleView}
+        />
         <Synth beat={beat} />
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Rando;
