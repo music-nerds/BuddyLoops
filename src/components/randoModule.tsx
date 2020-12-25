@@ -169,9 +169,8 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
     setCurrPattern(pattern);
   };
 
-  const toggleView = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    const target = event.target as Element;
-    setView(target.id);
+  const toggleView = (view: string) => {
+    setView(view);
   };
 
   return (

@@ -9,6 +9,14 @@
   color: var(--text);
   border: 2px solid var(--gray);
   position: relative;
+  transition-property: background-color;
+  -webkit-transition-property: background-color;
+  transition-duration: 0.1s;
+  -webkit-transition-duration: 0.1s;
+}
+
+.seq-square:hover {
+  cursor: pointer;
 }
 
 .seq-square > span {
@@ -21,6 +29,7 @@
 .seq-square[aria-checked="true"] {
   background-color: var(--blue);
 }
+
 .active-beat {
   border: 2px solid var(--text);
 }

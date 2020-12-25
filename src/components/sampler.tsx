@@ -12,7 +12,7 @@ interface Props {
   currPattern: number;
   selectPattern: (pattern: number) => void;
   view: string;
-  toggleView: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  toggleView: (view: string) => void;
 }
 
 interface PatternChange {
@@ -57,11 +57,11 @@ const Sampler: React.FC<Props> = ({ socketID, beat, currPattern, selectPattern, 
   return (
     <div className='sampler-container'>
       <div className='sampler-tabs'>
-        <div id='soundbank' className={view === 'soundbank' ? 'sampler-tab tab-selected' : 'sampler-tab'} onClick={toggleView}>
+        <div id='soundbank' className={view === 'soundbank' ? 'sampler-tab tab-selected' : 'sampler-tab'} onClick={() => toggleView('soundbank')}>
           <MusicNoteIcon />
           {/* Sounds */}
         </div>
-        <div id='pattern' className={view === 'pattern' ? 'sampler-tab tab-selected' : 'sampler-tab'} onClick={toggleView}>
+        <div id='pattern' className={view === 'pattern' ? 'sampler-tab tab-selected' : 'sampler-tab'} onClick={() => toggleView('pattern')}>
           <GridOnIcon />
           {/* Patterns */}
         </div>
