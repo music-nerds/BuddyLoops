@@ -86,11 +86,20 @@ io.on("connection", (socket) => {
   socket.on("synthPatternChange", (id, pattern) => {
     socket.to(id).emit("synthPatternChange", pattern);
   });
-  socket.on("swingChange", (id, value) => {
-    socket.to(id).emit("swingChange", value);
-  });
-  socket.on("tempoChange", (id, value) => {
-    socket.to(id).emit("tempoChange", value);
+  const params = [
+    "swingChange",
+    "tempoChange",
+    "synthWave",
+    "synthNoteLength",
+    "synthAttack",
+    "synthRelease",
+    "synthFreq",
+    "synthQ",
+  ];
+  params.forEach((param) => {
+    socket.on(param, (id, value) => {
+      socket.to(id).emit(param, value);
+    });
   });
 });
 
