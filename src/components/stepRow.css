@@ -11,6 +11,14 @@
   position: relative;
 }
 
+.seq-square:hover {
+  cursor: pointer;
+}
+
+.seq-square:active {
+  background: radial-gradient(rgb(255, 255, 255, 0.3), rgb(255, 255, 255, 0));
+}
+
 .seq-square > span {
   margin: 5px;
   position: absolute;
@@ -21,6 +29,7 @@
 .seq-square[aria-checked="true"] {
   background-color: var(--blue);
 }
+
 .active-beat {
   border: 2px solid var(--text);
 }
