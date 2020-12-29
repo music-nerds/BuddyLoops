@@ -4,7 +4,7 @@
   max-width: 25%;
   max-height: 25%;
   /* max-height: calc(25% - 1em); */
-  padding-bottom: 25%;
+  padding-top: 25%;
   box-sizing: border-box;
   color: var(--text);
   border: 2px solid var(--gray);
