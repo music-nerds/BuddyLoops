@@ -25,12 +25,24 @@ interface SeqData {
   name: string;
   pattern: (0 | 1)[];
 }
+
+interface SynthData {
+  wave: OscillatorType;
+  noteLength: number;
+  attackTime: number;
+  releaseTime: number;
+  filterFreq: number;
+  q: number;
+  pattern: (0 | 1)[][];
+}
+
 export interface AppState {
   isPlaying: boolean;
   nextCycleTime?: number;
   tempo: number;
   swing: number;
   seqData: SeqData[];
+  synthState: SynthData;
 }
 
 interface Props {
@@ -102,7 +114,13 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
               name: seq.name,
             };
           });
-          const { tempo, isPlaying, swing, nextCycleTime } = context;
+          const {
+            tempo,
+            isPlaying,
+            swing,
+            nextCycleTime,
+            synth: { attackTime, releaseTime, pattern, filter, noteLength },
+          } = context;
           socket.emit("sendState", socketID, {
             nextCycleTime:
               (nextCycleTime as number) - Number(timeArr[0].offset),
@@ -110,6 +128,15 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
             tempo,
             isPlaying,
             swing,
+            synthState: {
+              attackTime,
+              releaseTime,
+              pattern,
+              noteLength,
+              wave: context.synth.osc.type,
+              filterFreq: filter.frequency.value,
+              q: filter.Q.value,
+            },
           });
         }
       }
@@ -129,6 +156,7 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
           sameSeq.pattern = seq.pattern;
         }
       });
+
       if (!context.isPlaying) {
         setContext({ ...context });
       }
@@ -186,7 +214,7 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
           view={view}
           toggleView={toggleView}
         />
-        <Synth beat={beat} />
+        <Synth beat={beat} synth={context.synth} />
       </div>
     </div>
   );

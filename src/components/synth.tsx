@@ -1,17 +1,16 @@
-import React, { useContext } from "react";
-import { ReactAudioContext } from "../app";
+import React from "react";
 import { useHistory } from "react-router-dom";
 import MonoSynthControls from "./monoSynthControls";
 import MonoSynthSquares from "./monoSynthSquares";
 import "./synth.css";
+import { MonoSynth } from "../audio/synth";
 
 interface MonoSynthProps {
   beat: number;
+  synth: MonoSynth;
 }
 
-const MonoSynth: React.SFC<MonoSynthProps> = ({ beat }) => {
-  const { context } = useContext(ReactAudioContext);
-  const { synth } = context;
+const Synth: React.SFC<MonoSynthProps> = ({ beat, synth }) => {
   const {
     location: { pathname },
   } = useHistory();
@@ -24,4 +23,4 @@ const MonoSynth: React.SFC<MonoSynthProps> = ({ beat }) => {
   );
 };
 
-export default MonoSynth;
+export default Synth;
