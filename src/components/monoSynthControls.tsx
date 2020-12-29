@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { MonoSynth } from "../audio/synth";
 import { makeStyles } from "@material-ui/core/styles";
 import Slider from "@material-ui/core/Slider";
@@ -6,7 +6,9 @@ import FormControl from "@material-ui/core/FormControl";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import { FormControlLabel } from "@material-ui/core";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import { SocketContext } from "../app";
+import { AppState } from "./randoModule";
 
 const useStyles = makeStyles({
   root: {
@@ -23,12 +25,17 @@ const MonoSynthControls: React.SFC<MonoSynthControlsProps> = ({
   synth,
   socketID,
 }) => {
-  const [wave, setWave] = useState<OscillatorType>("sawtooth");
+  const [showing, setShowing] = useState(false);
+  const [wave, setWave] = useState<OscillatorType>(synth.osc.type);
   const [noteLength, setNoteLength] = useState(synth.noteLength);
   const [attack, setAttack] = useState(synth.attackTime);
   const [release, setRelease] = useState(synth.releaseTime);
   const [filter, setFilter] = useState(synth.filter.frequency.value);
   const [q, setQ] = useState(synth.filter.Q.value);
+
+  const controls: React.RefObject<HTMLDivElement> | null = useRef(null);
+  const toggle: React.RefObject<HTMLDivElement> | null = useRef(null);
+  const chevron: React.RefObject<HTMLDivElement> | null = useRef(null);
 
   const socket = useContext(SocketContext);
 
@@ -102,6 +109,24 @@ const MonoSynthControls: React.SFC<MonoSynthControlsProps> = ({
       setQ(val);
       synth.filter.Q.value = val;
     });
+    socket.on("receiveState", (hostContext: AppState) => {
+      const { synthState } = hostContext;
+
+      synth.attackTime = synthState.attackTime;
+      synth.releaseTime = synthState.releaseTime;
+      synth.pattern = synthState.pattern;
+      synth.noteLength = synthState.noteLength;
+      synth.filter.frequency.value = synthState.filterFreq;
+      synth.filter.Q.value = synthState.q;
+      synth.osc.type = synthState.wave;
+
+      setWave(synthState.wave);
+      setAttack(synthState.attackTime);
+      setNoteLength(synthState.noteLength);
+      setFilter(synthState.filterFreq);
+      setQ(synthState.q);
+      setRelease(synthState.releaseTime);
+    });
     return () => {
       socket.off("synthWave");
       socket.off("synthNoteLength");
@@ -109,107 +134,134 @@ const MonoSynthControls: React.SFC<MonoSynthControlsProps> = ({
       socket.off("synthRelease");
       socket.off("synthFreq");
       socket.off("synthQ");
+      socket.off("receiveState");
     };
   }, [socket, synth]);
+
+  const toggleControls = () => {
+    if (controls.current) {
+      if (!showing) {
+        controls.current.style.maxHeight = controls.current.scrollHeight + "px";
+        setShowing(true);
+      } else {
+        controls.current.style.maxHeight = "0";
+        setShowing(false);
+      }
+      chevron.current?.classList.toggle("rotate");
+    }
+  };
+
   return (
     <div id="mono-synth-controls">
-      <div className="synth-wave">
-        <FormControl>
-          <RadioGroup
-            aria-label="waveform"
-            value={wave}
-            onChange={handleWave}
-            row
-          >
-            <FormControlLabel
-              value={"sawtooth"}
-              control={<Radio />}
-              label="Saw"
-            />
-            <FormControlLabel
-              value={"square"}
-              control={<Radio />}
-              label="Square"
-            />
-            <FormControlLabel
-              value={"triangle"}
-              control={<Radio />}
-              label="Triangle"
-            />
-            <FormControlLabel value={"sine"} control={<Radio />} label="Sine" />
-          </RadioGroup>
-        </FormControl>
+      <div className="toggle" ref={toggle} onClick={toggleControls}>
+        <p>Synth Controls</p>
+        <div className="chevron" ref={chevron}>
+          <KeyboardArrowDownIcon color="primary" fontSize="large" />
+        </div>
       </div>
-      <div className="synth-sliders">
-        <div className="synth-param">
-          <p className="label">
-            Note Length: <span>{noteLength * 100}%</span>
-          </p>
-          <Slider
-            value={noteLength}
-            onChange={handleNoteLength}
-            min={0.125}
-            max={1}
-            step={0.125}
-            color="primary"
-            className={classes.root}
-          />
+      <div className="controls" ref={controls}>
+        <div className="synth-wave">
+          <FormControl>
+            <RadioGroup
+              aria-label="waveform"
+              value={wave}
+              onChange={handleWave}
+              row
+            >
+              <FormControlLabel
+                value={"sawtooth"}
+                control={<Radio />}
+                label="Saw"
+              />
+              <FormControlLabel
+                value={"square"}
+                control={<Radio />}
+                label="Square"
+              />
+              <FormControlLabel
+                value={"triangle"}
+                control={<Radio />}
+                label="Triangle"
+              />
+              <FormControlLabel
+                value={"sine"}
+                control={<Radio />}
+                label="Sine"
+              />
+            </RadioGroup>
+          </FormControl>
         </div>
-        <div className="synth-param">
-          <p className="label">
-            Attack: <span>{attack}s</span>
-          </p>
-          <Slider
-            value={attack}
-            onChange={handleAttack}
-            min={0.01}
-            max={0.25}
-            step={0.01}
-            color="primary"
-            className={classes.root}
-          />
-        </div>
-        <div className="synth-param">
-          <p className="label">
-            Release: <span>{release}s</span>
-          </p>
-          <Slider
-            value={release}
-            onChange={handleRelease}
-            min={0.01}
-            max={0.5}
-            step={0.01}
-            color="primary"
-            className={classes.root}
-          />
-        </div>
-        <div className="synth-param">
-          <p className="label">
-            Filter Freq: <span>{filter}Hz</span>
-          </p>
-          <Slider
-            value={filter}
-            onChange={handleFilter}
-            min={100}
-            max={10000}
-            step={100}
-            color="primary"
-            className={classes.root}
-          />
-        </div>
-        <div className="synth-param">
-          <p className="label">
-            Q: <span>{q}</span>
-          </p>
-          <Slider
-            value={q}
-            onChange={handleQ}
-            min={0.5}
-            max={12}
-            step={0.25}
-            color="primary"
-            className={classes.root}
-          />
+        <div className="synth-sliders">
+          <div className="synth-param">
+            <p className="label">
+              Note Length: <span>{noteLength * 100}%</span>
+            </p>
+            <Slider
+              value={noteLength}
+              onChange={handleNoteLength}
+              min={0.125}
+              max={1}
+              step={0.125}
+              color="primary"
+              className={classes.root}
+            />
+          </div>
+          <div className="synth-param">
+            <p className="label">
+              Attack: <span>{attack}s</span>
+            </p>
+            <Slider
+              value={attack}
+              onChange={handleAttack}
+              min={0.01}
+              max={0.25}
+              step={0.01}
+              color="primary"
+              className={classes.root}
+            />
+          </div>
+          <div className="synth-param">
+            <p className="label">
+              Release: <span>{release}s</span>
+            </p>
+            <Slider
+              value={release}
+              onChange={handleRelease}
+              min={0.01}
+              max={0.5}
+              step={0.01}
+              color="primary"
+              className={classes.root}
+            />
+          </div>
+          <div className="synth-param">
+            <p className="label">
+              Filter Freq: <span>{filter}Hz</span>
+            </p>
+            <Slider
+              value={filter}
+              onChange={handleFilter}
+              min={100}
+              max={10000}
+              step={100}
+              color="primary"
+              className={classes.root}
+            />
+          </div>
+          <div className="synth-param">
+            <p className="label">
+              Q: <span>{q}</span>
+            </p>
+            <Slider
+              value={q}
+              onChange={handleQ}
+              min={0.5}
+              max={12}
+              step={0.25}
+              color="primary"
+              className={classes.root}
+            />
+          </div>
         </div>
       </div>
     </div>

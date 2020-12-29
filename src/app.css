@@ -5,6 +5,7 @@
   --green: #b2d430;
   --blue: #1a8b9d;
   --sampler: #616161;
+  --transitionTime: 0.4s;
 }
 
 body {
@@ -41,10 +42,4 @@ body {
 
 .flex-row {
   display: flex;
-}
-
-@media screen and (max-width: 800px) {
-  .fullPage {
-    /* overflow: hidden; */
-  }
 }
