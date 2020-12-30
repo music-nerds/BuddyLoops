@@ -15,18 +15,21 @@
   overflow: hidden;
 }
 .synth-sliders {
-  display: flex;
-  flex-wrap: wrap;
+  /* display: flex; */
+  /* flex-wrap: wrap; */
   width: 600px;
+  /* align-items: center; */
+  box-sizing: border-box;
+  columns: 3;
 }
 .synth-param {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
   width: 200px;
   color: whitesmoke;
-  box-sizing: border-box;
+  /* height: 96px; */
 }
 .synth-wave {
   display: flex;
@@ -35,9 +38,10 @@
   color: whitesmoke;
   box-sizing: border-box;
   width: 600px;
+  min-height: 64px;
 }
 .synth-param p.label {
-  flex: 1;
+  /* flex: 1; */
   font-size: 0.6rem;
 }
 
@@ -113,6 +117,12 @@ div.controls {
     width: 500px;
     margin-bottom: 64px;
   }
+  /* .synth-sliders {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    columns: 1;
+  } */
   .synth-square {
     width: 48px;
     height: 48px;
@@ -122,16 +132,19 @@ div.controls {
   }
   .synth-wave {
     width: 100%;
-    /* justify-content: center; */
-    display: block;
+    justify-content: center;
+    /* display: block; */
+    flex-direction: column;
+    min-height: 196px;
   }
   .MuiFormControl-root {
-    width: 100%;
+    width: 100px;
+    align-items: center;
   }
   .MuiFormGroup-root.MuiFormGroup-row {
     flex-direction: column;
     width: 100%;
-    align-items: center;
+    align-items: flex-start;
   }
   /* .MuiFormGroup-root.MuiFormGroup-row > label {
     width: 100%;
@@ -141,6 +154,7 @@ div.controls {
     width: 100%;
     /* align-items: center; */
     display: block;
+    columns: 1;
   }
   .synth-param {
     width: 100%;
