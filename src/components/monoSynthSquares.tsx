@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { MonoSynth } from "../audio/synth";
 import { ReactAudioContext, SocketContext } from "../app";
 import { useHistory } from "react-router-dom";
@@ -12,12 +12,14 @@ const MonoSynthSquares: React.SFC<MonoSynthSquaresProps> = ({
   synth,
   beat,
 }) => {
+  const [mouseDown, setMouseDown] = useState(false);
   const { context, setContext } = useContext(ReactAudioContext);
   const socket = useContext(SocketContext);
   const {
     location: { pathname },
   } = useHistory();
   const socketID = pathname.slice(1);
+  const squares: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
 
   const handleToggle = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLDivElement;
@@ -51,8 +53,20 @@ const MonoSynthSquares: React.SFC<MonoSynthSquaresProps> = ({
     };
   }, [socket, context, setContext, synth]);
 
+  const handleDrag = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (mouseDown) {
+      handleToggle(e);
+    }
+  };
+
   return (
-    <div className="synth-squares">
+    <div
+      className="synth-squares"
+      ref={squares}
+      onMouseDown={() => setMouseDown(true)}
+      onMouseUp={() => setMouseDown(false)}
+      onMouseLeave={() => setMouseDown(false)}
+    >
       {synth.pattern.map((row, i) => (
         <div className="synth-square-row" key={i}>
           {row.map((col, j) => (
@@ -65,6 +79,8 @@ const MonoSynthSquares: React.SFC<MonoSynthSquaresProps> = ({
               data-value={col}
               onClick={handleToggle}
               key={j}
+              onMouseEnter={handleDrag}
+              style={{ userSelect: "none" }}
             />
           ))}
         </div>

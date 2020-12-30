@@ -1,16 +1,16 @@
-import React, {useRef, useEffect, useContext, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { ReactAudioContext, SocketContext } from '../app';
-import { StepRow } from '../audio/createContext';
-import './stepRow.css';
-import LaunchButton from './launchBtn';
+import React, { useRef, useContext, useState } from "react";
+// import { useHistory } from "react-router-dom";
+import { SocketContext } from "../app";
+import { StepRow } from "../audio/createContext";
+import "./stepRow.css";
+// import LaunchButton from './launchBtn';
 
-import SeqSquare from './seqSquare';
+import SeqSquare from "./seqSquare";
 
-interface Row {
+interface RowProps {
   row: StepRow;
   id: string;
-  beat: number
+  beat: number;
 }
 
 // interface PatternChange {
@@ -19,41 +19,9 @@ interface Row {
 //   id: string;
 // }
 
-const StepRow: React.FC<Row> = ({row, id, beat}) => {
-  // const div = useRef<HTMLDivElement>(null);
-  const launch = useRef<HTMLButtonElement>(null);
-  const {context, setContext} = useContext(ReactAudioContext);
+const Row: React.FC<RowProps> = ({ row, id, beat }) => {
   const socket = useContext(SocketContext);
-  const { location: { pathname } } = useHistory();
-  // const [launchEnabled, setLaunchEnabled] = useState(true);
-
-  // useEffect(() => {
-  //   row.squares = div.current && div.current.children;
-  // },[row])
-
-  // useEffect(() => {
-  //   socket.on('patternChange', (data: PatternChange) => {
-  //     const seq = context.sequencers.find(seq => seq.name === data.name);
-  //     if (seq) {
-  //       seq.pattern = data.pattern;
-  //     }
-  //     if(!context.isPlaying){
-  //       // causes bug if isPlaying is true
-  //       // stop button loses reference to context
-  //       setContext({...context});
-  //     }
-  //   })
-  //   socket.on('receiveRowLaunch', (name: string) => {
-  //     if(name === row.name){
-  //       row.shouldPlayNextLoop = !row.shouldPlayNextLoop;
-  //       setLaunchEnabled(row.shouldPlayNextLoop);
-  //     }
-  //   })
-  //   return () => {
-  //     socket.off('patternChange');
-  //     socket.off('receiveRowLaunch')
-  //   }
-  // }, [context, context.sequencers, row])
+  const [mouseDown, setMouseDown] = useState(false);
 
   // const handleLaunch = () => {
   //   socket.emit('sendRowLaunch', id, row.name)
@@ -61,35 +29,49 @@ const StepRow: React.FC<Row> = ({row, id, beat}) => {
 
   const handleToggle = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLDivElement;
-    const index = Number(target.getAttribute('data-index'))!;
-    if (target.getAttribute('aria-checked') === 'false') {
-      target.setAttribute('aria-checked', 'true');
+    const index = Number(target.getAttribute("data-index"))!;
+    if (target.getAttribute("aria-checked") === "false") {
+      target.setAttribute("aria-checked", "true");
       row.pattern[index] = 1;
     } else {
-      target.setAttribute('aria-checked', 'false');
+      target.setAttribute("aria-checked", "false");
       row.pattern[index] = 0;
     }
-    socket.emit('patternChange', id, { name: row.name, pattern: row.pattern, id })
-  }
+    socket.emit("patternChange", id, {
+      name: row.name,
+      pattern: row.pattern,
+      id,
+    });
+  };
 
+  const div: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
+  const bool = useRef(false);
+  const down = () => {
+    bool.current = true;
+    setMouseDown(true);
+    console.log("DOWN");
+  };
+  const up = () => {
+    setMouseDown(false);
+    bool.current = false;
+    console.log("UP");
+  };
   return (
-      // <div className='step-squares' ref={div} >
-      <div>
-        {
-          row.pattern.map((enabled, idx) => {
-            return (
-              <SeqSquare 
-                handleToggle={handleToggle}
-                enabled={enabled}
-                index={idx}
-                beat={beat}
-                key={idx}
-              />
-            )
-          })
-        }
-      </div>
-  )
-}
+    <div ref={div} onMouseDown={down} onMouseUp={up} onMouseLeave={up}>
+      {row.pattern.map((enabled, idx) => {
+        return (
+          <SeqSquare
+            handleToggle={handleToggle}
+            enabled={enabled}
+            index={idx}
+            beat={beat}
+            key={idx}
+            mouseDown={mouseDown}
+          />
+        );
+      })}
+    </div>
+  );
+};
 
-export default StepRow;
+export default Row;
