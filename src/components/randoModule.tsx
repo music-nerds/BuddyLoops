@@ -194,6 +194,7 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
 
   const selectPattern = (pattern: number): void => {
     setView("pattern");
+    console.log("PATTERN", pattern);
     setCurrPattern(pattern);
   };
 
