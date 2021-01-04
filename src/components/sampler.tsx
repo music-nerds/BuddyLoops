@@ -29,6 +29,7 @@ const Sampler: React.FC<Props> = ({
   view,
   toggleView,
 }) => {
+
   const { context, setContext } = useContext(ReactAudioContext);
   const socket = useContext(SocketContext);
 
