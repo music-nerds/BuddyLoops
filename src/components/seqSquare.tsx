@@ -3,7 +3,11 @@ import React from "react";
 interface SquareProps {
   beat: number;
   index: number;
-  handleToggle: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  handleToggle: (
+    e:
+      | React.MouseEvent<HTMLDivElement, MouseEvent>
+      | React.TouchEvent<HTMLDivElement>
+  ) => void;
   enabled: 0 | 1;
   mouseDown: boolean;
 }
@@ -26,7 +30,9 @@ const SeqSquare: React.FC<SquareProps> = ({
       className={`seq-square ${beat === index ? "active-beat" : ""}`}
       aria-checked={enabled === 1 ? "true" : "false"}
       onMouseDown={handleToggle}
-      onMouseOver={handleDrag}
+      // onTouchStart={handleToggle}
+      // onTouchMove={handleTouchDrag}
+      onMouseEnter={handleDrag}
       style={{
         userSelect: "none",
       }}
