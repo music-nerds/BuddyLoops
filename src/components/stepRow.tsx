@@ -17,7 +17,6 @@ const Row: React.FC<RowProps> = ({ row, id, beat }) => {
   const div: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
   const curDiv: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
   const prevDiv: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
-  const bool = useRef(false);
 
   const handleToggle = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLDivElement;
@@ -52,12 +51,10 @@ const Row: React.FC<RowProps> = ({ row, id, beat }) => {
     });
   };
   const down = () => {
-    bool.current = true;
     setMouseDown(true);
   };
   const up = () => {
     setMouseDown(false);
-    bool.current = false;
   };
   const touchDown = (e: React.TouchEvent<HTMLDivElement>) => {
     curDiv.current = e.target as HTMLDivElement;
