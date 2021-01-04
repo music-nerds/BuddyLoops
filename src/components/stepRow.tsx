@@ -1,9 +1,7 @@
 import React, { useRef, useContext, useState } from "react";
-// import { useHistory } from "react-router-dom";
 import { SocketContext } from "../app";
 import { StepRow } from "../audio/createContext";
 import "./stepRow.css";
-// import LaunchButton from './launchBtn';
 
 import SeqSquare from "./seqSquare";
 
@@ -13,75 +11,57 @@ interface RowProps {
   beat: number;
 }
 
-// interface PatternChange {
-//   name: string;
-//   pattern: (0|1)[];
-//   id: string;
-// }
-
 const Row: React.FC<RowProps> = ({ row, id, beat }) => {
   const socket = useContext(SocketContext);
   const [mouseDown, setMouseDown] = useState(false);
-  // const [toggleIndex, setToggleIndex] = useState<string | undefined>(undefined);
-  // const handleLaunch = () => {
-  //   socket.emit('sendRowLaunch', id, row.name)
-  // }
-
-  const handleToggle = (
-    e:
-      | React.MouseEvent<HTMLDivElement, MouseEvent>
-      | React.TouchEvent<HTMLDivElement>
-  ) => {
-    const target = e.target as HTMLDivElement;
-    const index = Number(target.getAttribute("data-index"))!;
-    if (target.getAttribute("aria-checked") === "false") {
-      target.setAttribute("aria-checked", "true");
-      row.pattern[index] = 1;
-    } else {
-      target.setAttribute("aria-checked", "false");
-      row.pattern[index] = 0;
-    }
-    socket.emit("patternChange", id, {
-      name: row.name,
-      pattern: row.pattern,
-      id,
-    });
-  };
-
-  const handleDragToggle = (target: HTMLDivElement) => {
-    const index = Number(target.dataset.index);
-    if (target.getAttribute("aria-checked") === "false") {
-      target.setAttribute("aria-checked", "true");
-      row.pattern[index] = 1;
-    } else {
-      target.setAttribute("aria-checked", "false");
-      row.pattern[index] = 0;
-    }
-    socket.emit("patternChange", id, {
-      name: row.name,
-      pattern: row.pattern,
-      id,
-    });
-  };
-
   const div: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
   const curDiv: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
   const prevDiv: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
   const bool = useRef(false);
 
+  const handleToggle = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const target = e.target as HTMLDivElement;
+    const index = Number(target.dataset.index)!;
+    target.classList.add("active-square");
+    if (row.pattern[index] === 0) {
+      target.setAttribute("aria-checked", "true");
+      row.pattern[index] = 1;
+    } else {
+      target.setAttribute("aria-checked", "false");
+      row.pattern[index] = 0;
+    }
+    socket.emit("patternChange", id, {
+      name: row.name,
+      pattern: row.pattern,
+      id,
+    });
+  };
+  const handleDragToggle = (target: HTMLDivElement) => {
+    const index = Number(target.dataset.index);
+    if (row.pattern[index] === 0) {
+      target.setAttribute("aria-checked", "true");
+      row.pattern[index] = 1;
+    } else {
+      target.setAttribute("aria-checked", "false");
+      row.pattern[index] = 0;
+    }
+    socket.emit("patternChange", id, {
+      name: row.name,
+      pattern: row.pattern,
+      id,
+    });
+  };
   const down = () => {
     bool.current = true;
     setMouseDown(true);
-    console.log("DOWN");
   };
   const up = () => {
     setMouseDown(false);
     bool.current = false;
-    console.log("UP");
   };
   const touchDown = (e: React.TouchEvent<HTMLDivElement>) => {
     curDiv.current = e.target as HTMLDivElement;
-    console.log("TOUCHDOWN", curDiv.current);
+    curDiv.current.classList.add("active-square");
   };
   const touchMove = (e: React.TouchEvent<HTMLDivElement>) => {
     const loc = e.changedTouches[0];
@@ -94,13 +74,16 @@ const Row: React.FC<RowProps> = ({ row, id, beat }) => {
     }
     prevDiv.current = curDiv.current;
     curDiv.current = location;
+    if (!location.classList.contains("active-square")) {
+      location.classList.add("active-square");
+    }
     if (location !== prevDiv.current) {
       handleDragToggle(location);
-    } else {
-      // prevDiv.current = null;
+      prevDiv.current?.classList.remove("active-square");
     }
   };
   const touchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    curDiv.current?.classList.remove("active-square");
     curDiv.current = null;
     prevDiv.current = null;
   };
@@ -113,6 +96,9 @@ const Row: React.FC<RowProps> = ({ row, id, beat }) => {
       onTouchEnd={touchEnd}
       onMouseUp={up}
       onMouseLeave={up}
+      style={{
+        userSelect: "none",
+      }}
     >
       {row.pattern.map((enabled, idx) => {
         return (

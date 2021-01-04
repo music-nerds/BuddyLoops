@@ -16,7 +16,7 @@
   cursor: pointer;
 }
 
-.seq-square:active {
+.seq-square.active-square {
   background: radial-gradient(rgb(255, 255, 255, 0.3), rgb(255, 255, 255, 0));
 }
 
