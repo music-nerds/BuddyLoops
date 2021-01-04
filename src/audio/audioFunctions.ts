@@ -1,4 +1,4 @@
-import { StepContext, StepRow } from './createContext';
+import { StepContext, StepRow } from "./createContext";
 
 export const playback = (ctx: StepContext, seq: StepRow): void => {
   const playSound = ctx.context.createBufferSource();
@@ -8,65 +8,68 @@ export const playback = (ctx: StepContext, seq: StepRow): void => {
 };
 
 export const nextNote = (ctx: StepContext): void => {
-    const secondsPerBeat: number = (60 / (ctx.tempo*2));
-    const maxSwing: number = secondsPerBeat / 3;
-    const swingPercent: number = ctx.swing / 100;
-    const swing = swingPercent * maxSwing; 
-    
-    if (ctx.currentNote % 2 === 0) {
-      ctx.nextNoteTime += (secondsPerBeat + swing);
-    } else {
-      ctx.nextNoteTime += (secondsPerBeat - swing);
-    }
-    ctx.currentNote++;
-    if (ctx.currentNote === 16) {
-      ctx.currentNote = 0;
-    };
+  const secondsPerBeat: number = 60 / (ctx.tempo * 4);
+  const maxSwing: number = secondsPerBeat / 3;
+  const swingPercent: number = ctx.swing / 100;
+  const swing = swingPercent * maxSwing;
+
+  if (ctx.currentNote % 2 === 0) {
+    ctx.nextNoteTime += secondsPerBeat + swing;
+  } else {
+    ctx.nextNoteTime += secondsPerBeat - swing;
+  }
+  ctx.currentNote++;
+  if (ctx.currentNote === 16) {
+    ctx.currentNote = 0;
+  }
 };
 
 export const calculateFullCycleTime = (ctx: StepContext) => {
-  return Math.floor((ctx.nextNoteTime + ((60000 / (ctx.tempo*2)) * 16)));
-}
+  return Math.floor(ctx.nextNoteTime + (60000 / (ctx.tempo * 2)) * 16);
+};
 
 export const calculateNextCycleTime = (ctx: StepContext) => {
   return Date.now() + calculateFullCycleTime(ctx);
-
-}
+};
 
 export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
   // handle which loops should play each cycle
   const quantizeLength = 8;
   if (beatNumber % quantizeLength === 0) {
-    ctx.sequencers.forEach(seq => {
-      if(seq.shouldPlayNextLoop){
+    ctx.sequencers.forEach((seq) => {
+      if (seq.shouldPlayNextLoop) {
         seq.isPlaying = true;
       } else {
         seq.isPlaying = false;
       }
-    })
+    });
   }
   // play the samples
-  ctx.sequencers.forEach(seq => {
-      // if (seq.squares && seq.squares[beatNumber].getAttribute('aria-checked') === 'true' && seq.isPlaying && seq.audioBuffer) {
-      if (seq.pattern[beatNumber] && seq.isPlaying && seq.audioBuffer) {
-        playback(ctx, seq);
-      }
-    })
-    const hasNote = ctx.synth.pattern[beatNumber].includes(1);
-    if(hasNote){
-      ctx.synth.pattern[beatNumber].forEach((note,i) => {
-        if(note === 1){
-          ctx.synth.playNote(ctx.synth.scale[i] * ctx.synth.octave, ctx.nextNoteTime, ctx.tempo);
-        } 
-      })
-    } else {
-      ctx.synth.stopNote();
+  ctx.sequencers.forEach((seq) => {
+    // if (seq.squares && seq.squares[beatNumber].getAttribute('aria-checked') === 'true' && seq.isPlaying && seq.audioBuffer) {
+    if (seq.pattern[beatNumber] && seq.isPlaying && seq.audioBuffer) {
+      playback(ctx, seq);
     }
-  // paint the dom  
-  ctx.subscribers.forEach(fn => {
+  });
+  const hasNote = ctx.synth.pattern[beatNumber].includes(1);
+  if (hasNote) {
+    ctx.synth.pattern[beatNumber].forEach((note, i) => {
+      if (note === 1) {
+        ctx.synth.playNote(
+          ctx.synth.scale[i] * ctx.synth.octave,
+          ctx.nextNoteTime,
+          ctx.tempo
+        );
+      }
+    });
+  } else {
+    ctx.synth.stopNote();
+  }
+  // paint the dom
+  ctx.subscribers.forEach((fn) => {
     fn(beatNumber);
   });
-  if(beatNumber === 0){
+  if (beatNumber === 0) {
     // next note time plus 16 beats converted to ms
     ctx.nextCycleTime = calculateNextCycleTime(ctx);
   }
@@ -90,9 +93,9 @@ export const play = (ctx: StepContext): void => {
 };
 
 export const stop = (ctx: StepContext): void => {
-  if(ctx.isPlaying) {
+  if (ctx.isPlaying) {
     ctx.isPlaying = false;
     window.clearTimeout(ctx.timerId);
   }
   ctx.synth.stopNote();
-}
+};

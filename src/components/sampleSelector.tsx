@@ -9,7 +9,6 @@ interface Props {
 const SampleSelector: React.FC<Props> = ({ selectPattern, currPattern }) => {
   const { context } = useContext(ReactAudioContext);
   const [selected, setSelected] = useState(currPattern);
-  console.log(context);
 
   const togglePattern = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLElement;
