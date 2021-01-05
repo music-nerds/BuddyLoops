@@ -52,9 +52,9 @@ export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
     });
   }
   // play the samples
-  ctx.sequencers.forEach((seq) => {
+  ctx.sequencers.forEach((seq, idx) => {
     // if (seq.squares && seq.squares[beatNumber].getAttribute('aria-checked') === 'true' && seq.isPlaying && seq.audioBuffer) {
-    if (seq.pattern[beatNumber] && seq.isPlaying && seq.audioBuffer) {
+    if (seq.pattern[beatNumber] && seq.isPlaying && seq.audioBuffer || ctx.audition[idx]) {
       playback(ctx, seq);
     }
   });
