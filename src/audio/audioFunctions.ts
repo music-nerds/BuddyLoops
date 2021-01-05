@@ -7,6 +7,13 @@ export const playback = (ctx: StepContext, seq: StepRow): void => {
   playSound.start(ctx.nextNoteTime);
 };
 
+export const audition = (ctx: StepContext, seq: StepRow): void => {
+  const playSound = ctx.context.createBufferSource();
+  playSound.buffer = seq.audioBuffer;
+  playSound.connect(seq.gain);
+  playSound.start();
+};
+
 export const nextNote = (ctx: StepContext): void => {
   const secondsPerBeat: number = 60 / (ctx.tempo * 4);
   const maxSwing: number = secondsPerBeat / 3;

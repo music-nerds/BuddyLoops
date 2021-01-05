@@ -1,16 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import Slider from "@material-ui/core/Slider";
-import Snackbar from "@material-ui/core/Snackbar";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import PlayArrowSharpIcon from "@material-ui/icons/PlayArrowSharp";
-import StopSharpIcon from "@material-ui/icons/StopSharp";
-import GroupIcon from "@material-ui/icons/Group";
-import { ReactAudioContext, SocketContext, Timing, DeviceID } from "../app";
-import { AppState } from "./randoModule";
-import { play, stop } from "../audio/audioFunctions";
-import Button from "@material-ui/core/Button";
-import "./transport.css";
+import React, { useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import Slider from '@material-ui/core/Slider';
+import Switch from '@material-ui/core/Switch';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import PlayArrowSharpIcon from '@material-ui/icons/PlayArrowSharp';
+import StopSharpIcon from '@material-ui/icons/StopSharp';
+import GroupIcon from '@material-ui/icons/Group';
+import { ReactAudioContext, SocketContext, Timing, DeviceID } from '../app';
+import { AppState } from './randoModule';
+import { play, stop } from '../audio/audioFunctions'
+import Button from '@material-ui/core/Button';
+import './transport.css';
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => (
   <MuiAlert elevation={6} variant="filled" {...props} />
@@ -19,9 +20,11 @@ const Alert: React.FC<AlertProps> = (props: AlertProps) => (
 interface Props {
   id: string;
   setBeat: React.Dispatch<React.SetStateAction<number>>;
+  audition: boolean;
+  toggleAudition: () => void;
 }
 
-const Transport: React.FC<Props> = ({ id, setBeat }) => {
+const Transport: React.FC<Props> = ({id, setBeat, audition, toggleAudition }) => {
   const [open, setOpen] = useState(false);
   const { context } = useContext(ReactAudioContext);
   const [tempo, setTempo] = useState<number>(context.tempo);
@@ -142,6 +145,14 @@ const Transport: React.FC<Props> = ({ id, setBeat }) => {
         <div className="swing-adjust">
           <span>Swing {swing}%</span>
           <Slider value={swing} onChange={updateSwing} color="secondary" />
+        </div>
+        <div>
+          <span>Audition</span>
+          <Switch
+            color='primary'
+            checked={audition}
+            onChange={toggleAudition}
+          />
         </div>
       </div>
       <div className="transport-top-row">
