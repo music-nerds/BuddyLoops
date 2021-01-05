@@ -1,10 +1,11 @@
-import React, { useEffect, useContext } from "react";
-import { ReactAudioContext, SocketContext } from "../app";
-import StepRow from "./stepRow";
-import SampleSelector from "./sampleSelector";
-import GridOnIcon from "@material-ui/icons/GridOn";
-import MusicNoteIcon from "@material-ui/icons/MusicNote";
-import "./sampler.css";
+import React, { useState, useEffect, useContext } from 'react';
+import { ReactAudioContext, SocketContext } from '../app';
+import StepRow from './stepRow';
+import SampleSelector from './sampleSelector';
+import Audition from './audition';
+import GridOnIcon from '@material-ui/icons/GridOn';
+import MusicNoteIcon from '@material-ui/icons/MusicNote';
+import './sampler.css';
 
 interface Props {
   socketID: string;
@@ -13,6 +14,8 @@ interface Props {
   selectPattern: (pattern: number) => void;
   view: string;
   toggleView: (view: string) => void;
+  audition: boolean;
+  toggleAudition: () => void;
 }
 
 interface PatternChange {
@@ -21,16 +24,9 @@ interface PatternChange {
   id: string;
 }
 
-const Sampler: React.FC<Props> = ({
-  socketID,
-  beat,
-  currPattern,
-  selectPattern,
-  view,
-  toggleView,
-}) => {
-
-  const { context, setContext } = useContext(ReactAudioContext);
+const Sampler: React.FC<Props> = ({ socketID, beat, currPattern, selectPattern, view, toggleView, audition }) => {
+  console.log('VIEW', view)
+  const {context, setContext} = useContext(ReactAudioContext);
   const socket = useContext(SocketContext);
 
   useEffect(() => {
@@ -84,20 +80,19 @@ const Sampler: React.FC<Props> = ({
           {/* Patterns */}
         </div>
       </div>
-      <div className="sampler-view">
-        {view === "pattern" && (
-          <StepRow
-            row={context.sequencers[currPattern]}
-            id={socketID}
-            beat={beat}
-          />
-        )}
-        {view === "soundbank" && (
-          <SampleSelector
-            currPattern={currPattern}
-            selectPattern={selectPattern}
-          />
-        )}
+      <div className='sampler-view'>
+        {
+          view === 'pattern' &&
+          <StepRow row={context.sequencers[currPattern]} id={socketID} beat={beat} />
+        }
+        {
+          view === 'soundbank' && !audition &&
+          <SampleSelector currPattern={currPattern} selectPattern={selectPattern} />
+        }
+        {
+          view === 'soundbank' && audition &&
+          <Audition currPattern={currPattern} selectPattern={selectPattern} />
+        }
       </div>
     </div>
   );
