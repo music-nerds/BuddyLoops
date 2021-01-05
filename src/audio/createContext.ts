@@ -62,6 +62,10 @@ const initializeRow = (
   };
 };
 
+export interface AuditionMap {
+  [key: number]: boolean;
+}
+
 export interface StepContext {
   context: AudioContext;
   destination: AudioDestinationNode;
@@ -81,6 +85,9 @@ export interface StepContext {
   updateTempo: (bpm: number) => void;
   updateSwing: (swingValue: number) => void;
   hostID?: string;
+  audition: AuditionMap;
+  setAudition: (idx: number) => void;
+  endAudition: () => void;
 }
 
 export const createAudioContext = (): StepContext => {
@@ -148,6 +155,18 @@ export const createAudioContext = (): StepContext => {
     lookAhead: 25.0,
     timerId: undefined,
     subscribers: [],
+    audition: new Array(16).fill(null).reduce((a:AuditionMap, b:any, idx:number) => {
+      a[idx] = false;
+      return a;
+    }, {}),
+    setAudition: function (idx: number) {
+      this.audition[idx] = !this.audition[idx];
+    },
+    endAudition: function () {
+      for (let idx in this.audition) {
+        this.audition[idx] = false;
+      }
+    },
     subscribeSquares: function (
       fn: React.Dispatch<React.SetStateAction<number>>
     ) {
