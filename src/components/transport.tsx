@@ -49,6 +49,14 @@ const Transport: React.FC<Props> = ({ id, setBeat }) => {
       console.log("received play", target);
       playAtTime(target);
     });
+
+    return () => {
+      socket.off("receivePlay");
+      clearTimeout(timeoutID);
+    };
+  }, [timeArr, context, socket, deviceID]);
+
+  useEffect(() => {
     socket.on("receiveStop", () => {
       console.log("received stop", Date.now());
       stop(context);
@@ -60,11 +68,10 @@ const Transport: React.FC<Props> = ({ id, setBeat }) => {
       console.log("TRANSPORT RECEIVE STATE", hostState);
     });
     return () => {
-      socket.off("receivePlay");
       socket.off("receiveStop");
-      clearTimeout(timeoutID);
+      socket.off("receiveState");
     };
-  }, [timeArr, context, socket, deviceID, setBeat]);
+  }, [context, setBeat, socket]);
 
   const handlePlay = (): void => {
     socket.emit("sendPlay", id, timeArr);
@@ -89,20 +96,6 @@ const Transport: React.FC<Props> = ({ id, setBeat }) => {
     if (reason === "clickaway") return;
     setOpen(false);
   };
-
-  // const tempoUp = (): void => {
-  //   const newTempo: number = context.tempo+1
-  //   context.updateTempo(newTempo)
-  //   setTempo(newTempo)
-  //   socket.emit('tempoChange', socketID, newTempo);
-  // }
-
-  // const tempoDown = (): void => {
-  //   const newTempo: number = context.tempo-1;
-  //   context.updateTempo(newTempo)
-  //   setTempo(newTempo);
-  //   socket.emit('tempoChange', socketID, newTempo);
-  // }
 
   const updateTempo = (event: any, newValue: number | number[]) => {
     context.updateTempo(newValue as number);

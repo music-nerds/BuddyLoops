@@ -88,7 +88,6 @@ const MonoSynthSquares: React.SFC<MonoSynthSquaresProps> = ({
       if (!context.isPlaying) {
         setContext({ ...context });
       }
-      console.log(synth.pattern);
     });
     return () => {
       socket.off("synthPatternChange");
@@ -106,6 +105,7 @@ const MonoSynthSquares: React.SFC<MonoSynthSquaresProps> = ({
       onTouchEnd={touchEnd}
       style={{
         userSelect: "none",
+        touchAction: "none",
       }}
     >
       {synth.pattern.map((row, i) => (
@@ -128,7 +128,7 @@ const MonoSynthSquares: React.SFC<MonoSynthSquaresProps> = ({
               onMouseDown={handleToggle}
               key={j}
               onMouseEnter={handleDrag}
-              style={{ userSelect: "none" }}
+              style={{ userSelect: "none", touchAction: "none" }}
             />
           ))}
         </div>

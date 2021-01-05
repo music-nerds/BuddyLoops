@@ -1,14 +1,19 @@
-import React, { useState, useContext } from "react";
+import React, { useContext, useState } from "react";
 import { ReactAudioContext } from "../app";
 
 interface Props {
   selectPattern: (pattern: number) => void;
   currPattern: number;
+  beat: number;
 }
 
-const SampleSelector: React.FC<Props> = ({ selectPattern, currPattern }) => {
-  const { context } = useContext(ReactAudioContext);
+const SampleSelector: React.FC<Props> = ({
+  selectPattern,
+  currPattern,
+  beat,
+}) => {
   const [selected, setSelected] = useState(currPattern);
+  const { context } = useContext(ReactAudioContext);
 
   const togglePattern = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLElement;
@@ -24,7 +29,13 @@ const SampleSelector: React.FC<Props> = ({ selectPattern, currPattern }) => {
             key={idx}
             id={`${idx}`}
             onClick={togglePattern}
-            style={{ backgroundColor: "var(--blue)" }}
+            style={{
+              backgroundColor: `${
+                context.sequencers[idx].pattern[beat] === 1
+                  ? "var(--highlight)"
+                  : "var(--blue)"
+              }`,
+            }}
             className={
               idx === selected ? "seq-square active-beat" : "seq-square"
             }
