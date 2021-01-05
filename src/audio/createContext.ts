@@ -1,5 +1,6 @@
 import { sounds } from "./sounds";
 import { MonoSynth } from "./synth";
+import { kilmer140bpm } from "./drumPatterns";
 
 export interface StepRow {
   name: string; // name of row - helps to find this later
@@ -90,33 +91,64 @@ export const createAudioContext = (): StepContext => {
   context.onstatechange = () => console.log(context.state);
 
   const destination: AudioDestinationNode = context.destination;
-  const pattern: (1 | 0)[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  const one = initializeRow(context, "JungleKick", sounds.one, [...pattern]);
-  const two = initializeRow(context, "JungleSnare", sounds.two, [...pattern]);
-  const three = initializeRow(context, "Clave1", sounds.three, [...pattern]);
-  const four = initializeRow(context, "Cymbal", sounds.four, [...pattern]);
-  const five = initializeRow(context, "HiTom", sounds.five, [...pattern]);
-  const six = initializeRow(context, "SnareDry1", sounds.six, [...pattern]);
-  const seven = initializeRow(context, "Clave2", sounds.seven, [...pattern]);
-  const eight = initializeRow(context, "ClickClap", sounds.eight, [...pattern]);
-  const nine = initializeRow(context, "Kick2", sounds.nine, [...pattern]);
-  const ten = initializeRow(context, "SnareVerb", sounds.ten, [...pattern]);
-  const eleven = initializeRow(context, "Clap", sounds.eleven, [...pattern]);
-  const twelve = initializeRow(context, "SizzleHat", sounds.twelve, [
-    ...pattern,
-  ]);
-  const thirteen = initializeRow(context, "Kick1", sounds.thirteen, [
-    ...pattern,
-  ]);
-  const fourteen = initializeRow(context, "SnareDry2", sounds.fourteen, [
-    ...pattern,
-  ]);
-  const fifteen = initializeRow(context, "Click", sounds.fifteen, [...pattern]);
-  const sixteen = initializeRow(context, "HiHatDry", sounds.sixteen, [
-    ...pattern,
-  ]);
+  const one = initializeRow(context, "JungleKick", sounds.one, kilmer140bpm[0]);
+  const two = initializeRow(
+    context,
+    "JungleSnare",
+    sounds.two,
+    kilmer140bpm[1]
+  );
+  const three = initializeRow(context, "Clave1", sounds.three, kilmer140bpm[2]);
+  const four = initializeRow(context, "Cymbal", sounds.four, kilmer140bpm[3]);
+  const five = initializeRow(context, "HiTom", sounds.five, kilmer140bpm[4]);
+  const six = initializeRow(context, "SnareDry1", sounds.six, kilmer140bpm[5]);
+  const seven = initializeRow(context, "Clave2", sounds.seven, kilmer140bpm[6]);
+  const eight = initializeRow(
+    context,
+    "ClickClap",
+    sounds.eight,
+    kilmer140bpm[7]
+  );
+  const nine = initializeRow(context, "Kick2", sounds.nine, kilmer140bpm[8]);
+  const ten = initializeRow(context, "SnareVerb", sounds.ten, kilmer140bpm[9]);
+  const eleven = initializeRow(
+    context,
+    "Clap",
+    sounds.eleven,
+    kilmer140bpm[10]
+  );
+  const twelve = initializeRow(
+    context,
+    "SizzleHat",
+    sounds.twelve,
+    kilmer140bpm[11]
+  );
+  const thirteen = initializeRow(
+    context,
+    "Kick1",
+    sounds.thirteen,
+    kilmer140bpm[12]
+  );
+  const fourteen = initializeRow(
+    context,
+    "SnareDry2",
+    sounds.fourteen,
+    kilmer140bpm[13]
+  );
+  const fifteen = initializeRow(
+    context,
+    "Click",
+    sounds.fifteen,
+    kilmer140bpm[14]
+  );
+  const sixteen = initializeRow(
+    context,
+    "HiHatDry",
+    sounds.sixteen,
+    kilmer140bpm[15]
+  );
 
-  const synth = new MonoSynth(context, "sawtooth");
+  const synth = new MonoSynth(context, "square");
   return {
     context,
     destination,
@@ -140,7 +172,7 @@ export const createAudioContext = (): StepContext => {
     ],
     synth,
     isPlaying: false,
-    tempo: 90,
+    tempo: 140,
     swing: 0,
     currentNote: 0,
     nextNoteTime: 0,
