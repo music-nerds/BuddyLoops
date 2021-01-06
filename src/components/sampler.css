@@ -1,4 +1,3 @@
-
 .sampler-container {
   display: flex;
   flex-direction: column;
@@ -44,7 +43,6 @@
 .sampler-tab:hover {
   cursor: pointer;
 }
-
 
 .sampler-view {
   display: flex;

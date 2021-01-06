@@ -21,10 +21,10 @@
 }
 
 .seq-square > span {
-  margin: 5px;
   position: absolute;
   top: 1rem;
-  left: 1rem;
+  width: 100%;
+  text-align: center;
 }
 
 .seq-square[aria-checked="true"] {
@@ -85,34 +85,8 @@
   border: 2px solid var(--blue);
 }
 
-/* @media (max-width: 1088px) {
-  .step-squares {
-    max-width: 600px;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
-  .seq-square {
-    margin-bottom: 0.5em;
-    width: 75px;
-    height: 75px;
-  }
-} */
-
-/* @media (max-width: 640px) {
-  .step-squares {
-    max-width: 400px;
-  }
-  .seq-square {
-    width: 100px;
-    height: 100px;
+@media (max-width: 480px) {
+  #sample-name {
+    font-size: 0.5rem;
   }
 }
-@media (max-width: 450px) {
-  .step-squares {
-    max-width: 300px;
-  }
-  .seq-square {
-    width: 75px;
-    height: 75px;
-  }
-} */
