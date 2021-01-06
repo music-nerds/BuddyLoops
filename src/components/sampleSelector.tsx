@@ -40,7 +40,7 @@ const SampleSelector: React.FC<Props> = ({
               idx === selected ? "seq-square active-beat" : "seq-square"
             }
           >
-            <span>{context.sequencers[idx].name}</span>
+            <span id="sample-name">{context.sequencers[idx].name}</span>
           </div>
         ) : (
           <div key={idx} className="seq-square"></div>
