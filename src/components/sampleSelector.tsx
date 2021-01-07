@@ -17,8 +17,8 @@ const SampleSelector: React.FC<Props> = ({
 
   const togglePattern = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLElement;
-    setSelected(Number(target.id));
-    selectPattern(Number(target.id));
+    setSelected(Number(target.dataset.pattern));
+    selectPattern(Number(target.dataset.pattern));
   };
 
   return (
@@ -27,7 +27,7 @@ const SampleSelector: React.FC<Props> = ({
         context.sequencers[idx] ? (
           <div
             key={idx}
-            id={`${idx}`}
+            data-pattern={idx}
             onClick={togglePattern}
             style={{
               backgroundColor: `${
@@ -40,7 +40,9 @@ const SampleSelector: React.FC<Props> = ({
               idx === selected ? "seq-square active-beat" : "seq-square"
             }
           >
-            <span id="sample-name">{context.sequencers[idx].name}</span>
+            <span className="sample-name" data-pattern={idx}>
+              {context.sequencers[idx].name}
+            </span>
           </div>
         ) : (
           <div key={idx} className="seq-square"></div>
