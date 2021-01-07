@@ -86,7 +86,7 @@
 }
 
 @media (max-width: 480px) {
-  #sample-name {
+  .sample-name {
     font-size: 0.5rem;
   }
 }
