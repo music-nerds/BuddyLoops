@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { ReactAudioContext, SocketContext } from '../app';
-import StepRow from './stepRow';
-import SampleSelector from './sampleSelector';
-import Audition from './audition';
-import SoundbankFxPanel from './soundbankFxPanel';
-import PatternFxPanel from './patternFxPanel';
-import GridOnIcon from '@material-ui/icons/GridOn';
-import MusicNoteIcon from '@material-ui/icons/MusicNote';
-import './sampler.css';
+import React, { useEffect, useContext } from "react";
+import { ReactAudioContext, SocketContext } from "../app";
+import StepRow from "./stepRow";
+import SampleSelector from "./sampleSelector";
+import Audition from "./audition";
+import SoundbankFxPanel from "./soundbankFxPanel";
+import PatternFxPanel from "./patternFxPanel";
+import GridOnIcon from "@material-ui/icons/GridOn";
+import MusicNoteIcon from "@material-ui/icons/MusicNote";
+import "./sampler.css";
 
 interface Props {
   socketID: string;
@@ -26,9 +26,18 @@ interface PatternChange {
   id: string;
 }
 
-const Sampler: React.FC<Props> = ({ socketID, beat, currPattern, selectPattern, view, toggleView, audition, toggleAudition }) => {
-  console.log('VIEW', view)
-  const {context, setContext} = useContext(ReactAudioContext);
+const Sampler: React.FC<Props> = ({
+  socketID,
+  beat,
+  currPattern,
+  selectPattern,
+  view,
+  toggleView,
+  audition,
+  toggleAudition,
+}) => {
+  console.log("VIEW", view);
+  const { context, setContext } = useContext(ReactAudioContext);
   const socket = useContext(SocketContext);
 
   useEffect(() => {
@@ -44,33 +53,33 @@ const Sampler: React.FC<Props> = ({ socketID, beat, currPattern, selectPattern, 
       }
     });
 
-    socket.on('receiveRowLaunch', (name: string) => {
+    socket.on("receiveRowLaunch", (name: string) => {
       // if(name === context.sequencers[currPattern].name){
       //   sequencer.shouldPlayNextLoop = !row.shouldPlayNextLoop;
       //   // setLaunchEnabled(row.shouldPlayNextLoop);
       // }
-      const sequencer = context.sequencers.find(seq => seq.name === name)!;
-      sequencer.shouldPlayNextLoop = !sequencer.shouldPlayNextLoop
-    })
+      const sequencer = context.sequencers.find((seq) => seq.name === name)!;
+      sequencer.shouldPlayNextLoop = !sequencer.shouldPlayNextLoop;
+    });
 
-    socket.on('receiveDrumToggle', () => {
+    socket.on("receiveDrumToggle", () => {
       context.toggleSequencersEnabled();
-    })
+    });
 
-    socket.on('receiveMomentaryOn', (id:number) => {
+    socket.on("receiveMomentaryOn", (id: number) => {
       context.setAudition(id);
-    })
+    });
 
-    socket.on('receiveMomentaryOff', (id:number) => {
+    socket.on("receiveMomentaryOff", (id: number) => {
       context.endAudition(id);
-    })
+    });
 
     return () => {
       socket.off("patternChange");
-      socket.off('receiveRowLaunch');
-      socket.off('receiveDrumToggle');
-      socket.off('sendMomentaryOn');
-      socket.off('sendMomentaryOff');
+      socket.off("receiveRowLaunch");
+      socket.off("receiveDrumToggle");
+      socket.off("sendMomentaryOn");
+      socket.off("sendMomentaryOff");
     };
     // }, [context, context.sequencers, row])
   }, [context, context.sequencers, setContext, socket]);
@@ -97,27 +106,32 @@ const Sampler: React.FC<Props> = ({ socketID, beat, currPattern, selectPattern, 
           <GridOnIcon />
         </div>
       </div>
-      {
-        view === 'soundbank' && 
+      {view === "soundbank" && (
         <SoundbankFxPanel audition={audition} toggleAudition={toggleAudition} />
-      }
-      {
-        view === 'pattern' && 
-        <PatternFxPanel currPattern={currPattern} />
-      }
-      <div className='sampler-view'>
-        {
-          view === 'pattern' &&
-          <StepRow row={context.sequencers[currPattern]} id={socketID} beat={beat} />
-        }
-        {
-          view === 'soundbank' && !audition &&
-          <SampleSelector beat={beat} currPattern={currPattern} selectPattern={selectPattern} />
-        }
-        {
-          view === 'soundbank' && audition &&
-          <Audition selectPattern={selectPattern} beat={beat} />
-        }
+      )}
+      {view === "pattern" && <PatternFxPanel currPattern={currPattern} />}
+      <div className="sampler-view">
+        {view === "pattern" && (
+          <StepRow
+            row={context.sequencers[currPattern]}
+            id={socketID}
+            beat={beat}
+          />
+        )}
+        {view === "soundbank" && !audition && (
+          <SampleSelector
+            beat={beat}
+            currPattern={currPattern}
+            selectPattern={selectPattern}
+          />
+        )}
+        {view === "soundbank" && audition && (
+          <Audition
+            selectPattern={selectPattern}
+            beat={beat}
+            currPattern={currPattern}
+          />
+        )}
       </div>
     </div>
   );
