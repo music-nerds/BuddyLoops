@@ -87,7 +87,7 @@ const Sampler: React.FC<Props> = ({ socketID, beat, currPattern, selectPattern, 
         }
         {
           view === 'soundbank' && !audition &&
-          <SampleSelector currPattern={currPattern} selectPattern={selectPattern} />
+          <SampleSelector currPattern={currPattern} selectPattern={selectPattern} beat={beat} />
         }
         {
           view === 'soundbank' && audition &&
