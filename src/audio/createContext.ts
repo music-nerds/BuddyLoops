@@ -71,6 +71,8 @@ export interface StepContext {
   context: AudioContext;
   destination: AudioDestinationNode;
   sequencers: StepRow[];
+  sequencersArePlaying: boolean;
+  sequencersShouldPlayNextLoop: boolean;
   synth: MonoSynth;
   isPlaying: boolean;
   tempo: number;
@@ -89,6 +91,7 @@ export interface StepContext {
   audition: AuditionMap;
   setAudition: (idx: number) => void;
   endAudition: () => void;
+  toggleSequencersEnabled: () => void;
 }
 
 export const createAudioContext = (): StepContext => {
@@ -177,6 +180,8 @@ export const createAudioContext = (): StepContext => {
       fifteen,
       sixteen,
     ],
+    sequencersArePlaying: true,
+    sequencersShouldPlayNextLoop: true,
     synth,
     isPlaying: false,
     tempo: 140,
@@ -209,6 +214,9 @@ export const createAudioContext = (): StepContext => {
     },
     updateSwing: function (swingValue: number) {
       this.swing = swingValue;
+    },
+    toggleSequencersEnabled: function () {
+      this.sequencersShouldPlayNextLoop = !this.sequencersShouldPlayNextLoop;
     },
   };
 };

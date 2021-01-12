@@ -64,10 +64,24 @@
 
 .sampler-fx-panel {
   width: 95%;
-  height: 50px;
-  padding: 0 10px;
+  /* height: 50px; */
+  padding: 5px 10px;
   border: 1px solid black;
   background-color: var(--sampler);
   color: var(--text);
   box-sizing: border-box;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.fx-panel-launch {
+  background-color: var(--blue);
+  padding: 0.25rem 1.5rem;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.fx-panel-launch:active {
+  transform: scale(0.9);
 }
