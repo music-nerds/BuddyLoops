@@ -24,7 +24,7 @@ interface Props {
   toggleAudition: () => void;
 }
 
-const Transport: React.FC<Props> = ({id, setBeat, audition, toggleAudition }) => {
+const Transport: React.FC<Props> = ({id, setBeat }) => {
   const [open, setOpen] = useState(false);
   const { context } = useContext(ReactAudioContext);
   const [tempo, setTempo] = useState<number>(context.tempo);

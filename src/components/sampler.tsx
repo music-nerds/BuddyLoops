@@ -3,6 +3,7 @@ import { ReactAudioContext, SocketContext } from '../app';
 import StepRow from './stepRow';
 import SampleSelector from './sampleSelector';
 import Audition from './audition';
+import SamplerFXPanel from './samplerFxPanel';
 import GridOnIcon from '@material-ui/icons/GridOn';
 import MusicNoteIcon from '@material-ui/icons/MusicNote';
 import './sampler.css';
@@ -24,7 +25,7 @@ interface PatternChange {
   id: string;
 }
 
-const Sampler: React.FC<Props> = ({ socketID, beat, currPattern, selectPattern, view, toggleView, audition }) => {
+const Sampler: React.FC<Props> = ({ socketID, beat, currPattern, selectPattern, view, toggleView, audition, toggleAudition }) => {
   console.log('VIEW', view)
   const {context, setContext} = useContext(ReactAudioContext);
   const socket = useContext(SocketContext);
@@ -80,6 +81,7 @@ const Sampler: React.FC<Props> = ({ socketID, beat, currPattern, selectPattern, 
           {/* Patterns */}
         </div>
       </div>
+      <SamplerFXPanel audition={audition} toggleAudition={toggleAudition}/>
       <div className='sampler-view'>
         {
           view === 'pattern' &&
@@ -87,11 +89,11 @@ const Sampler: React.FC<Props> = ({ socketID, beat, currPattern, selectPattern, 
         }
         {
           view === 'soundbank' && !audition &&
-          <SampleSelector currPattern={currPattern} selectPattern={selectPattern} beat={beat} />
+          <SampleSelector beat={beat} currPattern={currPattern} selectPattern={selectPattern} />
         }
         {
           view === 'soundbank' && audition &&
-          <Audition />
+          <Audition selectPattern={selectPattern} beat={beat} />
         }
       </div>
     </div>
