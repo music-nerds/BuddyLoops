@@ -71,8 +71,28 @@
   color: var(--text);
   box-sizing: border-box;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
+}
+
+.pattern-fx-panel {
+  width: 95%;
+  /* height: 50px; */
+  padding: 5px 10px;
+  border: 1px solid black;
+  background-color: var(--sampler);
+  color: var(--text);
+  box-sizing: border-box;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.pattern-fx-launch {
+  background-color: orange;
+  padding: 0.25rem 1.5rem;
+  box-sizing: border-box;
+  cursor: pointer;
 }
 
 .fx-panel-launch {
