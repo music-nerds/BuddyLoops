@@ -208,7 +208,7 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
     <div className="fullPage">
       <div className="container">
         {!ready && <ContextOverlay setReady={setReady} />}
-        <Transport id={socketID} setBeat={setBeat} />
+        <Transport id={socketID} setBeat={setBeat} audition={audition} toggleAudition={toggleAudition} />
         <Sampler
           socketID={socketID}
           beat={beat}
