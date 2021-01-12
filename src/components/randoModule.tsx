@@ -11,10 +11,6 @@ import ContextOverlay from "./contextOverlay";
 import Transport from "./transport";
 import Sampler from "./sampler";
 import Synth from "./synth";
-// import { play } from '../audio/audioFunctions'
-
-// import Indicators from './indicators';
-// import { Step } from '@material-ui/core';
 
 interface NewUser {
   id: string;
@@ -195,7 +191,6 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
 
   const selectPattern = (pattern: number): void => {
     setView("pattern");
-    console.log("PATTERN", pattern);
     setCurrPattern(pattern);
   };
 

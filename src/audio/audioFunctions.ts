@@ -94,7 +94,7 @@ export const play = (ctx: StepContext): void => {
   if (!ctx.isPlaying) {
     ctx.isPlaying = true;
     ctx.currentNote = 0;
-    ctx.nextNoteTime = ctx.context.currentTime;
+    ctx.nextNoteTime = ctx.context.currentTime + ctx.scheduleAheadTime;
     scheduler(ctx);
   }
 };
