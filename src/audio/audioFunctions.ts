@@ -1,3 +1,4 @@
+import ContextOverlay from "../components/contextOverlay";
 import { StepContext, StepRow } from "./createContext";
 
 export const playback = (ctx: StepContext, seq: StepRow): void => {
@@ -43,6 +44,11 @@ export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
   // handle which loops should play each cycle
   const quantizeLength = 8;
   if (beatNumber % quantizeLength === 0) {
+    if (ctx.sequencersShouldPlayNextLoop) {
+      ctx.sequencersArePlaying = true;
+    } else {
+      ctx.sequencersArePlaying = false;
+    }
     ctx.sequencers.forEach((seq) => {
       if (seq.shouldPlayNextLoop) {
         seq.isPlaying = true;
@@ -52,12 +58,14 @@ export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
     });
   }
   // play the samples
-  ctx.sequencers.forEach((seq, idx) => {
-    // if (seq.squares && seq.squares[beatNumber].getAttribute('aria-checked') === 'true' && seq.isPlaying && seq.audioBuffer) {
-    if (seq.pattern[beatNumber] && seq.isPlaying && seq.audioBuffer || ctx.audition[idx]) {
-      playback(ctx, seq);
-    }
-  });
+  if (ctx.sequencersArePlaying) {
+    ctx.sequencers.forEach((seq, idx) => {
+      // if (seq.squares && seq.squares[beatNumber].getAttribute('aria-checked') === 'true' && seq.isPlaying && seq.audioBuffer) {
+      if (ctx.audition[idx] || (seq.pattern[beatNumber] && seq.isPlaying && seq.audioBuffer)) {
+        playback(ctx, seq);
+      }
+    }); 
+  }   
   const hasNote = ctx.synth.pattern[beatNumber].includes(1);
   if (hasNote) {
     ctx.synth.pattern[beatNumber].forEach((note, i) => {

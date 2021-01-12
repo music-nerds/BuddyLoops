@@ -41,10 +41,9 @@ const Audition: React.FC<Props> = ({ selectPattern, beat }) => {
               onMouseUp={auditionEnd}
               onTouchStart={auditionStart}
               onTouchEnd={auditionEnd}
-              // style={{ backgroundColor: '#B22222'}}
               style={{
                 backgroundColor: `${
-                  context.sequencers[idx].pattern[beat] === 1
+                  (context.sequencers[idx].pattern[beat] === 1 && context.sequencersArePlaying)
                     ? "var(--highlight)"
                     : "var(--blue)"
                 }`,
