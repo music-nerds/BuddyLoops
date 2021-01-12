@@ -90,7 +90,7 @@ export interface StepContext {
   hostID?: string;
   audition: AuditionMap;
   setAudition: (idx: number) => void;
-  endAudition: () => void;
+  endAudition: (id:number) => void;
   toggleSequencersEnabled: () => void;
 }
 
@@ -197,12 +197,10 @@ export const createAudioContext = (): StepContext => {
       return a;
     }, {}),
     setAudition: function (idx: number) {
-      this.audition[idx] = !this.audition[idx];
+      this.audition[idx] = true;
     },
-    endAudition: function () {
-      for (let idx in this.audition) {
-        this.audition[idx] = false;
-      }
+    endAudition: function (id) {
+      this.audition[id] = false;
     },
     subscribeSquares: function (
       fn: React.Dispatch<React.SetStateAction<number>>

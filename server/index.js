@@ -76,8 +76,21 @@ io.on("connection", (socket) => {
 
   socket.on("sendRowLaunch", (id, name) => {
     // launch a row
-    io.to(id).emit("receiveRowLaunch", name);
+    // io.to(id).emit("receiveRowLaunch", name);
+    socket.to(id).emit('receiveRowLaunch', name);
   });
+
+  socket.on('sendDrumToggle', (id) => {
+    socket.to(id).emit('receiveDrumToggle')
+  });
+
+  socket.on('sendMomentaryOn', (socketId, id) => {
+    socket.to(socketId).emit('receiveMomentaryOn', id);
+  });
+
+  socket.on('sendMomentaryOff', (socketID, id) => {
+    socket.to(socketID).emit('receiveMomentaryOff', id);
+  })
 
   socket.on("patternChange", (id, data) => {
     // change pattern

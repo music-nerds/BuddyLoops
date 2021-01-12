@@ -1,4 +1,3 @@
-import ContextOverlay from "../components/contextOverlay";
 import { StepContext, StepRow } from "./createContext";
 
 export const playback = (ctx: StepContext, seq: StepRow): void => {
@@ -42,7 +41,7 @@ export const calculateNextCycleTime = (ctx: StepContext) => {
 
 export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
   // handle which loops should play each cycle
-  const quantizeLength = 8;
+  const quantizeLength = 16;
   if (beatNumber % quantizeLength === 0) {
     if (ctx.sequencersShouldPlayNextLoop) {
       ctx.sequencersArePlaying = true;
@@ -65,7 +64,13 @@ export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
         playback(ctx, seq);
       }
     }); 
-  }   
+  } else {
+    ctx.sequencers.forEach((seq, idx) => {
+      if (ctx.audition[idx]) {
+        playback(ctx, seq);
+      }
+    }); 
+  }
   const hasNote = ctx.synth.pattern[beatNumber].includes(1);
   if (hasNote) {
     ctx.synth.pattern[beatNumber].forEach((note, i) => {
