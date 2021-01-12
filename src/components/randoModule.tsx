@@ -48,7 +48,7 @@ interface Props {
 const Rando: React.FC<Props> = ({ ready, setReady }) => {
   const { context, setContext } = useContext(ReactAudioContext);
   const [beat, setBeat] = useState(-1);
-  const [audition, setAudition] = useState(false);
+  const [audition, setAudition] = useState(true);
   const socket = useContext(SocketContext);
   const deviceID = useContext(DeviceID);
   let timeArr = useContext(Timing);
@@ -190,8 +190,10 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
   }, [timeArr, context, deviceID, socket, socketID, setContext]);
 
   const selectPattern = (pattern: number): void => {
-    setView("pattern");
     setCurrPattern(pattern);
+    if (!audition) {
+      setView("pattern");
+    }
   };
 
   const toggleView = (view: string) => {
@@ -206,7 +208,7 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
     <div className="fullPage">
       <div className="container">
         {!ready && <ContextOverlay setReady={setReady} />}
-        <Transport id={socketID} setBeat={setBeat} audition={audition} toggleAudition={toggleAudition} />
+        <Transport id={socketID} setBeat={setBeat} />
         <Sampler
           socketID={socketID}
           beat={beat}

@@ -20,11 +20,9 @@ const Alert: React.FC<AlertProps> = (props: AlertProps) => (
 interface Props {
   id: string;
   setBeat: React.Dispatch<React.SetStateAction<number>>;
-  audition: boolean;
-  toggleAudition: () => void;
 }
 
-const Transport: React.FC<Props> = ({id, setBeat, audition, toggleAudition }) => {
+const Transport: React.FC<Props> = ({id, setBeat }) => {
   const [open, setOpen] = useState(false);
   const { context } = useContext(ReactAudioContext);
   const [tempo, setTempo] = useState<number>(context.tempo);
@@ -145,14 +143,6 @@ const Transport: React.FC<Props> = ({id, setBeat, audition, toggleAudition }) =>
         <div className="swing-adjust">
           <span>Swing {swing}%</span>
           <Slider value={swing} onChange={updateSwing} color="secondary" />
-        </div>
-        <div>
-          <span>Audition</span>
-          <Switch
-            color='primary'
-            checked={audition}
-            onChange={toggleAudition}
-          />
         </div>
       </div>
       <div className="transport-top-row">

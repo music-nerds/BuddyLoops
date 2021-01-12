@@ -3,12 +3,18 @@ import { ReactAudioContext } from '../app';
 import { audition } from '../audio/audioFunctions';
 import './stepRow.css';
 
-const Audition: React.FC = () => {
+interface Props {
+  selectPattern: (pattern: number) => void;
+  beat: number;
+}
+
+const Audition: React.FC<Props> = ({ selectPattern, beat }) => {
   const { context } = useContext(ReactAudioContext);
 
   const auditionStart = (event: React.MouseEvent<HTMLDivElement, MouseEvent> | React.TouchEvent<HTMLDivElement>) => {
     const target = event.target as HTMLElement;
     const id:number = Number(target.id);
+    selectPattern(id);
     if (!context.isPlaying) {
       audition(context, context.sequencers[id]);
     } else {
@@ -35,7 +41,14 @@ const Audition: React.FC = () => {
               onMouseUp={auditionEnd}
               onTouchStart={auditionStart}
               onTouchEnd={auditionEnd}
-              style={{ backgroundColor: '#B22222'}}
+              // style={{ backgroundColor: '#B22222'}}
+              style={{
+                backgroundColor: `${
+                  context.sequencers[idx].pattern[beat] === 1
+                    ? "var(--highlight)"
+                    : "var(--blue)"
+                }`,
+              }}
               className='aud-square'
             >
               <span>
