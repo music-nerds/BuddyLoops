@@ -146,14 +146,6 @@ const Transport: React.FC<Props> = ({id, setBeat }) => {
           <span>Swing {swing}%</span>
           <Slider value={swing} onChange={updateSwing} color="secondary" />
         </div>
-        <div>
-          <span>Audition</span>
-          <Switch
-            color='primary'
-            checked={audition}
-            onChange={toggleAudition}
-          />
-        </div>
       </div>
       <div className="transport-top-row">
         <Button color="secondary" onClick={handlePlay}>
