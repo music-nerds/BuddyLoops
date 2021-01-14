@@ -2,13 +2,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 95%;
   margin: 20px 0;
 }
 
 .transport-top-row {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
 }
@@ -22,26 +22,35 @@
 .share-btn {
   color: #ffffff;
 }
-
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+.play-stop {
+  flex: 3;
+  display: flex;
+  justify-content: center;
+}
+.share-btn-div {
+  flex: 2;
+  display: flex;
+  justify-content: flex-end;
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
 .transport-bottom-row {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin: 0 20px;
+  margin: 0;
   min-width: 300px;
   color: var(--text);
 }
 
 .transport-bottom-row > div {
   width: 100%;
-  margin: 0 10px;
+  margin-right: 2rem;
 }
 
 @media screen and (max-width: 1088px) {

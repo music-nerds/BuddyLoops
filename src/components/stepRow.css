@@ -26,11 +26,12 @@
   touch-action: none;
 }
 
-.aud-square:active {
+.aud-square.active {
   background: radial-gradient(rgb(255, 255, 255, 0.3), rgb(255, 255, 255, 0));
 }
 
-.seq-square:hover, .aud-square:hover {
+.seq-square:hover,
+.aud-square:hover {
   cursor: pointer;
 }
 
@@ -38,7 +39,8 @@
   background: radial-gradient(rgb(255, 255, 255, 0.3), rgb(255, 255, 255, 0));
 }
 
-.seq-square > span, .aud-square > span {
+.seq-square > span,
+.aud-square > span {
   margin: 5px;
   position: absolute;
   top: 1rem;
