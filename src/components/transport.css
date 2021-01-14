@@ -61,4 +61,11 @@ input[type="number"]::-webkit-outer-spin-button {
     justify-content: center;
     align-items: center;
   }
+  .share-btn-div,
+  .play-stop {
+    flex: 1;
+  }
+  .share-btn-div {
+    justify-content: center;
+  }
 }

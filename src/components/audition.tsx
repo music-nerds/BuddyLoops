@@ -189,7 +189,9 @@ const Audition: React.FC<Props> = ({ selectPattern, beat, currPattern }) => {
               OTHERWISE, IT WILL BREAK IF CLICKED ON. 
               E.TARGET IS THE MOST HIGHLY NESTED ELEMENT
             */}
-            <span data-index={idx}>{context.sequencers[idx].name}</span>
+            <span data-index={idx} className="sample-name">
+              {context.sequencers[idx].name}
+            </span>
           </div>
         ) : (
           <div key={idx} className="seq-square"></div>
