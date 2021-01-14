@@ -1,17 +1,17 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import Slider from '@material-ui/core/Slider';
-import Switch from '@material-ui/core/Switch';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
-import PlayArrowSharpIcon from '@material-ui/icons/PlayArrowSharp';
-import StopSharpIcon from '@material-ui/icons/StopSharp';
-import GroupIcon from '@material-ui/icons/Group';
-import { ReactAudioContext, SocketContext, Timing, DeviceID } from '../app';
-import { AppState } from './randoModule';
-import { play, stop } from '../audio/audioFunctions'
-import Button from '@material-ui/core/Button';
-import './transport.css';
+import React, { useContext, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import Slider from "@material-ui/core/Slider";
+// import Switch from "@material-ui/core/Switch";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+import PlayArrowSharpIcon from "@material-ui/icons/PlayArrowSharp";
+import StopSharpIcon from "@material-ui/icons/StopSharp";
+import GroupIcon from "@material-ui/icons/Group";
+import { ReactAudioContext, SocketContext, Timing, DeviceID } from "../app";
+import { AppState } from "./randoModule";
+import { play, stop } from "../audio/audioFunctions";
+import Button from "@material-ui/core/Button";
+import "./transport.css";
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => (
   <MuiAlert elevation={6} variant="filled" {...props} />
@@ -24,7 +24,7 @@ interface Props {
   toggleAudition: () => void;
 }
 
-const Transport: React.FC<Props> = ({id, setBeat }) => {
+const Transport: React.FC<Props> = ({ id, setBeat }) => {
   const [open, setOpen] = useState(false);
   const { context } = useContext(ReactAudioContext);
   const [tempo, setTempo] = useState<number>(context.tempo);
@@ -148,23 +148,27 @@ const Transport: React.FC<Props> = ({id, setBeat }) => {
         </div>
       </div>
       <div className="transport-top-row">
-        <Button color="secondary" onClick={handlePlay}>
-          <PlayArrowSharpIcon style={{ fontSize: 64 }} />
-        </Button>
-        <Button color="secondary" onClick={handleStop}>
-          <StopSharpIcon style={{ fontSize: 64 }} />
-        </Button>
-        <Button
-          startIcon={<GroupIcon fontSize="large" />}
-          className="share-btn"
-          color="primary"
-          variant="contained"
-          size="small"
-          style={{ height: 24, verticalAlign: "center", padding: "0 8px" }}
-          onClick={clipboard}
-        >
-          Share
-        </Button>
+        <div className="play-stop">
+          <Button color="secondary" onClick={handlePlay}>
+            <PlayArrowSharpIcon style={{ fontSize: 64 }} />
+          </Button>
+          <Button color="secondary" onClick={handleStop}>
+            <StopSharpIcon style={{ fontSize: 64 }} />
+          </Button>
+        </div>
+        <div className="share-btn-div">
+          <Button
+            startIcon={<GroupIcon fontSize="large" />}
+            className="share-btn"
+            color="primary"
+            variant="contained"
+            size="small"
+            style={{ height: 24, verticalAlign: "center", padding: "0 8px" }}
+            onClick={clipboard}
+          >
+            Share
+          </Button>
+        </div>
       </div>
       <Snackbar open={open} autoHideDuration={5000} onClose={close}>
         <Alert onClose={close} severity="success">
