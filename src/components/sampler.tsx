@@ -92,6 +92,7 @@ const Sampler: React.FC<Props> = ({
             view === "soundbank" ? "sampler-tab tab-selected" : "sampler-tab"
           }
           onClick={() => toggleView("soundbank")}
+          onTouchStart={() => toggleView("soundbank")}
         >
           <MusicNoteIcon />
         </div>
@@ -101,6 +102,7 @@ const Sampler: React.FC<Props> = ({
             view === "pattern" ? "sampler-tab tab-selected" : "sampler-tab"
           }
           onClick={() => toggleView("pattern")}
+          onTouchStart={() => toggleView("pattern")}
         >
           <GridOnIcon />
         </div>
