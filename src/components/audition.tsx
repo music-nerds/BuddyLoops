@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useRef, useState, useEffect } from "react";
 import { ReactAudioContext, SocketContext } from "../app";
 import { useHistory } from "react-router-dom";
 import { audition } from "../audio/audioFunctions";
@@ -22,6 +22,17 @@ const Audition: React.FC<Props> = ({ selectPattern, beat, currPattern }) => {
   const mouseDown: React.MutableRefObject<boolean> = useRef(false);
   const curDiv: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
   const prevDiv: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      context.sequencers.forEach((seq) => {
+        for (let i = 0; i < context.sequencers.length; i++) {
+          context.endAudition(i);
+          socket.emit("sendMomentaryOff", socketID, i);
+        }
+      });
+    };
+  }, [context, socket, socketID]);
 
   const startAudition = (
     event:
@@ -81,7 +92,9 @@ const Audition: React.FC<Props> = ({ selectPattern, beat, currPattern }) => {
   const auditionStartEnter = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    startAudition(event);
+    if (mouseDown.current) {
+      startAudition(event);
+    }
   };
   const touchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     mouseDown.current = true;
