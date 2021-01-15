@@ -32,8 +32,23 @@ const SoundbankFxPanel: React.FC<Props> = ({ audition, toggleAudition }) => {
     console.log("START");
   };
 
+  const clearAll = (
+    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
+  ) => {
+    e.preventDefault();
+    context.clearAllPatterns();
+  };
+
   return (
     <div className="sampler-fx-panel">
+      <div
+        onClick={clearAll}
+        onTouchEnd={clearAll}
+        className="fx-panel-launch"
+        id="clear-button"
+      >
+        <span>CLEAR PATTERN</span>
+      </div>
       <div>
         <span>Play</span>
         <Switch color="primary" checked={!audition} onChange={toggleAudition} />

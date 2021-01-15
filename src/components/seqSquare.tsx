@@ -6,6 +6,7 @@ interface SquareProps {
   handleToggle: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   enabled: 0 | 1;
   mouseDown: boolean;
+  sequencersArePlaying: boolean;
 }
 
 const SeqSquare: React.FC<SquareProps> = ({
@@ -14,6 +15,7 @@ const SeqSquare: React.FC<SquareProps> = ({
   handleToggle,
   enabled,
   mouseDown,
+  sequencersArePlaying,
 }) => {
   const handleDrag = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLDivElement;
@@ -35,7 +37,9 @@ const SeqSquare: React.FC<SquareProps> = ({
   return (
     <div
       data-index={index}
-      className={`seq-square ${beat === index ? "active-beat" : ""}`}
+      className={`seq-square ${
+        sequencersArePlaying && beat === index ? "active-beat" : ""
+      }`}
       aria-checked={enabled === 1 ? "true" : "false"}
       onMouseDown={handleToggle}
       onMouseLeave={handleMouseOut}

@@ -13,6 +13,7 @@ export interface StepRow {
   pattern: (0 | 1)[]; // rhythmic pattern as an array
   loadSample: () => Promise<void>; // load the sample and assign to audioBuffer property
   errMsg: string;
+  clearPattern: () => void;
 }
 
 const initializeRow = (
@@ -60,6 +61,9 @@ const initializeRow = (
     isPlaying: true,
     shouldPlayNextLoop: true,
     errMsg: "",
+    clearPattern: function() {
+      this.pattern = new Array(this.pattern.length).fill(0);
+    }
   };
 };
 
@@ -92,6 +96,7 @@ export interface StepContext {
   setAudition: (idx: number) => void;
   endAudition: (id:number) => void;
   toggleSequencersEnabled: () => void;
+  clearAllPatterns: () => void;
 }
 
 export const createAudioContext = (): StepContext => {
@@ -216,5 +221,8 @@ export const createAudioContext = (): StepContext => {
     toggleSequencersEnabled: function () {
       this.sequencersShouldPlayNextLoop = !this.sequencersShouldPlayNextLoop;
     },
+    clearAllPatterns: function() {
+      this.sequencers.forEach(s => s.clearPattern());
+    }
   };
 };
