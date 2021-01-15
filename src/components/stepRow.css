@@ -10,6 +10,7 @@
   color: var(--text);
   border: 2px solid var(--gray);
   touch-action: none;
+  user-select: none;
   position: relative;
 }
 

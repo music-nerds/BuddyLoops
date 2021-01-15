@@ -97,11 +97,13 @@ const Audition: React.FC<Props> = ({ selectPattern, beat, currPattern }) => {
     }
   };
   const touchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    e.preventDefault();
     mouseDown.current = true;
     curDiv.current = e.target as HTMLDivElement;
     startAudition(e);
   };
   const touchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    e.preventDefault();
     const loc = e.changedTouches[0];
     const location = document.elementFromPoint(
       loc.clientX,
