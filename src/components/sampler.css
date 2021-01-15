@@ -84,7 +84,7 @@
   color: var(--text);
   box-sizing: border-box;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -104,4 +104,16 @@
 
 .fx-panel-launch:active {
   transform: scale(0.9);
+}
+
+#clear-button {
+  height: 100%;
+  /* border: 1px solid red; */
+  background-color: rgba(255, 0, 0, 0.6);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  padding: 0 1rem;
 }

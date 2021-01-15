@@ -4,6 +4,7 @@ import Switch from "@material-ui/core/Switch";
 import { ReactAudioContext, SocketContext } from "../app";
 import PlayArrowSharpIcon from "@material-ui/icons/PlayArrowSharp";
 import PauseIcon from "@material-ui/icons/Pause";
+import Button from '@material-ui/core/Button';
 import "./sampler.css";
 
 interface Props {
@@ -32,8 +33,15 @@ const SoundbankFxPanel: React.FC<Props> = ({ audition, toggleAudition }) => {
     console.log("START");
   };
 
+  const clearAll = () => {
+    context.clearAllPatterns();
+  }
+
   return (
     <div className="sampler-fx-panel">
+      <div onClick={clearAll} className='fx-panel-launch' id='clear-button'>
+        <span>CLEAR ALL</span>
+      </div>
       <div>
         <span>Play</span>
         <Switch color="primary" checked={!audition} onChange={toggleAudition} />
