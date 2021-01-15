@@ -100,6 +100,7 @@
   padding: 0.25rem 1.5rem;
   box-sizing: border-box;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 .fx-panel-launch:active {
@@ -108,8 +109,7 @@
 
 #clear-button {
   height: 100%;
-  /* border: 1px solid red; */
-  background-color: rgba(255, 0, 0, 0.6);
+  background-color: var(--blue);
   color: white;
   display: flex;
   justify-content: center;

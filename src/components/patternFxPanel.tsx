@@ -1,9 +1,9 @@
-import React, { useContext, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { ReactAudioContext, SocketContext } from '../app';
-import PlayArrowSharpIcon from '@material-ui/icons/PlayArrowSharp';
-import PauseIcon from '@material-ui/icons/Pause';
-import './sampler.css';
+import React, { useContext, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { ReactAudioContext, SocketContext } from "../app";
+import PlayArrowSharpIcon from "@material-ui/icons/PlayArrowSharp";
+import PauseIcon from "@material-ui/icons/Pause";
+import "./sampler.css";
 
 interface Props {
   currPattern: number;
@@ -16,7 +16,6 @@ const PatternFxPanel: React.FC<Props> = ({ currPattern }) => {
   } = useHistory();
   const socketID = pathname.slice(1);
   const socket = useContext(SocketContext);
-  const sequencer = context.sequencers[currPattern];
   const [playing, setPlaying] = useState(context.sequencersArePlaying);
 
   // const handlePatternLaunch = () => {
@@ -37,14 +36,22 @@ const PatternFxPanel: React.FC<Props> = ({ currPattern }) => {
     console.log("START");
   };
 
-  const clearRow = () => {
+  const clearRow = (
+    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
+  ) => {
+    e.preventDefault();
     context.sequencers[currPattern].clearPattern();
-  }
+  };
 
   return (
-    <div className='pattern-fx-panel'>
-      <div onClick={clearRow} className='fx-panel-launch' id='clear-button'>
-        <span>CLEAR PATTERN</span>
+    <div className="pattern-fx-panel">
+      <div
+        onClick={clearRow}
+        onTouchEnd={clearRow}
+        className="fx-panel-launch"
+        id="clear-button"
+      >
+        <span>CLEAR TRACK</span>
       </div>
       <div
         className="fx-panel-launch"
@@ -68,7 +75,7 @@ const PatternFxPanel: React.FC<Props> = ({ currPattern }) => {
         }
       </div> */}
     </div>
-  )
-}
+  );
+};
 
 export default PatternFxPanel;

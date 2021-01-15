@@ -1,5 +1,5 @@
 import React, { useRef, useContext, useState } from "react";
-import { SocketContext } from "../app";
+import { SocketContext, ReactAudioContext } from "../app";
 import { StepRow } from "../audio/createContext";
 import "./stepRow.css";
 
@@ -13,6 +13,9 @@ interface RowProps {
 
 const Row: React.FC<RowProps> = ({ row, id, beat }) => {
   const socket = useContext(SocketContext);
+  const {
+    context: { sequencersArePlaying },
+  } = useContext(ReactAudioContext);
   const [mouseDown, setMouseDown] = useState(false);
   const div: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
   const curDiv: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
@@ -106,6 +109,7 @@ const Row: React.FC<RowProps> = ({ row, id, beat }) => {
             beat={beat}
             key={idx}
             mouseDown={mouseDown}
+            sequencersArePlaying={sequencersArePlaying}
           />
         );
       })}
