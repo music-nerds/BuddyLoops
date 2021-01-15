@@ -20,6 +20,8 @@ interface NewUser {
 interface SeqData {
   name: string;
   pattern: (0 | 1)[];
+  isPlaying: boolean;
+  shouldPlayNextLoop: boolean;
 }
 
 interface SynthData {
@@ -39,6 +41,8 @@ export interface AppState {
   swing: number;
   seqData: SeqData[];
   synthState: SynthData;
+  sequencersArePlaying: boolean;
+  sequencersShouldPlayNextLoop: boolean;
 }
 
 interface Props {
@@ -109,6 +113,8 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
             return {
               pattern: seq.pattern,
               name: seq.name,
+              isPlaying: seq.isPlaying,
+              shouldPlayNextLoop: seq.shouldPlayNextLoop,
             };
           });
           const {
@@ -116,6 +122,8 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
             isPlaying,
             swing,
             nextCycleTime,
+            sequencersArePlaying,
+            sequencersShouldPlayNextLoop,
             synth: { attackTime, releaseTime, pattern, filter, noteLength },
           } = context;
           socket.emit("sendState", socketID, {
@@ -125,6 +133,8 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
             tempo,
             isPlaying,
             swing,
+            sequencersArePlaying,
+            sequencersShouldPlayNextLoop,
             synthState: {
               attackTime,
               releaseTime,
@@ -145,12 +155,17 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
       context.nextCycleTime = hostContext.nextCycleTime;
       context.tempo = hostContext.tempo;
       context.swing = hostContext.swing;
+      context.sequencersArePlaying = hostContext.sequencersArePlaying;
+      context.sequencersShouldPlayNextLoop =
+        hostContext.sequencersShouldPlayNextLoop;
       hostContext.seqData.forEach((seq) => {
         const sameSeq = context.sequencers.find(
           (ctxSeq) => ctxSeq.name === seq.name
         );
         if (sameSeq) {
           sameSeq.pattern = seq.pattern;
+          sameSeq.isPlaying = seq.isPlaying;
+          sameSeq.shouldPlayNextLoop = seq.shouldPlayNextLoop;
         }
       });
 
@@ -208,7 +223,12 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
     <div className="fullPage">
       <div className="container">
         {!ready && <ContextOverlay setReady={setReady} />}
-        <Transport id={socketID} setBeat={setBeat} audition={audition} toggleAudition={toggleAudition} />
+        <Transport
+          id={socketID}
+          setBeat={setBeat}
+          audition={audition}
+          toggleAudition={toggleAudition}
+        />
         <Sampler
           socketID={socketID}
           beat={beat}

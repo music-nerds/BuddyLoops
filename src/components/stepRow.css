@@ -1,17 +1,4 @@
-.seq-square {
-  height: inherit;
-  width: inherit;
-  max-width: 25%;
-  max-height: 25%;
-  /* max-height: calc(25% - 1em); */
-  padding-top: 25%;
-  box-sizing: border-box;
-  color: var(--text);
-  border: 2px solid var(--gray);
-  position: relative;
-  touch-action: none;
-}
-
+.seq-square,
 .aud-square {
   height: inherit;
   width: inherit;
@@ -22,8 +9,8 @@
   box-sizing: border-box;
   color: var(--text);
   border: 2px solid var(--gray);
-  position: relative;
   touch-action: none;
+  position: relative;
 }
 
 .aud-square.active {
@@ -39,12 +26,12 @@
   background: radial-gradient(rgb(255, 255, 255, 0.3), rgb(255, 255, 255, 0));
 }
 
-.seq-square > span,
-.aud-square > span {
-  margin: 5px;
+.seq-square > span.sample-name,
+.aud-square > span.sample-name {
+  width: 100%;
   position: absolute;
-  top: 1rem;
-  left: 1rem;
+  top: 8px;
+  text-align: center;
   user-select: none;
   touch-action: none;
   -webkit-touch-callout: none;
@@ -110,7 +97,8 @@
 }
 
 @media (max-width: 480px) {
-  .sample-name {
+  .seq-square > span,
+  .aud-square > span {
     font-size: 0.5rem;
   }
 }
