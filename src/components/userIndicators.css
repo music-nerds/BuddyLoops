@@ -1,0 +1,5 @@
+.user-indicators {
+  display: flex;
+  width: 95%;
+  justify-content: flex-end;
+}

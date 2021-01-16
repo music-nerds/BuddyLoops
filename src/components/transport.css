@@ -3,7 +3,6 @@
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  margin: 20px 0;
 }
 
 .transport-top-row {
@@ -51,6 +50,10 @@ input[type="number"]::-webkit-outer-spin-button {
 .transport-bottom-row > div {
   width: 100%;
   margin-right: 2rem;
+}
+
+.transport-label {
+  font-size: 0.75rem;
 }
 
 @media screen and (max-width: 1088px) {

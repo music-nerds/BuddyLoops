@@ -11,6 +11,7 @@ import ContextOverlay from "./contextOverlay";
 import Transport from "./transport";
 import Sampler from "./sampler";
 import Synth from "./synth";
+import UserIndicators from "./userIndicators";
 
 interface NewUser {
   id: string;
@@ -62,6 +63,7 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
   const socketID = pathname.slice(1);
   const [currPattern, setCurrPattern] = useState(0);
   const [view, setView] = useState("soundbank");
+  const [numUsers, setNumUsers] = useState(0);
 
   useEffect(() => {
     context.sequencers.forEach((seq) => {
@@ -91,6 +93,7 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
         timeObj.deviceReceiveTime - timeObj.deviceSendTime;
       timeObj.offset = timeObj.deviceReceiveTime - timeObj.serverTime;
       timeArr.push(timeObj);
+      setNumUsers(timeArr.length);
       console.log("RECEIVE SERVER TIME", timeArr);
       socket.emit("notifyTime", socketID, timeArr[0]);
     });
@@ -100,6 +103,7 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
       );
       if (!deviceHasThisAlready) {
         timeArr.push(timeObj);
+        setNumUsers(timeArr.length);
       }
       if (timeArr.length > 1) {
         // person on the longest becomes the host
@@ -186,11 +190,13 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
         // assign new host
         timeArr.splice(hostIndex, 1);
         timeArr[0].isHost = true;
+        setNumUsers(timeArr.length);
       } else {
         // find the person who left and splice them out
         const userThatLeft = timeArr.find((obj) => obj.socketDeviceID === id);
         const userThatLeftIndex = timeArr.indexOf(userThatLeft!);
         timeArr.splice(userThatLeftIndex, 1);
+        setNumUsers(timeArr.length);
       }
       console.log(timeArr);
     });
@@ -222,6 +228,7 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
   return (
     <div className="fullPage">
       <div className="container">
+        <UserIndicators numUsers={numUsers} />
         {!ready && <ContextOverlay setReady={setReady} />}
         <Transport
           id={socketID}
