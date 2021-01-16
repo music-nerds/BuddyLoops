@@ -133,7 +133,7 @@ const Transport: React.FC<Props> = ({ id, setBeat }) => {
     <div id="transport">
       <div className="transport-bottom-row">
         <div className="tempo-adjust">
-          <span>{tempo} bpm</span>
+          <span className="transport-label">{tempo} bpm</span>
           <Slider
             value={tempo}
             onChange={updateTempo}
@@ -143,17 +143,17 @@ const Transport: React.FC<Props> = ({ id, setBeat }) => {
           />
         </div>
         <div className="swing-adjust">
-          <span>Swing {swing}%</span>
+          <span className="transport-label">Swing {swing}%</span>
           <Slider value={swing} onChange={updateSwing} color="secondary" />
         </div>
       </div>
       <div className="transport-top-row">
         <div className="play-stop">
           <Button color="secondary" onClick={handlePlay}>
-            <PlayArrowSharpIcon style={{ fontSize: 64 }} />
+            <PlayArrowSharpIcon style={{ fontSize: 56 }} />
           </Button>
           <Button color="secondary" onClick={handleStop}>
-            <StopSharpIcon style={{ fontSize: 64 }} />
+            <StopSharpIcon style={{ fontSize: 56 }} />
           </Button>
         </div>
         <div className="share-btn-div">
