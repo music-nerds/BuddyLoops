@@ -41,6 +41,7 @@ const PatternFxPanel: React.FC<Props> = ({ currPattern }) => {
   ) => {
     e.preventDefault();
     context.sequencers[currPattern].clearPattern();
+    socket.emit("clearSamplerPattern", socketID, currPattern);
   };
 
   return (

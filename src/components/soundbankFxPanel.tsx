@@ -37,6 +37,7 @@ const SoundbankFxPanel: React.FC<Props> = ({ audition, toggleAudition }) => {
   ) => {
     e.preventDefault();
     context.clearAllPatterns();
+    socket.emit("clearAllSamplerPatterns", socketID);
   };
 
   return (
