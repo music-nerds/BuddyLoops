@@ -7,6 +7,8 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import { FormControlLabel } from "@material-ui/core";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import PauseIcon from "@material-ui/icons/Pause";
 import { SocketContext } from "../app";
 import { AppState } from "./randoModule";
 
@@ -127,6 +129,9 @@ const MonoSynthControls: React.SFC<MonoSynthControlsProps> = ({
       setQ(synthState.q);
       setRelease(synthState.releaseTime);
     });
+    socket.on("synthLaunch", () => {
+      synth.shouldPlayNextLoop = !synth.shouldPlayNextLoop;
+    });
     return () => {
       socket.off("synthWave");
       socket.off("synthNoteLength");
@@ -135,6 +140,7 @@ const MonoSynthControls: React.SFC<MonoSynthControlsProps> = ({
       socket.off("synthFreq");
       socket.off("synthQ");
       socket.off("receiveState");
+      socket.off("synthLaunch");
     };
   }, [socket, synth]);
 
@@ -151,11 +157,25 @@ const MonoSynthControls: React.SFC<MonoSynthControlsProps> = ({
     }
   };
 
+  const handleLaunch = (
+    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
+  ) => {
+    e.preventDefault();
+    synth.shouldPlayNextLoop = !synth.shouldPlayNextLoop;
+    socket.emit("synthLaunch", socketID);
+  };
+
   return (
     <div id="mono-synth-controls">
-      <div className="toggle" ref={toggle} onClick={toggleControls}>
-        <p>Synth Controls</p>
-        <div className="chevron" ref={chevron}>
+      <div className="toggle" ref={toggle}>
+        <div className="synth-launch" onClick={handleLaunch}>
+          {synth.shouldPlayNextLoop ? (
+            <PauseIcon style={{ color: "white" }} />
+          ) : (
+            <PlayArrowIcon style={{ color: "white" }} />
+          )}
+        </div>
+        <div className="chevron" ref={chevron} onClick={toggleControls}>
           <KeyboardArrowDownIcon color="primary" fontSize="large" />
         </div>
       </div>

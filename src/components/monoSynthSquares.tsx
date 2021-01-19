@@ -120,7 +120,7 @@ const MonoSynthSquares: React.SFC<MonoSynthSquaresProps> = ({
           {row.map((col, j) => (
             <div
               className={`synth-square ${col === 1 ? "active-square" : ""} ${
-                i === beat ? "active-beat" : ""
+                synth.isPlaying && i === beat ? "active-beat" : ""
               }`}
               data-row={i}
               data-col={j}

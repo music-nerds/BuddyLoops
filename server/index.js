@@ -27,6 +27,9 @@ app.get("/*", (req, res) => {
 });
 
 io.on("connection", (socket) => {
+  /*
+    GLOBAL MESSAGES
+  */
   socket.on("handshake", (id) => {
     // establish connection with socketID
     console.log(chalk.cyan("HANDSHAKE", `roomID: ${id}`));
@@ -74,32 +77,40 @@ io.on("connection", (socket) => {
     io.to(id).emit("receiveStop");
   });
 
+  /*
+    SAMPLER MESSAGES
+  */
+
   socket.on("sendRowLaunch", (id, name) => {
     // launch a row
-    // io.to(id).emit("receiveRowLaunch", name);
-    socket.to(id).emit('receiveRowLaunch', name);
+    socket.to(id).emit("receiveRowLaunch", name);
   });
 
-  socket.on('sendDrumToggle', (id) => {
-    socket.to(id).emit('receiveDrumToggle')
+  socket.on("sendDrumToggle", (id) => {
+    socket.to(id).emit("receiveDrumToggle");
   });
 
-  socket.on('sendMomentaryOn', (socketId, id) => {
-    socket.to(socketId).emit('receiveMomentaryOn', id);
+  socket.on("sendMomentaryOn", (socketId, id) => {
+    socket.to(socketId).emit("receiveMomentaryOn", id);
   });
 
-  socket.on('sendMomentaryOff', (socketID, id) => {
-    socket.to(socketID).emit('receiveMomentaryOff', id);
-  })
+  socket.on("sendMomentaryOff", (socketID, id) => {
+    socket.to(socketID).emit("receiveMomentaryOff", id);
+  });
 
   socket.on("patternChange", (id, data) => {
     // change pattern
     socket.to(id).emit("patternChange", data);
   });
+
+  /*
+    SYNTH MESSAGES
+  */
+
   socket.on("synthPatternChange", (id, pattern) => {
     socket.to(id).emit("synthPatternChange", pattern);
   });
-  const params = [
+  const synthParams = [
     "swingChange",
     "tempoChange",
     "synthWave",
@@ -109,10 +120,13 @@ io.on("connection", (socket) => {
     "synthFreq",
     "synthQ",
   ];
-  params.forEach((param) => {
+  synthParams.forEach((param) => {
     socket.on(param, (id, value) => {
       socket.to(id).emit(param, value);
     });
+  });
+  socket.on("synthLaunch", (id) => {
+    socket.to(id).emit("synthLaunch");
   });
 });
 
