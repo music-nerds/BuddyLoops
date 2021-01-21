@@ -48,6 +48,11 @@ export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
     } else {
       ctx.sequencersArePlaying = false;
     }
+    if (ctx.synth.shouldPlayNextLoop) {
+      ctx.synth.isPlaying = true;
+    } else {
+      ctx.synth.isPlaying = false;
+    }
     ctx.sequencers.forEach((seq) => {
       if (seq.shouldPlayNextLoop) {
         seq.isPlaying = true;
@@ -60,21 +65,24 @@ export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
   if (ctx.sequencersArePlaying) {
     ctx.sequencers.forEach((seq, idx) => {
       // if (seq.squares && seq.squares[beatNumber].getAttribute('aria-checked') === 'true' && seq.isPlaying && seq.audioBuffer) {
-      if (ctx.audition[idx] || (seq.pattern[beatNumber] && seq.isPlaying && seq.audioBuffer)) {
+      if (
+        ctx.audition[idx] ||
+        (seq.pattern[beatNumber] && seq.isPlaying && seq.audioBuffer)
+      ) {
         playback(ctx, seq);
       }
-    }); 
+    });
   } else {
     ctx.sequencers.forEach((seq, idx) => {
       if (ctx.audition[idx]) {
         playback(ctx, seq);
       }
-    }); 
+    });
   }
   const hasNote = ctx.synth.pattern[beatNumber].includes(1);
   if (hasNote) {
     ctx.synth.pattern[beatNumber].forEach((note, i) => {
-      if (note === 1) {
+      if (ctx.synth.isPlaying && note === 1) {
         ctx.synth.playNote(
           ctx.synth.scale[i] * ctx.synth.octave,
           ctx.nextNoteTime,

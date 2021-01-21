@@ -27,6 +27,9 @@ app.get("/*", (req, res) => {
 });
 
 io.on("connection", (socket) => {
+  /*
+    GLOBAL MESSAGES
+  */
   socket.on("handshake", (id) => {
     // establish connection with socketID
     console.log(chalk.cyan("HANDSHAKE", `roomID: ${id}`));
@@ -73,10 +76,11 @@ io.on("connection", (socket) => {
     // stop playing
     io.to(id).emit("receiveStop");
   });
-
+  /*
+    SAMPLER MESSAGES
+  */
   socket.on("sendRowLaunch", (id, name) => {
     // launch a row
-    // io.to(id).emit("receiveRowLaunch", name);
     socket.to(id).emit("receiveRowLaunch", name);
   });
 
@@ -96,17 +100,19 @@ io.on("connection", (socket) => {
     // change pattern
     socket.to(id).emit("patternChange", data);
   });
+  /*
+    SYNTH MESSAGES
+  */
   socket.on("clearAllSamplerPatterns", (id) => {
     socket.to(id).emit("clearAllSamplerPatterns");
   });
   socket.on("clearSamplerPattern", (id, patternIndex) => {
     socket.to(id).emit("clearSamplerPattern", patternIndex);
   });
-
   socket.on("synthPatternChange", (id, pattern) => {
     socket.to(id).emit("synthPatternChange", pattern);
   });
-  const params = [
+  const synthParams = [
     "swingChange",
     "tempoChange",
     "synthWave",
@@ -116,10 +122,13 @@ io.on("connection", (socket) => {
     "synthFreq",
     "synthQ",
   ];
-  params.forEach((param) => {
+  synthParams.forEach((param) => {
     socket.on(param, (id, value) => {
       socket.to(id).emit(param, value);
     });
+  });
+  socket.on("synthLaunch", (id) => {
+    socket.to(id).emit("synthLaunch");
   });
 });
 
