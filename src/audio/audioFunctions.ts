@@ -79,20 +79,36 @@ export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
       }
     });
   }
-  const hasNote = ctx.synth.pattern[beatNumber].includes(1);
-  if (hasNote) {
-    ctx.synth.pattern[beatNumber].forEach((note, i) => {
-      if (ctx.synth.isPlaying && note === 1) {
-        ctx.synth.playNote(
-          ctx.synth.scale[i] * ctx.synth.octave,
-          ctx.nextNoteTime,
-          ctx.tempo
-        );
-      }
-    });
+  let { scale, octave, arpNotes } = ctx.synth;
+  if (!ctx.synth.arpNotes.length) {
+    // PATTERN
+    const hasNote = ctx.synth.pattern[beatNumber].includes(1);
+    if (hasNote) {
+      ctx.synth.pattern[beatNumber].forEach((note, i) => {
+        if (ctx.synth.isPlaying && note === 1) {
+          ctx.synth.playNote(
+            ctx.synth.scale[i] * ctx.synth.octave,
+            ctx.nextNoteTime,
+            ctx.tempo
+          );
+        }
+      });
+    } else {
+      ctx.synth.stopNote();
+    }
   } else {
-    ctx.synth.stopNote();
+    // ARPEGGIATOR
+    let freq = scale[arpNotes[ctx.synth.arpIndex]] * octave;
+    if (freq) {
+      ctx.synth.playNote(freq, ctx.nextNoteTime, ctx.tempo);
+      ctx.synth.arpIndex += 1;
+    }
+
+    if (ctx.synth.arpIndex >= arpNotes.length) {
+      ctx.synth.arpIndex = 0;
+    }
   }
+
   // paint the dom
   ctx.subscribers.forEach((fn) => {
     fn(beatNumber);

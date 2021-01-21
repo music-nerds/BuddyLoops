@@ -26,6 +26,10 @@ export class MonoSynth {
   attack: NodeJS.Timeout | null;
   isPlaying: boolean;
   shouldPlayNextLoop: boolean;
+  arpNotes: number[];
+  arpStyle: string;
+  arpIndex: number;
+  arpEnabled: boolean;
   constructor(context: AudioContext, type: OscillatorType) {
     this.context = context;
     this.osc = this.context.createOscillator();
@@ -47,6 +51,10 @@ export class MonoSynth {
     this.release = null;
     this.isPlaying = true;
     this.shouldPlayNextLoop = true;
+    this.arpNotes = [];
+    this.arpStyle = "order";
+    this.arpIndex = 0;
+    this.arpEnabled = true;
   }
 
   pattern: (0 | 1)[][] = [
@@ -56,7 +64,7 @@ export class MonoSynth {
     [1, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0],
-    [0, 1, 0, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0],
     [0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0],
@@ -69,11 +77,20 @@ export class MonoSynth {
   ];
   scale: number[] = [
     notes["D"],
+    notes["E"],
     notes["F"],
     notes["G"],
     notes["A"],
+    notes["Bb"],
     notes["C"] * 2,
     notes["D"] * 2,
+    notes["E"] * 2,
+    notes["F"] * 2,
+    notes["G"] * 2,
+    notes["A"] * 2,
+    notes["Bb"] * 2,
+    notes["C"] * 4,
+    notes["D"] * 4,
   ];
   octave: number = 1 / 4;
   updatePattern = (value: 0 | 1, beat: number, note: number): void => {

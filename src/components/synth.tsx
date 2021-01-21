@@ -1,7 +1,8 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import MonoSynthControls from "./monoSynthControls";
-import MonoSynthSquares from "./monoSynthSquares";
+// import MonoSynthSquares from "./monoSynthSquares";
+import MonoSynthArp from "./monoSynthArp";
 import "./synth.css";
 import { MonoSynth } from "../audio/synth";
 
@@ -18,7 +19,8 @@ const Synth: React.SFC<MonoSynthProps> = ({ beat, synth }) => {
   return (
     <div id="synth">
       <MonoSynthControls synth={synth} socketID={socketID} />
-      <MonoSynthSquares synth={synth} beat={beat} />
+      {/* <MonoSynthSquares synth={synth} beat={beat} /> */}
+      <MonoSynthArp synth={synth} />
     </div>
   );
 };
