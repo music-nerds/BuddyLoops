@@ -77,25 +77,32 @@ io.on("connection", (socket) => {
   socket.on("sendRowLaunch", (id, name) => {
     // launch a row
     // io.to(id).emit("receiveRowLaunch", name);
-    socket.to(id).emit('receiveRowLaunch', name);
+    socket.to(id).emit("receiveRowLaunch", name);
   });
 
-  socket.on('sendDrumToggle', (id) => {
-    socket.to(id).emit('receiveDrumToggle')
+  socket.on("sendDrumToggle", (id) => {
+    socket.to(id).emit("receiveDrumToggle");
   });
 
-  socket.on('sendMomentaryOn', (socketId, id) => {
-    socket.to(socketId).emit('receiveMomentaryOn', id);
+  socket.on("sendMomentaryOn", (socketId, id) => {
+    socket.to(socketId).emit("receiveMomentaryOn", id);
   });
 
-  socket.on('sendMomentaryOff', (socketID, id) => {
-    socket.to(socketID).emit('receiveMomentaryOff', id);
-  })
+  socket.on("sendMomentaryOff", (socketID, id) => {
+    socket.to(socketID).emit("receiveMomentaryOff", id);
+  });
 
   socket.on("patternChange", (id, data) => {
     // change pattern
     socket.to(id).emit("patternChange", data);
   });
+  socket.on("clearAllSamplerPatterns", (id) => {
+    socket.to(id).emit("clearAllSamplerPatterns");
+  });
+  socket.on("clearSamplerPattern", (id, patternIndex) => {
+    socket.to(id).emit("clearSamplerPattern", patternIndex);
+  });
+
   socket.on("synthPatternChange", (id, pattern) => {
     socket.to(id).emit("synthPatternChange", pattern);
   });

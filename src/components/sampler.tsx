@@ -83,6 +83,19 @@ const Sampler: React.FC<Props> = ({
     // }, [context, context.sequencers, row])
   }, [context, context.sequencers, setContext, socket]);
 
+  useEffect(() => {
+    socket.on("clearAllSamplerPatterns", () => {
+      context.clearAllPatterns();
+    });
+    socket.on("clearSamplerPattern", (patternIndex: number) => {
+      context.sequencers[patternIndex].clearPattern();
+    });
+    return () => {
+      socket.off("clearAllSamplerPatterns");
+      socket.off("clearSamplerPattern");
+    };
+  }, [socket, context]);
+
   return (
     <div className="sampler-container">
       <div className="sampler-tabs">
