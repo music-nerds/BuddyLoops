@@ -123,6 +123,7 @@ export const play = (ctx: StepContext): void => {
 export const stop = (ctx: StepContext): void => {
   if (ctx.isPlaying) {
     ctx.isPlaying = false;
+    ctx.nextCycleTime = undefined;
     window.clearTimeout(ctx.timerId);
   }
   ctx.synth.stopNote();
