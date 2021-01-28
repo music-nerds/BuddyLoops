@@ -64,7 +64,7 @@ export class MonoSynth {
     [1, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0],
-    [0, 0, 1, 0, 0, 0],
+    [0, 1, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0],
@@ -77,18 +77,14 @@ export class MonoSynth {
   ];
   scale: number[] = [
     notes["D"],
-    notes["E"],
     notes["F"],
     notes["G"],
     notes["A"],
-    notes["Bb"],
     notes["C"] * 2,
     notes["D"] * 2,
-    notes["E"] * 2,
     notes["F"] * 2,
     notes["G"] * 2,
     notes["A"] * 2,
-    notes["Bb"] * 2,
     notes["C"] * 4,
     notes["D"] * 4,
   ];

@@ -5,6 +5,7 @@
   align-items: center;
   user-select: none;
   touch-action: none;
+  margin-bottom: 4rem;
 }
 #mono-synth-controls {
   display: flex;
@@ -128,7 +129,9 @@ div.controls {
   padding: 0.5rem 1rem;
   border-radius: 5px;
 }
-
+#arp {
+  width: 100%;
+}
 #arp-container {
   width: 100%;
   display: flex;
@@ -141,15 +144,39 @@ div.controls {
 }
 
 .arp-square {
-  height: 15vh;
-  flex-basis: 30%;
+  height: 20vh;
+  flex-basis: 32%;
   margin: 2px;
   background-color: var(--blue);
+  transition: 100ms;
   touch-action: none;
   user-select: none;
 }
 .arp-square.root {
   background-color: var(--highlight);
+}
+.arp-square.selected {
+  background-color: #aa33aa;
+}
+.arp-square.selected.root {
+  background-color: #ff33ff;
+}
+#arp-fx {
+  background-color: var(--gray);
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px;
+}
+.hold-btn {
+  padding: 0.5rem 1rem;
+  background-color: var(--blue);
+  width: 4rem;
+  color: #eee;
+}
+.hold-btn.enabled {
+  background-color: #aa33aa;
 }
 
 @media (max-width: 768px) {
