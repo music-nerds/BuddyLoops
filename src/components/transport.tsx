@@ -68,7 +68,7 @@ const Transport: React.FC<Props> = ({ id, setBeat }) => {
     socket.on("receiveState", (hostState: AppState) => {
       setSwing(hostState.swing);
       setTempo(hostState.tempo);
-      console.log("TRANSPORT RECEIVE STATE", hostState);
+      // console.log("TRANSPORT RECEIVE STATE", hostState);
     });
     return () => {
       socket.off("receiveStop");

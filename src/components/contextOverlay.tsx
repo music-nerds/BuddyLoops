@@ -16,11 +16,12 @@ const ContextOverlay: React.SFC<Props> = ({ setReady }) => {
   const handleStart = () => {
     setReady(true);
     context.context.resume().then(() => {
-      if (context.nextCycleTime) {
+      if (context.nextCycleTime && context.isPlaying) {
         const myTimeObj = timeArr.find((obj) => obj.deviceID === deviceID);
         const offset = myTimeObj?.offset || 0;
         const now = Date.now();
-        let delay = context.nextCycleTime + offset - now;
+        let delay =
+          context.nextCycleTime + offset - now - context.scheduleAheadTime;
         while (delay < 0) {
           delay = delay + calculateFullCycleTime(context);
         }
