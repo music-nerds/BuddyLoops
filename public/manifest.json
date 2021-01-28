@@ -1,7 +1,7 @@
 {
   "name": "Buddy Loops",
   "short_name": "Buddy Loops",
-  "start_url": "http://localhost:3000/",
+  "start_url": "https://buddyloops.com/",
   "background_color": "black",
   "display": "standalone",
   "orientation": "portrait-primary",
