@@ -1,6 +1,6 @@
 import { sounds } from "./sounds";
 import { MonoSynth } from "./synth";
-import { kilmer140bpm } from "./drumPatterns";
+import { kilmer125bpm } from "./drumPatterns";
 
 export interface StepRow {
   name: string; // name of row - helps to find this later
@@ -61,9 +61,9 @@ const initializeRow = (
     isPlaying: true,
     shouldPlayNextLoop: true,
     errMsg: "",
-    clearPattern: function() {
+    clearPattern: function () {
       this.pattern = new Array(this.pattern.length).fill(0);
-    }
+    },
   };
 };
 
@@ -94,7 +94,7 @@ export interface StepContext {
   hostID?: string;
   audition: AuditionMap;
   setAudition: (idx: number) => void;
-  endAudition: (id:number) => void;
+  endAudition: (id: number) => void;
   toggleSequencersEnabled: () => void;
   clearAllPatterns: () => void;
 }
@@ -106,61 +106,61 @@ export const createAudioContext = (): StepContext => {
   context.onstatechange = () => console.log(context.state);
 
   const destination: AudioDestinationNode = context.destination;
-  const one = initializeRow(context, "JungleKick", sounds.one, kilmer140bpm[0]);
+  const one = initializeRow(context, "JungleKick", sounds.one, kilmer125bpm[0]);
   const two = initializeRow(
     context,
     "JungleSnare",
     sounds.two,
-    kilmer140bpm[1]
+    kilmer125bpm[1]
   );
-  const three = initializeRow(context, "Clave1", sounds.three, kilmer140bpm[2]);
-  const four = initializeRow(context, "Cymbal", sounds.four, kilmer140bpm[3]);
-  const five = initializeRow(context, "HiTom", sounds.five, kilmer140bpm[4]);
-  const six = initializeRow(context, "SnareDry1", sounds.six, kilmer140bpm[5]);
-  const seven = initializeRow(context, "Clave2", sounds.seven, kilmer140bpm[6]);
+  const three = initializeRow(context, "Clave1", sounds.three, kilmer125bpm[2]);
+  const four = initializeRow(context, "Cymbal", sounds.four, kilmer125bpm[3]);
+  const five = initializeRow(context, "HiTom", sounds.five, kilmer125bpm[4]);
+  const six = initializeRow(context, "SnareDry1", sounds.six, kilmer125bpm[5]);
+  const seven = initializeRow(context, "Clave2", sounds.seven, kilmer125bpm[6]);
   const eight = initializeRow(
     context,
     "ClickClap",
     sounds.eight,
-    kilmer140bpm[7]
+    kilmer125bpm[7]
   );
-  const nine = initializeRow(context, "Kick2", sounds.nine, kilmer140bpm[8]);
-  const ten = initializeRow(context, "SnareVerb", sounds.ten, kilmer140bpm[9]);
+  const nine = initializeRow(context, "Kick2", sounds.nine, kilmer125bpm[8]);
+  const ten = initializeRow(context, "SnareVerb", sounds.ten, kilmer125bpm[9]);
   const eleven = initializeRow(
     context,
     "Clap",
     sounds.eleven,
-    kilmer140bpm[10]
+    kilmer125bpm[10]
   );
   const twelve = initializeRow(
     context,
     "SizzleHat",
     sounds.twelve,
-    kilmer140bpm[11]
+    kilmer125bpm[11]
   );
   const thirteen = initializeRow(
     context,
     "Kick1",
     sounds.thirteen,
-    kilmer140bpm[12]
+    kilmer125bpm[12]
   );
   const fourteen = initializeRow(
     context,
     "SnareDry2",
     sounds.fourteen,
-    kilmer140bpm[13]
+    kilmer125bpm[13]
   );
   const fifteen = initializeRow(
     context,
     "Click",
     sounds.fifteen,
-    kilmer140bpm[14]
+    kilmer125bpm[14]
   );
   const sixteen = initializeRow(
     context,
     "HiHatDry",
     sounds.sixteen,
-    kilmer140bpm[15]
+    kilmer125bpm[15]
   );
 
   const synth = new MonoSynth(context, "square");
@@ -189,18 +189,20 @@ export const createAudioContext = (): StepContext => {
     sequencersShouldPlayNextLoop: true,
     synth,
     isPlaying: false,
-    tempo: 140,
-    swing: 0,
+    tempo: 125,
+    swing: 10,
     currentNote: 0,
     nextNoteTime: 0,
     scheduleAheadTime: 0.1,
     lookAhead: 25.0,
     timerId: undefined,
     subscribers: [],
-    audition: new Array(16).fill(null).reduce((a:AuditionMap, b:any, idx:number) => {
-      a[idx] = false;
-      return a;
-    }, {}),
+    audition: new Array(16)
+      .fill(null)
+      .reduce((a: AuditionMap, b: any, idx: number) => {
+        a[idx] = false;
+        return a;
+      }, {}),
     setAudition: function (idx: number) {
       this.audition[idx] = true;
     },
@@ -221,8 +223,8 @@ export const createAudioContext = (): StepContext => {
     toggleSequencersEnabled: function () {
       this.sequencersShouldPlayNextLoop = !this.sequencersShouldPlayNextLoop;
     },
-    clearAllPatterns: function() {
-      this.sequencers.forEach(s => s.clearPattern());
-    }
+    clearAllPatterns: function () {
+      this.sequencers.forEach((s) => s.clearPattern());
+    },
   };
 };
