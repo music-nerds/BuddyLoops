@@ -71,7 +71,7 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
     context.sequencers.forEach((seq) => {
       seq.loadSample().then(() => {
         if (seq.errMsg) {
-          // TODO: do something with the error
+          // TODO: do something with the errors
         }
       });
     });
@@ -90,14 +90,19 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     socket.on("receiveServerTime", (timeObj: TimeObj) => {
+      // console.log("RECEIVE SERVER TIME PRE", timeArr);
       timeObj.deviceReceiveTime = Date.now();
       timeObj.roundTripTime =
         timeObj.deviceReceiveTime - timeObj.deviceSendTime;
       timeObj.offset = timeObj.deviceReceiveTime - timeObj.serverTime;
       timeArr.push(timeObj);
       setNumUsers(timeArr.length);
-      console.log("RECEIVE SERVER TIME", timeArr);
-      socket.emit("notifyTime", socketID, timeArr[0]);
+      if (timeObj.deviceID !== deviceID) {
+        const myTimeObj = timeArr.find((obj) => obj.deviceID === deviceID);
+        socket.emit("notifyTime", socketID, myTimeObj);
+      } else {
+        socket.emit("notifyTime", socketID, timeObj);
+      }
     });
     socket.on("notifyTime", (timeObj: TimeObj) => {
       const deviceHasThisAlready = timeArr.find(
@@ -153,7 +158,6 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
           });
         }
       }
-      console.log("NOTIFY TIME", timeArr);
     });
     let timeoutID: number;
     socket.on("receiveState", (hostContext: AppState) => {
@@ -178,7 +182,7 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
       if (!context.isPlaying) {
         setContext({ ...context });
       }
-      console.log("receiveState", hostContext);
+      // console.log("RECEIVE STATE", hostContext);
     });
     socket.on("userJoined", (data: NewUser) => {
       console.log("NEW USER", data);

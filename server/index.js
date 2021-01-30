@@ -53,7 +53,7 @@ io.on("connection", (socket) => {
 
   socket.on("notifyTime", (id, timeObj) => {
     // notify other users of time data
-    socket.to(id).emit("notifyTime", timeObj);
+    io.to(id).emit("notifyTime", timeObj);
   });
 
   socket.on("sendState", (id, hostState) => {

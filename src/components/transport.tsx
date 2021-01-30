@@ -152,11 +152,17 @@ const Transport: React.FC<Props> = ({ id, setBeat, instrument, toggleInstrument 
             color="secondary"
             min={50}
             max={180}
+            step={1}
           />
         </div>
         <div className="swing-adjust">
           <span className="transport-label">Swing {swing}%</span>
-          <Slider value={swing} onChange={updateSwing} color="secondary" />
+          <Slider
+            value={swing}
+            onChange={updateSwing}
+            color="secondary"
+            step={1}
+          />
         </div>
       </div>
       <div className="transport-top-row">
