@@ -71,18 +71,20 @@
 
 .synth-square {
   width: 50px;
-  /* width: 64px; */
-  /* height: 64px; */
   height: 50px;
   box-sizing: border-box;
   border: 2px solid var(--blue);
   margin: 0.125rem;
 }
+.synth-square.on-beat {
+  border: 2px solid var(--highlight);
+}
 
 .synth-square.active-square {
   background-color: var(--blue);
 }
-.synth-square.active-beat {
+.synth-square.active-beat,
+.synth-square.synth-square.active-beat.on-beat {
   border: 2px solid whitesmoke;
 }
 
@@ -177,8 +179,6 @@ div.controls {
 @media (max-width: 480px) {
   #mono-synth-controls {
     width: 320px;
-    /* width: calc(32px * 8); */
-    max-width: 480px;
   }
 
   .synth-squares {
@@ -188,6 +188,14 @@ div.controls {
   .synth-square {
     width: 32px;
     height: 32px;
+  }
+  .synth-square-row {
+    margin: 0.5rem 0;
+  }
+}
+@media (max-width: 375px) {
+  .synth-square {
+    height: 24px;
   }
 }
 
