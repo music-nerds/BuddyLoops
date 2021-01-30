@@ -16,7 +16,9 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({ synth }) => {
   const { context, setContext } = useContext(ReactAudioContext);
   const [hold, setHold] = useState(false);
   const touches: React.MutableRefObject<TouchProps> = useRef({});
-  const holdNotes: React.MutableRefObject<TouchProps> = useRef({});
+  const holdNotes: React.MutableRefObject<number[]> = useRef([]);
+  const prevIndex: React.MutableRefObject<TouchProps> = useRef({});
+  const curIndex: React.MutableRefObject<TouchProps> = useRef({});
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     e.preventDefault();
     const loc = e.changedTouches[0];
@@ -26,8 +28,18 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({ synth }) => {
     ) as HTMLDivElement;
     const index = Number(location.dataset.index);
     if (index >= 0) {
-      touches.current[loc.identifier] = index;
-      if (hold) holdNotes.current = { ...touches.current };
+      if (!hold) {
+        touches.current[loc.identifier] = index;
+        synth.arpNotes = Object.values(touches.current);
+      } else {
+        curIndex.current[loc.identifier] = index;
+        if (!holdNotes.current.includes(index)) {
+          holdNotes.current.push(index);
+        } else {
+          holdNotes.current = holdNotes.current.filter((t) => t !== index);
+        }
+        synth.arpNotes = holdNotes.current;
+      }
     }
     // error handling for stuck notes
     // if finger triggers device-level events,
@@ -47,7 +59,7 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({ synth }) => {
         }
       }
     }
-    synth.arpNotes = Object.values(touches.current);
+
     if (!context.isPlaying) {
       setContext({ ...context });
     }
@@ -58,6 +70,9 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({ synth }) => {
     if (!hold) {
       delete touches.current[loc.identifier];
       synth.arpNotes = Object.values(touches.current);
+    } else {
+      delete prevIndex.current[loc.identifier];
+      delete curIndex.current[loc.identifier];
     }
     if (!context.isPlaying) {
       setContext({ ...context });
@@ -74,10 +89,26 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({ synth }) => {
     if (index >= 0) {
       if (!hold) {
         touches.current[loc.identifier] = index;
+        synth.arpNotes = Object.values(touches.current);
       } else {
-        holdNotes.current = { ...touches.current };
+        prevIndex.current[loc.identifier] = curIndex.current[loc.identifier];
+        curIndex.current[loc.identifier] = index;
+        if (
+          prevIndex.current[loc.identifier] !==
+            curIndex.current[loc.identifier] &&
+          !holdNotes.current.includes(index)
+        ) {
+          holdNotes.current.push(index);
+        } else if (
+          prevIndex.current[loc.identifier] !==
+            curIndex.current[loc.identifier] &&
+          holdNotes.current.includes(index)
+        ) {
+          holdNotes.current = holdNotes.current.filter((t) => t !== index);
+        }
+        synth.arpNotes = holdNotes.current;
       }
-      synth.arpNotes = Object.values(touches.current);
+
       if (!context.isPlaying) {
         setContext({ ...context });
       }
@@ -91,7 +122,7 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({ synth }) => {
       synth.arpIndex = 0;
     } else {
       setHold(true);
-      synth.arpNotes = Object.values(holdNotes.current).map((t) => t.index);
+      synth.arpNotes = holdNotes.current;
     }
   };
   return (
