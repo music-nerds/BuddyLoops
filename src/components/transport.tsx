@@ -28,7 +28,7 @@ const Transport: React.FC<Props> = ({ id, setBeat }) => {
   const [open, setOpen] = useState(false);
   const { context } = useContext(ReactAudioContext);
   const [tempo, setTempo] = useState<number>(context.tempo);
-  const [swing, setSwing] = useState<number>(0);
+  const [swing, setSwing] = useState<number>(10);
   const {
     location: { pathname },
   } = useHistory();
