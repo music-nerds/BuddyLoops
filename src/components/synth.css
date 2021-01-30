@@ -197,6 +197,9 @@ div.controls {
   .synth-square {
     height: 24px;
   }
+  .synth-launch {
+    padding: 0.25rem 0.5rem;
+  }
 }
 
 @media screen and (max-width: 600px) {
