@@ -28,7 +28,7 @@ const Transport: React.FC<Props> = ({ id, setBeat }) => {
   const [open, setOpen] = useState(false);
   const { context } = useContext(ReactAudioContext);
   const [tempo, setTempo] = useState<number>(context.tempo);
-  const [swing, setSwing] = useState<number>(10);
+  const [swing, setSwing] = useState<number>(context.swing);
   const {
     location: { pathname },
   } = useHistory();
@@ -140,11 +140,17 @@ const Transport: React.FC<Props> = ({ id, setBeat }) => {
             color="secondary"
             min={50}
             max={180}
+            step={1}
           />
         </div>
         <div className="swing-adjust">
           <span className="transport-label">Swing {swing}%</span>
-          <Slider value={swing} onChange={updateSwing} color="secondary" />
+          <Slider
+            value={swing}
+            onChange={updateSwing}
+            color="secondary"
+            step={1}
+          />
         </div>
       </div>
       <div className="transport-top-row">
