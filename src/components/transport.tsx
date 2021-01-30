@@ -11,6 +11,8 @@ import { ReactAudioContext, SocketContext, Timing, DeviceID } from "../app";
 import { AppState } from "./randoModule";
 import { play, stop } from "../audio/audioFunctions";
 import Button from "@material-ui/core/Button";
+import drum from '../../images/icons/drum.png';
+import piano from '../../images/icons/piano.png';
 import "./transport.css";
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => (
@@ -22,13 +24,16 @@ interface Props {
   setBeat: React.Dispatch<React.SetStateAction<number>>;
   audition: boolean;
   toggleAudition: () => void;
+  toggleInstrument: (instrument: string) => void;
+  instrument: string;
 }
 
-const Transport: React.FC<Props> = ({ id, setBeat }) => {
+const Transport: React.FC<Props> = ({ id, setBeat, instrument, toggleInstrument }) => {
   const [open, setOpen] = useState(false);
   const { context } = useContext(ReactAudioContext);
   const [tempo, setTempo] = useState<number>(context.tempo);
-  const [swing, setSwing] = useState<number>(context.swing);
+  const [swing, setSwing] = useState<number>(0);
+  const [playing, setIsPlaying] = useState<boolean>(false);
   const {
     location: { pathname },
   } = useHistory();
@@ -77,13 +82,21 @@ const Transport: React.FC<Props> = ({ id, setBeat }) => {
   }, [context, setBeat, socket]);
 
   const handlePlay = (): void => {
+    setIsPlaying(true);
     socket.emit("sendPlay", id, timeArr);
   };
 
   const handleStop = (): void => {
     setBeat(-1);
+    setIsPlaying(false);
     socket.emit("sendStop", id);
   };
+
+  const togglePlay = (): void => {
+    !context.isPlaying
+    ? handlePlay()
+    : handleStop()
+  }
 
   const clipboard = async (): Promise<void> => {
     const url: string = window.location.href;
@@ -128,7 +141,6 @@ const Transport: React.FC<Props> = ({ id, setBeat }) => {
       socket.off("tempoChange");
     };
   }, [context, socket]);
-
   return (
     <div id="transport">
       <div className="transport-bottom-row">
@@ -155,12 +167,31 @@ const Transport: React.FC<Props> = ({ id, setBeat }) => {
       </div>
       <div className="transport-top-row">
         <div className="play-stop">
-          <Button color="secondary" onClick={handlePlay}>
-            <PlayArrowSharpIcon style={{ fontSize: 56 }} />
+          <Button color="secondary" onClick={togglePlay}>
+            {
+              !playing
+              ? <PlayArrowSharpIcon style={{ fontSize: 56 }} />
+              : <StopSharpIcon style={{ fontSize: 56 }} />
+            }
           </Button>
-          <Button color="secondary" onClick={handleStop}>
-            <StopSharpIcon style={{ fontSize: 56 }} />
-          </Button>
+        </div>
+        <div className='transport-instrument-select'>
+          <div className={instrument === 'sampler' ? 'transport-instrument-button selected' : 'transport-instrument-button'}>
+            <img 
+              className='transport-instrument-icon'
+              src={drum} 
+              alt='sampler icon'
+              onClick={() => toggleInstrument('sampler')}
+            />
+          </div>
+          <div className={instrument === 'synth' ? 'transport-instrument-button selected' : 'transport-instrument-button'}>
+            <img 
+              className='transport-instrument-icon'
+              src={piano} 
+              alt='synth icon'
+              onClick={() => toggleInstrument('synth')}
+            />
+          </div>
         </div>
         <div className="share-btn-div">
           <Button
