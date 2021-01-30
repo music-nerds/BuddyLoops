@@ -19,6 +19,8 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({ synth }) => {
   const holdNotes: React.MutableRefObject<number[]> = useRef([]);
   const prevIndex: React.MutableRefObject<TouchProps> = useRef({});
   const curIndex: React.MutableRefObject<TouchProps> = useRef({});
+
+  const mouseDown: React.MutableRefObject<boolean> = useRef(false);
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     e.preventDefault();
     const loc = e.changedTouches[0];
@@ -125,9 +127,55 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({ synth }) => {
       synth.arpNotes = holdNotes.current;
     }
   };
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLDivElement;
+    const index = Number(target.dataset.index);
+    mouseDown.current = true;
+    console.log(index);
+    if (!hold) {
+      synth.arpNotes = [index];
+    } else {
+      if (holdNotes.current.includes(index)) {
+        holdNotes.current = holdNotes.current.filter((i) => i !== index);
+      } else {
+        holdNotes.current.push(index);
+      }
+      synth.arpNotes = [...holdNotes.current];
+    }
+  };
+  const handleMouseUp = () => {
+    mouseDown.current = false;
+    if (!hold) {
+      synth.arpNotes = [];
+    }
+  };
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!mouseDown.current) return;
+    const target = e.target as HTMLDivElement;
+    const index = Number(target.dataset.index);
+
+    if (!hold) {
+      synth.arpNotes = [index];
+    } else {
+      if (holdNotes.current.includes(index)) {
+        holdNotes.current = holdNotes.current.filter((i) => i !== index);
+      } else {
+        holdNotes.current.push(index);
+      }
+    }
+  };
+  const handleMouseLeave = () => {
+    if (mouseDown.current) {
+      mouseDown.current = false;
+      if (!hold) {
+        synth.arpNotes = [];
+      }
+    }
+  };
   return (
     <div id="arp">
-      <div id="arp-container">
+      <div id="arp-container" onMouseLeave={handleMouseLeave}>
         {new Array(9).fill(null).map((_, i) => (
           <div
             className={`arp-square ${i % 5 === 0 ? "root" : ""} ${
@@ -138,6 +186,9 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({ synth }) => {
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
             onTouchMove={handleTouchMove}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseEnter={handleMouseEnter}
           ></div>
         ))}
       </div>
