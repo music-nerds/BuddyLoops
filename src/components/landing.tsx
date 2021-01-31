@@ -5,7 +5,7 @@ import { ReactAudioContext, DeviceID } from "../app";
 import { v4 as uuidv4 } from "uuid";
 import "./landing.css";
 
-// const logo = require("../../public/images/logo.png");
+const logo = require("../../public/images/logo.png").default;
 
 interface Props {
   setReady: React.Dispatch<React.SetStateAction<boolean>>;
@@ -27,13 +27,15 @@ const Landing: React.FC<Props> = ({ setReady }) => {
 
   return (
     <div className="landing">
-      <img src="/images/logo.png" alt="Buddy Loops Logo" className="logo" />
-      <h1 className="tagline">Make Music in Real Time</h1>
-      <Link to={uuidv4()}>
-        <Button id="sessionStart" variant="outlined" onClick={handleStart}>
-          Get Started
-        </Button>
-      </Link>
+      <img src={logo} alt="Buddy Loops Logo" className="logo" />
+      <div className="call-to-action">
+        <h1 className="tagline">Make Music in Real Time</h1>
+        <Link to={uuidv4()}>
+          <Button id="sessionStart" variant="outlined" onClick={handleStart}>
+            Get Started
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 };
