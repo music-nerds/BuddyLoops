@@ -11,7 +11,6 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  margin-bottom: 0.5rem;
   width: 100%;
   max-width: 1024px;
   box-sizing: border-box;
@@ -99,8 +98,8 @@
   width: 100%;
   align-items: center;
   text-transform: uppercase;
-  border-bottom: 2px solid #000;
-  background-color: #111;
+  border-top: 3px solid #000;
+  background-color: var(--sampler);
   z-index: 2;
 }
 .chevron {
@@ -115,7 +114,7 @@
 
 div.controls {
   transition: var(--transitionTime);
-  background-color: #111;
+  background-color: var(--gray);
   width: 100%;
   max-height: 0;
   overflow: hidden;
@@ -141,10 +140,11 @@ div.controls {
   background-color: var(--gray);
   touch-action: none;
   user-select: none;
+  padding-top: 1rem;
 }
 
 .arp-square {
-  height: 20vh;
+  height: 15vh;
   flex-basis: 32%;
   margin: 2px;
   background-color: var(--blue);
@@ -178,7 +178,23 @@ div.controls {
 .hold-btn.enabled {
   background-color: #aa33aa;
 }
-
+.synth-tabs {
+  height: 3rem;
+  width: 100%;
+  display: flex;
+}
+.synth-tabs > div {
+  width: 50%;
+  height: 100%;
+  background-color: var(--gray);
+  border-radius: 10px 10px 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.synth-tabs > div.selected {
+  background-color: var(--sampler);
+}
 @media (max-width: 768px) {
   .synth-squares {
     /* width: 500px; */

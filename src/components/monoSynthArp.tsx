@@ -1,26 +1,32 @@
-import React, { useRef, useState, useContext } from "react";
+import React, { useRef, useContext } from "react";
 import { MonoSynth } from "../audio/synth";
 import { ReactAudioContext } from "../app";
 import "./synth.css";
 
 export interface MonoSynthArpProps {
   synth: MonoSynth;
+  holdNotes: React.MutableRefObject<number[]>;
+  hold: boolean;
+  setHold: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface TouchProps {
   [identifier: number]: number;
 }
 
-const MonoSynthArp: React.FC<MonoSynthArpProps> = ({ synth }) => {
+const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
+  synth,
+  holdNotes,
+  hold,
+  setHold,
+}) => {
   // const socket = useContext(SocketContext);
   const { context, setContext } = useContext(ReactAudioContext);
-  const [hold, setHold] = useState(false);
   const touches: React.MutableRefObject<TouchProps> = useRef({});
-  const holdNotes: React.MutableRefObject<number[]> = useRef([]);
   const prevIndex: React.MutableRefObject<TouchProps> = useRef({});
   const curIndex: React.MutableRefObject<TouchProps> = useRef({});
-
   const mouseDown: React.MutableRefObject<boolean> = useRef(false);
+
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     e.preventDefault();
     const loc = e.changedTouches[0];
@@ -132,7 +138,6 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({ synth }) => {
     const target = e.target as HTMLDivElement;
     const index = Number(target.dataset.index);
     mouseDown.current = true;
-    console.log(index);
     if (!hold) {
       synth.arpNotes = [index];
     } else {
@@ -154,7 +159,6 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({ synth }) => {
     if (!mouseDown.current) return;
     const target = e.target as HTMLDivElement;
     const index = Number(target.dataset.index);
-
     if (!hold) {
       synth.arpNotes = [index];
     } else {
@@ -163,6 +167,7 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({ synth }) => {
       } else {
         holdNotes.current.push(index);
       }
+      synth.arpNotes = [...holdNotes.current];
     }
   };
   const handleMouseLeave = () => {

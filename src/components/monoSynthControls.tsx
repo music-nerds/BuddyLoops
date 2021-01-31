@@ -176,7 +176,7 @@ const MonoSynthControls: React.SFC<MonoSynthControlsProps> = ({
           )}
         </div>
         <div className="chevron" ref={chevron} onClick={toggleControls}>
-          <KeyboardArrowDownIcon color="primary" fontSize="large" />
+          <KeyboardArrowDownIcon style={{ color: "white" }} fontSize="large" />
         </div>
       </div>
       <div className="controls" ref={controls}>

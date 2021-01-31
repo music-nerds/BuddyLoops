@@ -12,7 +12,6 @@ import Transport from "./transport";
 import Sampler from "./sampler";
 import Synth from "./synth";
 import UserIndicators from "./userIndicators";
-import LowerNavigator from './lowerNavigator';
 
 interface NewUser {
   id: string;
@@ -64,7 +63,7 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
   const socketID = pathname.slice(1);
   const [currPattern, setCurrPattern] = useState(0);
   const [view, setView] = useState("soundbank");
-  const [instrument, setInstrument] = useState('sampler');
+  const [instrument, setInstrument] = useState("sampler");
   const [numUsers, setNumUsers] = useState(0);
 
   useEffect(() => {
@@ -248,25 +247,20 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
           toggleInstrument={toggleInstrument}
           instrument={instrument}
         />
-        {
-          instrument === 'sampler' &&
+        {instrument === "sampler" && (
           <Sampler
-          socketID={socketID}
-          beat={beat}
-          selectPattern={selectPattern}
-          currPattern={currPattern}
-          view={view}
-          toggleView={toggleView}
-          audition={audition}
-          toggleAudition={toggleAudition}
-        />
-        }
-        {
-          instrument === 'synth' &&
-          <Synth beat={beat} synth={context.synth} /> 
-        }
+            socketID={socketID}
+            beat={beat}
+            selectPattern={selectPattern}
+            currPattern={currPattern}
+            view={view}
+            toggleView={toggleView}
+            audition={audition}
+            toggleAudition={toggleAudition}
+          />
+        )}
+        {instrument === "synth" && <Synth beat={beat} synth={context.synth} />}
       </div>
-      {/* <LowerNavigator toggleInstrument={toggleInstrument} instrument={instrument} /> */}
     </div>
   );
 };
