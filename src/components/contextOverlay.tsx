@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 import { ReactAudioContext, Timing, DeviceID } from "../app";
 import { play, calculateFullCycleTime } from "../audio/audioFunctions";
-// import { StepContext } from "../audio/createContext";
 import Button from "@material-ui/core/Button";
 import "./contextOverlay.css";
 
+const logo = require("../../public/images/logo.png").default;
+
 interface Props {
   setReady: React.Dispatch<React.SetStateAction<boolean>>;
-  // context: StepContext;
 }
 const ContextOverlay: React.SFC<Props> = ({ setReady }) => {
   const { context } = useContext(ReactAudioContext);
@@ -34,9 +34,13 @@ const ContextOverlay: React.SFC<Props> = ({ setReady }) => {
 
   return (
     <div className={"context-overlay"}>
-      <Button variant="outlined" onClick={handleStart}>
-        Get Started
-      </Button>
+      <img src={logo} alt="Buddy Loops Logo" className="logo" />
+      <div className="call-to-action">
+        <h1 className="tagline">Make Music in Real Time</h1>
+        <Button variant="outlined" onClick={handleStart}>
+          Get Started
+        </Button>
+      </div>
     </div>
   );
 };

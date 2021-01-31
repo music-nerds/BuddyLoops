@@ -9,27 +9,55 @@
 
 .landing {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   height: 100vh;
   width: 100%;
-  background-color: black;
+  background: url("/public/images/bg.jpg");
+  background-position: center;
+  background-attachment: fixed;
+  background-size: cover;
 }
 
-.landing > a {
+img.logo {
+  width: 700px;
+}
+
+.call-to-action {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  padding: 0 1rem;
+}
+
+h1.tagline {
+  color: #dfdf7a;
+  text-shadow: 0 0 10px black;
+  font-size: 2rem;
+  margin-bottom: 2em;
+  text-align: center;
+  font-family: "Press Start 2P";
+}
+
+.landing a {
   display: flex;
   justify-content: center;
   align-items: center;
   text-decoration: none;
 }
 
-.landing > a:visited {
+.landing a:visited {
   color: var(--text);
 }
 
 button#sessionStart {
   color: whitesmoke;
   border: 2px solid whitesmoke;
+  padding: 1rem 2rem;
+  font-size: 2rem;
+  font-weight: 700;
 }
 
 .sessionStart:hover {
@@ -42,4 +70,16 @@ button#sessionStart {
 
 .sessionStart:focus {
   outline: 0;
+}
+@media (max-width: 768px) {
+  img.logo {
+    max-width: 75%;
+  }
+  h1.tagline {
+    font-size: 1.25rem;
+  }
+  button#sessionStart {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+  }
 }

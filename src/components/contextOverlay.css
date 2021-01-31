@@ -11,10 +11,33 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.9);
+  flex-direction: column;
+  background: url("/public/images/bg.jpg");
+  background-position: center;
+  background-attachment: fixed;
+  background-size: cover;
   z-index: 10;
 }
 .context-overlay button {
   color: whitesmoke;
   border: 2px solid whitesmoke;
+  padding: 1rem 2rem;
+  font-size: 2rem;
+  font-weight: 700;
+}
+.context-overlay button:hover {
+  transform: scale(1.03);
+}
+
+@media (max-width: 768px) {
+  img.logo {
+    max-width: 75%;
+  }
+  h1.tagline {
+    font-size: 1.25rem;
+  }
+  .context-overlay button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+  }
 }
