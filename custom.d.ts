@@ -3,6 +3,6 @@ declare module "*.wav" {
   export default content;
 }
 declare module "*.png" {
-  const content: string;
-  export default content;
+  const value: any;
+  export = value;
 }

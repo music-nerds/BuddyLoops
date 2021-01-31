@@ -17,11 +17,9 @@ const Landing: React.FC<Props> = ({ setReady }) => {
   const handleStart = () => {
     // if you're hitting this button, you're the host
     context.hostID = deviceID;
+    setReady(true);
     if (context.context.state !== "running") {
-      context.context.resume().then(() => {
-        // triggers re-render to avoid context overlay
-        setReady(true);
-      });
+      context.context.resume();
     }
   };
 
