@@ -24,7 +24,6 @@ img.logo {
 }
 
 .call-to-action {
-  flex: 1;
   display: flex;
   flex-direction: column;
   /* justify-content: center; */
@@ -33,9 +32,9 @@ img.logo {
 }
 
 h1.tagline {
-  color: #dfdf7a;
+  color: #ff0;
   text-shadow: 0 0 10px black;
-  font-size: 2rem;
+  font-size: 1rem;
   margin-bottom: 2em;
   text-align: center;
   font-family: "Press Start 2P";
@@ -53,14 +52,17 @@ h1.tagline {
 }
 
 button#sessionStart {
-  color: whitesmoke;
-  border: 2px solid whitesmoke;
+  color: rgb(255, 0, 255);
+  border: 2px solid rgb(255, 0, 255);
   padding: 1rem 2rem;
   font-size: 2rem;
   font-weight: 700;
+  font-family: "Press Start 2P";
+  margin-top: 3rem;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
-.sessionStart:hover {
+button#sessionStart:hover {
   transform: scale(1.03);
 }
 
@@ -72,14 +74,15 @@ button#sessionStart {
   outline: 0;
 }
 @media (max-width: 768px) {
-  img.logo {
-    max-width: 75%;
+  .landing {
+    padding-top: 20%;
   }
   h1.tagline {
-    font-size: 1.25rem;
+    font-size: 0.75rem;
   }
   button#sessionStart {
     padding: 0.5rem 1rem;
     font-size: 1rem;
+    margin-top: 1rem;
   }
 }
