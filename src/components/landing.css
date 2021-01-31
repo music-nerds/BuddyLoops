@@ -9,11 +9,31 @@
 
 .landing {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
   width: 100%;
-  background-color: black;
+  background: url("/public/images/bg.jpg");
+  background-position: bottom;
+  background-attachment: fixed;
+  background-size: cover;
+  position: relative;
+}
+
+img.logo {
+  width: 700px;
+  position: absolute;
+  top: -100px;
+}
+
+h1.tagline {
+  color: #dfdf7a;
+  text-shadow: 0 0 10px #dfdf7a;
+  font-size: 2rem;
+  margin-bottom: 2em;
+  text-align: center;
+  font-family: "Roboto";
 }
 
 .landing > a {
@@ -30,6 +50,8 @@
 button#sessionStart {
   color: whitesmoke;
   border: 2px solid whitesmoke;
+  padding: 1rem 2rem;
+  font-size: 2rem;
 }
 
 .sessionStart:hover {
@@ -42,4 +64,17 @@ button#sessionStart {
 
 .sessionStart:focus {
   outline: 0;
+}
+@media (max-width: 768px) {
+  img.logo {
+    max-width: 75%;
+    top: -50px;
+  }
+  h1.tagline {
+    font-size: 1.5rem;
+  }
+  button#sessionStart {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+  }
 }
