@@ -9,6 +9,15 @@
   --transitionTime: 0.4s;
 }
 
+* {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 body {
   margin: 0;
   color: var(--text);
@@ -32,17 +41,19 @@ body {
   overflow: scroll;
   box-sizing: border-box;
   height: 100vh;
+  /* touch-action: none; */
 }
 
 .container {
   width: 100%;
-  max-width: 750px;
+  max-width: 700px;
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow-x: scroll;
   box-sizing: border-box;
   flex-shrink: 0;
+  /* touch-action: none; */
 }
 
 .flex-row {
