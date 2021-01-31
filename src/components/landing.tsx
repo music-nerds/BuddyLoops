@@ -27,7 +27,7 @@ const Landing: React.FC<Props> = ({ setReady }) => {
     <div className="landing">
       <img src={logo} alt="Buddy Loops Logo" className="logo" />
       <div className="call-to-action">
-        <h1 className="tagline">Make Music in Real Time</h1>
+        <h1 className="tagline">Make Music With Friends in Real Time</h1>
         <Link to={uuidv4()}>
           <Button id="sessionStart" variant="outlined" onClick={handleStart}>
             Get Started
