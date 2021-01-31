@@ -17,10 +17,10 @@ const Landing: React.FC<Props> = ({ setReady }) => {
   const handleStart = () => {
     // if you're hitting this button, you're the host
     context.hostID = deviceID;
-    setReady(true);
     if (context.context.state !== "running") {
       context.context.resume();
     }
+    setReady(true);
   };
 
   return (
