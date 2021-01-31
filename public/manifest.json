@@ -1,0 +1,17 @@
+{
+  "name": "Buddy Loops",
+  "short_name": "Buddy Loops",
+  "start_url": "https://buddyloops.com/",
+  "background_color": "black",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "description": "Collaborative Sampler/Synth app that syncs between multiple devices",
+  "categories": ["music", "social", "games", "entertainment"],
+  "icons": [
+    {
+      "src": "mixerIcon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ] 
+}
