@@ -7,12 +7,14 @@ import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import PlayArrowSharpIcon from "@material-ui/icons/PlayArrowSharp";
 import StopSharpIcon from "@material-ui/icons/StopSharp";
 import GroupIcon from "@material-ui/icons/Group";
+import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import { ReactAudioContext, SocketContext, Timing, DeviceID } from "../app";
 import { AppState } from "./randoModule";
 import { play, stop } from "../audio/audioFunctions";
 import Button from "@material-ui/core/Button";
 import drum from '../../images/icons/drum.png';
 import piano from '../../images/icons/piano.png';
+import axios from 'axios';
 import "./transport.css";
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => (
@@ -34,6 +36,8 @@ const Transport: React.FC<Props> = ({ id, setBeat, instrument, toggleInstrument 
   const [tempo, setTempo] = useState<number>(context.tempo);
   const [swing, setSwing] = useState<number>(0);
   const [playing, setIsPlaying] = useState<boolean>(false);
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [kits, setKits] = useState([]);
   const {
     location: { pathname },
   } = useHistory();
@@ -141,6 +145,23 @@ const Transport: React.FC<Props> = ({ id, setBeat, instrument, toggleInstrument 
       socket.off("tempoChange");
     };
   }, [context, socket]);
+
+  useEffect(() => {
+    axios.get('/api/getkits')
+      .then(({ data }) => {
+        setKits(data);
+      })
+  }, [])
+
+  const openMenu = () => {
+    setMenuOpen(!menuOpen);
+  }
+
+  const loadSet = (set:any) => {
+    context.loadNewSet(set);
+    setMenuOpen(false);
+  }
+
   return (
     <div id="transport">
       <div className="transport-bottom-row">
@@ -200,11 +221,29 @@ const Transport: React.FC<Props> = ({ id, setBeat, instrument, toggleInstrument 
             color="primary"
             variant="contained"
             size="small"
-            style={{ height: 24, verticalAlign: "center", padding: "0 8px" }}
+            style={{ height: 24, verticalAlign: "center", padding: "0 8px", margin: '5px' }}
             onClick={clipboard}
-          >
-            Share
-          </Button>
+          ></Button>
+          <Button
+            startIcon={<FolderOpenIcon fontSize="large" />}
+            className="share-btn"
+            color="primary"
+            variant="contained"
+            size="small"
+            style={{ height: 24, verticalAlign: "center", padding: "0 8px", margin: '5px' }}
+            onClick={openMenu}
+          ></Button>
+          <div className={menuOpen ? 'set-menu open' : 'set-menu'}>
+            {
+              kits.map((set:any) => {
+                return (
+                  <div onClick={() => loadSet(set)} className='set-menu-item' key={set.id}>
+                    <p>{set.name}</p>
+                  </div>
+                )
+              })
+            }
+          </div>
         </div>
       </div>
       <Snackbar open={open} autoHideDuration={5000} onClose={close}>

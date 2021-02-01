@@ -97,6 +97,7 @@ export interface StepContext {
   endAudition: (id: number) => void;
   toggleSequencersEnabled: () => void;
   clearAllPatterns: () => void;
+  loadNewSet: (set: any) => void;
 }
 
 export const createAudioContext = (): StepContext => {
@@ -226,5 +227,13 @@ export const createAudioContext = (): StepContext => {
     clearAllPatterns: function () {
       this.sequencers.forEach((s) => s.clearPattern());
     },
+    loadNewSet: function (set) {
+      this.updateTempo(set.tempo);
+      this.updateSwing(set.swing);
+      this.sequencers = set.steprows.map((row: any) => {
+        const seq = initializeRow(this.context, row.name, row.audioPath, row.pattern)
+        return seq;
+      })
+    }
   };
 };

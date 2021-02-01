@@ -28,10 +28,12 @@
   display: flex;
   justify-content: center;
 }
-.share-btn-div {
-  flex: 2;
+
+.load-set-button-div {
+  /* flex: 2; */
   display: flex;
-  justify-content: flex-end;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -61,7 +63,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .transport-instrument-select {
   display: flex;
   justify-content: space-between;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   user-select: none;
   -webkit-user-select: none;
@@ -95,6 +97,48 @@ input[type="number"]::-webkit-outer-spin-button {
   width: auto;
   user-select: none;
   -webkit-user-select: none;
+}
+
+.share-btn-div {
+  position: relative;
+}
+
+.set-menu {
+  height: 0px;
+  width: 0px;
+  position: absolute;
+  background-color: rgba(0,0,0,0.7);
+  transition: all 1s linear;
+  z-index: 10;
+  right: 0;
+  overflow: hidden;
+  direction: rtl;
+  opacity: 0;
+}
+
+.set-menu.open {
+  width: 650px;
+  transition: all 1s linear;
+  height: 750px;
+  direction: rtl;
+  opacity: 1;
+}
+
+.set-menu-item {
+  border: 1px solid red;
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 3rem;
+  align-items: center;
+  direction: ltr;
+}
+
+.set-menu-item:hover {
+  cursor: pointer;
+}
+
+.set-menu-item > p {
+  color: var(--text);
 }
 
 @media screen and (max-width: 1088px) {

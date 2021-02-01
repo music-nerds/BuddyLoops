@@ -101,7 +101,6 @@ const statenIslandKarateKit = async () => {
     pattern: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     setId: set.id,
   });
-
 }
 
 module.exports = statenIslandKarateKit;
