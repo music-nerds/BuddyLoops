@@ -55,6 +55,7 @@ const Synth: React.SFC<MonoSynthProps> = ({ beat, synth }) => {
           holdNotes={holdNotes}
           hold={hold}
           setHold={setHold}
+          beat={beat}
         />
       )}
     </div>

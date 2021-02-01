@@ -8,6 +8,7 @@ export interface MonoSynthArpProps {
   holdNotes: React.MutableRefObject<number[]>;
   hold: boolean;
   setHold: React.Dispatch<React.SetStateAction<boolean>>;
+  beat: number;
 }
 
 interface TouchProps {
@@ -19,6 +20,7 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
   holdNotes,
   hold,
   setHold,
+  beat,
 }) => {
   // const socket = useContext(SocketContext);
   const { context, setContext } = useContext(ReactAudioContext);
@@ -69,6 +71,11 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
     }
 
     if (!context.isPlaying) {
+      synth.playNote(
+        synth.scale[index] * synth.octave,
+        context.context.currentTime,
+        context.tempo
+      );
       setContext({ ...context });
     }
   };
@@ -116,8 +123,12 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
         }
         synth.arpNotes = holdNotes.current;
       }
-
       if (!context.isPlaying) {
+        synth.playNote(
+          synth.scale[index] * synth.octave,
+          context.context.currentTime,
+          context.tempo
+        );
         setContext({ ...context });
       }
     }
@@ -152,6 +163,11 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
       synth.arpNotes = [...holdNotes.current];
     }
     if (!context.isPlaying) {
+      synth.playNote(
+        synth.scale[index] * synth.octave,
+        context.context.currentTime,
+        context.tempo
+      );
       setContext({ ...context });
     }
   };
@@ -159,6 +175,9 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
     mouseDown.current = false;
     if (!hold) {
       synth.arpNotes = [];
+      if (!context.isPlaying) {
+        setContext({ ...context });
+      }
     }
   };
   const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -176,6 +195,11 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
       synth.arpNotes = [...holdNotes.current];
     }
     if (!context.isPlaying) {
+      synth.playNote(
+        synth.scale[index] * synth.octave,
+        context.context.currentTime,
+        context.tempo
+      );
       setContext({ ...context });
     }
   };
@@ -194,6 +218,12 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
           <div
             className={`arp-square ${i % 5 === 0 ? "root" : ""} ${
               synth.arpNotes.includes(i) ? "selected" : ""
+            } ${
+              beat >= 0 &&
+              !synth.arpNotes.length &&
+              synth.pattern[beat][i] === 1
+                ? "selected"
+                : ""
             }`}
             data-index={i}
             key={i}

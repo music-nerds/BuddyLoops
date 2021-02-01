@@ -22,8 +22,6 @@ export class MonoSynth {
   releaseTime: number;
   portamentoTime: number;
   noteLength: number;
-  release: NodeJS.Timeout | null;
-  attack: NodeJS.Timeout | null;
   isPlaying: boolean;
   shouldPlayNextLoop: boolean;
   arpNotes: number[];
@@ -47,8 +45,6 @@ export class MonoSynth {
     this.releaseTime = 0.25;
     this.portamentoTime = 0;
     this.noteLength = 0.5;
-    this.attack = null;
-    this.release = null;
     this.isPlaying = true;
     this.shouldPlayNextLoop = true;
     this.arpNotes = [];
@@ -105,7 +101,6 @@ export class MonoSynth {
   }
 
   playNote(note: number, time: number, tempo: number): void {
-    if (this.release) clearTimeout(this.release);
     // set frequency
     this.osc.frequency.setValueAtTime(note, time);
     // manage gain events
