@@ -132,6 +132,9 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
       setHold(true);
       synth.arpNotes = holdNotes.current;
     }
+    if (!context.isPlaying) {
+      setContext({ ...context });
+    }
   };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -147,6 +150,9 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
         holdNotes.current.push(index);
       }
       synth.arpNotes = [...holdNotes.current];
+    }
+    if (!context.isPlaying) {
+      setContext({ ...context });
     }
   };
   const handleMouseUp = () => {
@@ -168,6 +174,9 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
         holdNotes.current.push(index);
       }
       synth.arpNotes = [...holdNotes.current];
+    }
+    if (!context.isPlaying) {
+      setContext({ ...context });
     }
   };
   const handleMouseLeave = () => {

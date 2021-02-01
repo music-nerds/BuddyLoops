@@ -29,7 +29,9 @@ const Synth: React.SFC<MonoSynthProps> = ({ beat, synth }) => {
           className={`synth-pattern-tab ${view === "arp" ? "selected" : ""}`}
           onClick={() => setView("arp")}
         >
-          <MusicNoteIcon style={{ color: "white" }} />
+          <MusicNoteIcon
+            style={{ color: `${view === "arp" ? "white" : "#aaa"}` }}
+          />
         </div>
         <div
           className={`synth-pattern-tab ${
@@ -37,7 +39,11 @@ const Synth: React.SFC<MonoSynthProps> = ({ beat, synth }) => {
           }`}
           onClick={() => setView("pattern")}
         >
-          <GridOnIcon style={{ color: "white" }} />
+          <GridOnIcon
+            style={{
+              color: `${view === "pattern" ? "white" : "#aaa"}`,
+            }}
+          />
         </div>
       </div>
       <MonoSynthControls synth={synth} socketID={socketID} />

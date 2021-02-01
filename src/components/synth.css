@@ -75,16 +75,16 @@
   width: 50px;
   height: 50px;
   box-sizing: border-box;
-  border: 2px solid var(--blue);
+  border: 2px solid var(--synth);
   margin: 0.125rem;
   background-color: #111;
 }
 .synth-square.on-beat {
-  border: 2px solid var(--highlight);
+  border: 2px solid var(--synthHL);
 }
 
 .synth-square.active-square {
-  background-color: var(--blue);
+  background-color: var(--synth);
 }
 .synth-square.active-beat,
 .synth-square.synth-square.active-beat.on-beat {
@@ -92,7 +92,7 @@
 }
 
 .toggle {
-  color: var(--blue);
+  color: var(--synth);
   display: flex;
   justify-content: space-between;
   box-sizing: border-box;
@@ -101,7 +101,7 @@
   align-items: center;
   text-transform: uppercase;
   border: 1px solid #000;
-  background-color: var(--sampler);
+  /* background-color: var(--gray); */
   z-index: 2;
 }
 .chevron {
@@ -127,7 +127,7 @@ div.controls {
 
 .synth-launch,
 .clear-synth-pattern {
-  background-color: var(--blue);
+  background-color: var(--synth);
   padding: 0.25rem 1.5rem;
   border-radius: 5px;
   color: whitesmoke;
@@ -154,19 +154,19 @@ div.controls {
   flex-basis: 33.3333%;
   box-sizing: border-box;
   border: 1px solid black;
-  background-color: var(--blue);
+  background-color: var(--synth);
   transition: 100ms;
   touch-action: none;
   user-select: none;
 }
 .arp-square.root {
-  background-color: var(--highlight);
+  background-color: var(--synthHL);
 }
 .arp-square.selected {
-  background-color: #aa33aa;
+  background-color: var(--synthContrast);
 }
 .arp-square.selected.root {
-  background-color: #ff33ff;
+  background-color: var(--synthContrastHL);
 }
 #arp-fx {
   height: 10vh;
@@ -177,12 +177,12 @@ div.controls {
 }
 .hold-btn {
   padding: 0.5rem 1rem;
-  background-color: var(--blue);
+  background-color: var(--synth);
   width: 4rem;
   color: #eee;
 }
 .hold-btn.enabled {
-  background-color: #aa33aa;
+  background-color: var(--synthContrast);
 }
 .synth-tabs {
   height: 3rem;

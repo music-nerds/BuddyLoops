@@ -177,15 +177,15 @@ const MonoSynthControls: React.SFC<MonoSynthControlsProps> = ({
         <div className="clear-synth-pattern" onClick={clearPattern}>
           Clear Pattern
         </div>
+        <div className="chevron" ref={chevron} onClick={toggleControls}>
+          <KeyboardArrowDownIcon style={{ color: "white" }} fontSize="large" />
+        </div>
         <div className="synth-launch" onClick={handleLaunch}>
           {synth.shouldPlayNextLoop ? (
             <PauseIcon style={{ color: "white" }} fontSize="large" />
           ) : (
             <PlayArrowIcon style={{ color: "white" }} fontSize="large" />
           )}
-        </div>
-        <div className="chevron" ref={chevron} onClick={toggleControls}>
-          <KeyboardArrowDownIcon style={{ color: "white" }} fontSize="large" />
         </div>
       </div>
       <div className="controls" ref={controls}>

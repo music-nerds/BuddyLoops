@@ -111,7 +111,7 @@ export class MonoSynth {
     // manage gain events
     this.output.gain.cancelScheduledValues(time);
     this.output.gain.setValueAtTime(this.getGainValue(), time);
-    this.output.gain.setTargetAtTime(0.4, time + 0.0001, this.attackTime / 4);
+    this.output.gain.setTargetAtTime(0.4, time + 0.0001, this.attackTime / 5);
 
     this.stopNote(time + (60 / (tempo * 4)) * this.noteLength);
   }
@@ -119,7 +119,7 @@ export class MonoSynth {
   stopNote(time: number): void {
     // turn down the volume with releaseTime
     this.output.gain.cancelScheduledValues(time);
-    this.output.gain.setTargetAtTime(0, time + 0.0001, this.releaseTime / 10);
+    this.output.gain.setTargetAtTime(0, time + 0.0001, this.releaseTime / 5);
   }
 
   getGainValue(): number {
