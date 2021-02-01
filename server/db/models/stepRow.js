@@ -1,7 +1,7 @@
 const db = require('../db');
 const { STRING, ARRAY, INTEGER, UUID, UUIDV4 } = require('sequelize');
 
-const StepRow = db.define('steprow', {
+const Steprow = db.define('steprow', {
   name: {
     type: STRING,
     allowNull: false,
@@ -30,4 +30,4 @@ const StepRow = db.define('steprow', {
   },
 });
 
-module.exports = StepRow;
+module.exports = Steprow;

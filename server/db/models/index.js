@@ -1,10 +1,10 @@
 const Set = require('./set');
-const StepRow = require('./stepRow');
+const Steprow = require('./stepRow');
 
-StepRow.belongsTo(Set);
-Set.hasMany(StepRow);
+Steprow.belongsTo(Set);
+Set.hasMany(Steprow);
 
 module.exports = {
   Set,
-  StepRow,
+  Steprow,
 }

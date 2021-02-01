@@ -21,6 +21,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(PUBLIC_PATH));
 app.use(express.static(DIST_PATH));
+app.use('/api', require('./api/routes'));
 
 app.get("/*", (req, res) => {
   res.sendFile(`${PUBLIC_PATH}/index.html`);
