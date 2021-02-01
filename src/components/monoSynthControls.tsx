@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { MonoSynth } from "../audio/synth";
+import { ReactAudioContext } from "../app";
 import { makeStyles } from "@material-ui/core/styles";
 import Slider from "@material-ui/core/Slider";
 import FormControl from "@material-ui/core/FormControl";
@@ -38,7 +39,7 @@ const MonoSynthControls: React.SFC<MonoSynthControlsProps> = ({
   const controls: React.RefObject<HTMLDivElement> | null = useRef(null);
   const toggle: React.RefObject<HTMLDivElement> | null = useRef(null);
   const chevron: React.RefObject<HTMLDivElement> | null = useRef(null);
-
+  const { context, setContext } = useContext(ReactAudioContext);
   const socket = useContext(SocketContext);
 
   const classes = useStyles();
@@ -164,15 +165,23 @@ const MonoSynthControls: React.SFC<MonoSynthControlsProps> = ({
     synth.shouldPlayNextLoop = !synth.shouldPlayNextLoop;
     socket.emit("synthLaunch", socketID);
   };
-
+  const clearPattern = () => {
+    synth.clearPattern();
+    if (!context.isPlaying) {
+      setContext({ ...context });
+    }
+  };
   return (
     <div id="mono-synth-controls">
       <div className="toggle" ref={toggle}>
+        <div className="clear-synth-pattern" onClick={clearPattern}>
+          Clear Pattern
+        </div>
         <div className="synth-launch" onClick={handleLaunch}>
           {synth.shouldPlayNextLoop ? (
-            <PauseIcon style={{ color: "white" }} />
+            <PauseIcon style={{ color: "white" }} fontSize="large" />
           ) : (
-            <PlayArrowIcon style={{ color: "white" }} />
+            <PlayArrowIcon style={{ color: "white" }} fontSize="large" />
           )}
         </div>
         <div className="chevron" ref={chevron} onClick={toggleControls}>

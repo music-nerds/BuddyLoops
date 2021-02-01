@@ -94,7 +94,7 @@ export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
         }
       });
     } else {
-      ctx.synth.stopNote();
+      ctx.synth.stopNote(ctx.nextNoteTime);
     }
   } else {
     // ARPEGGIATOR
@@ -142,5 +142,5 @@ export const stop = (ctx: StepContext): void => {
     ctx.nextCycleTime = undefined;
     window.clearTimeout(ctx.timerId);
   }
-  ctx.synth.stopNote();
+  ctx.synth.stopNote(ctx.context.currentTime);
 };

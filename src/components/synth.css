@@ -1,10 +1,12 @@
 #synth {
-  width: 100%;
+  width: 95%;
   display: flex;
   flex-direction: column;
   align-items: center;
   user-select: none;
   touch-action: none;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 10px 10px 0 0;
   margin-bottom: 4rem;
 }
 #mono-synth-controls {
@@ -54,21 +56,19 @@
 }
 
 .synth-squares {
-  background-color: #111;
-  /* width: 100%; */
   width: calc((50px + (0.125rem * 2)) * 8);
   box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
-  /* flex-direction: column; */
   align-items: center;
   justify-content: center;
+  padding-bottom: 1rem;
 }
 
 .synth-square-row {
   display: flex;
   flex-direction: column-reverse;
-  margin: 1rem 0;
+  margin-top: 1rem;
 }
 
 .synth-square {
@@ -77,6 +77,7 @@
   box-sizing: border-box;
   border: 2px solid var(--blue);
   margin: 0.125rem;
+  background-color: #111;
 }
 .synth-square.on-beat {
   border: 2px solid var(--highlight);
@@ -94,11 +95,12 @@
   color: var(--blue);
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem 1rem;
+  box-sizing: border-box;
+  padding: 5px 10px;
   width: 100%;
   align-items: center;
   text-transform: uppercase;
-  border-top: 3px solid #000;
+  border: 1px solid #000;
   background-color: var(--sampler);
   z-index: 2;
 }
@@ -123,10 +125,16 @@ div.controls {
   align-items: center;
 }
 
-.synth-launch {
+.synth-launch,
+.clear-synth-pattern {
   background-color: var(--blue);
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 1.5rem;
   border-radius: 5px;
+  color: whitesmoke;
+  cursor: pointer;
+}
+.clear-synth-pattern {
+  padding: 1rem;
 }
 #arp {
   width: 100%;
@@ -137,16 +145,15 @@ div.controls {
   flex-wrap: wrap-reverse;
   align-items: center;
   justify-content: center;
-  background-color: var(--gray);
   touch-action: none;
   user-select: none;
-  padding-top: 1rem;
 }
 
 .arp-square {
   height: 15vh;
-  flex-basis: 32%;
-  margin: 2px;
+  flex-basis: 33.3333%;
+  box-sizing: border-box;
+  border: 1px solid black;
   background-color: var(--blue);
   transition: 100ms;
   touch-action: none;
@@ -162,7 +169,6 @@ div.controls {
   background-color: #ff33ff;
 }
 #arp-fx {
-  background-color: var(--gray);
   height: 10vh;
   display: flex;
   align-items: center;
@@ -182,6 +188,8 @@ div.controls {
   height: 3rem;
   width: 100%;
   display: flex;
+  border-bottom: 1px solid var(--gray);
+  box-sizing: border-box;
 }
 .synth-tabs > div {
   width: 50%;
@@ -195,6 +203,7 @@ div.controls {
 .synth-tabs > div.selected {
   background-color: var(--sampler);
 }
+
 @media (max-width: 768px) {
   .synth-squares {
     /* width: 500px; */
@@ -265,7 +274,8 @@ div.controls {
   .synth-square {
     height: 24px;
   }
-  .synth-launch {
+  .synth-launch,
+  .clear-synth-pattern {
     padding: 0.25rem 0.5rem;
   }
 }
