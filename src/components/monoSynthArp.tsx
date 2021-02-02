@@ -220,6 +220,7 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
               synth.arpNotes.includes(i) ? "selected" : ""
             } ${
               beat >= 0 &&
+              synth.isPlaying &&
               !synth.arpNotes.length &&
               synth.pattern[beat][i] === 1
                 ? "selected"
