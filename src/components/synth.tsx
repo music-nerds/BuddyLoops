@@ -1,5 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import { SocketContext } from "../app";
 import MonoSynthControls from "./monoSynthControls";
 import MonoSynthSquares from "./monoSynthSquares";
 import MonoSynthArp from "./monoSynthArp";
@@ -14,9 +15,35 @@ interface MonoSynthProps {
 }
 
 const Synth: React.SFC<MonoSynthProps> = ({ beat, synth }) => {
+  const socket = useContext(SocketContext);
   const [view, setView] = useState("arp");
   const [hold, setHold] = useState(false);
   const holdNotes: React.MutableRefObject<number[]> = useRef([]);
+
+  useEffect(() => {
+    socket.on("arpNotes", (notesArr: number[]) => {
+      synth.arpNotes = notesArr;
+      if (hold) {
+        holdNotes.current = [...notesArr];
+      }
+    });
+    socket.on("arpHoldOff", () => {
+      setHold(false);
+      synth.arpNotes = [];
+      synth.arpIndex = 0;
+      console.log("hold OFF", holdNotes.current);
+    });
+    socket.on("arpHoldOn", () => {
+      setHold(true);
+      synth.arpNotes = [...holdNotes.current];
+      console.log("hold ON", holdNotes.current);
+    });
+    return () => {
+      socket.off("arpNotes");
+      socket.off("arpHoldOff");
+      socket.off("arpHoldOn");
+    };
+  }, [synth, socket, hold]);
 
   const {
     location: { pathname },
@@ -56,6 +83,7 @@ const Synth: React.SFC<MonoSynthProps> = ({ beat, synth }) => {
           hold={hold}
           setHold={setHold}
           beat={beat}
+          socketID={socketID}
         />
       )}
     </div>

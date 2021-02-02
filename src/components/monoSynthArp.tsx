@@ -1,6 +1,6 @@
 import React, { useRef, useContext } from "react";
 import { MonoSynth } from "../audio/synth";
-import { ReactAudioContext } from "../app";
+import { ReactAudioContext, SocketContext } from "../app";
 import "./synth.css";
 
 export interface MonoSynthArpProps {
@@ -9,6 +9,7 @@ export interface MonoSynthArpProps {
   hold: boolean;
   setHold: React.Dispatch<React.SetStateAction<boolean>>;
   beat: number;
+  socketID: string;
 }
 
 interface TouchProps {
@@ -21,8 +22,9 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
   hold,
   setHold,
   beat,
+  socketID,
 }) => {
-  // const socket = useContext(SocketContext);
+  const socket = useContext(SocketContext);
   const { context, setContext } = useContext(ReactAudioContext);
   const touches: React.MutableRefObject<TouchProps> = useRef({});
   const prevIndex: React.MutableRefObject<TouchProps> = useRef({});
@@ -41,6 +43,7 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
       if (!hold) {
         touches.current[loc.identifier] = index;
         synth.arpNotes = Object.values(touches.current);
+        socket.emit("arpNotes", socketID, synth.arpNotes);
       } else {
         curIndex.current[loc.identifier] = index;
         if (!holdNotes.current.includes(index)) {
@@ -49,6 +52,7 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
           holdNotes.current = holdNotes.current.filter((t) => t !== index);
         }
         synth.arpNotes = holdNotes.current;
+        socket.emit("arpNotes", socketID, synth.arpNotes);
       }
     }
     // error handling for stuck notes
@@ -85,6 +89,7 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
     if (!hold) {
       delete touches.current[loc.identifier];
       synth.arpNotes = Object.values(touches.current);
+      socket.emit("arpNotes", socketID, synth.arpNotes);
     } else {
       delete prevIndex.current[loc.identifier];
       delete curIndex.current[loc.identifier];
@@ -105,6 +110,7 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
       if (!hold) {
         touches.current[loc.identifier] = index;
         synth.arpNotes = Object.values(touches.current);
+        socket.emit("arpNotes", socketID, synth.arpNotes);
       } else {
         prevIndex.current[loc.identifier] = curIndex.current[loc.identifier];
         curIndex.current[loc.identifier] = index;
@@ -122,6 +128,7 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
           holdNotes.current = holdNotes.current.filter((t) => t !== index);
         }
         synth.arpNotes = holdNotes.current;
+        socket.emit("arpNotes", socketID, synth.arpNotes);
       }
       if (!context.isPlaying) {
         synth.playNote(
@@ -139,9 +146,11 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
       setHold(false);
       synth.arpNotes = [];
       synth.arpIndex = 0;
+      socket.emit("arpHoldOff", socketID);
     } else {
       setHold(true);
-      synth.arpNotes = holdNotes.current;
+      synth.arpNotes = [...holdNotes.current];
+      socket.emit("arpHoldOn", socketID);
     }
     if (!context.isPlaying) {
       setContext({ ...context });
@@ -154,6 +163,7 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
     mouseDown.current = true;
     if (!hold) {
       synth.arpNotes = [index];
+      socket.emit("arpNotes", socketID, synth.arpNotes);
     } else {
       if (holdNotes.current.includes(index)) {
         holdNotes.current = holdNotes.current.filter((i) => i !== index);
@@ -161,6 +171,7 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
         holdNotes.current.push(index);
       }
       synth.arpNotes = [...holdNotes.current];
+      socket.emit("arpNotes", socketID, synth.arpNotes);
     }
     if (!context.isPlaying) {
       synth.playNote(
@@ -175,6 +186,7 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
     mouseDown.current = false;
     if (!hold) {
       synth.arpNotes = [];
+      socket.emit("arpNotes", socketID, synth.arpNotes);
       if (!context.isPlaying) {
         setContext({ ...context });
       }
@@ -186,6 +198,7 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
     const index = Number(target.dataset.index);
     if (!hold) {
       synth.arpNotes = [index];
+      socket.emit("arpNotes", socketID, synth.arpNotes);
     } else {
       if (holdNotes.current.includes(index)) {
         holdNotes.current = holdNotes.current.filter((i) => i !== index);
@@ -193,6 +206,7 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
         holdNotes.current.push(index);
       }
       synth.arpNotes = [...holdNotes.current];
+      socket.emit("arpNotes", socketID, synth.arpNotes);
     }
     if (!context.isPlaying) {
       synth.playNote(
@@ -208,6 +222,7 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
       mouseDown.current = false;
       if (!hold) {
         synth.arpNotes = [];
+        socket.emit("arpNotes", socketID, synth.arpNotes);
       }
     }
   };
