@@ -224,6 +224,9 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
         synth.arpNotes = [];
         socket.emit("arpNotes", socketID, synth.arpNotes);
       }
+      if (!context.isPlaying) {
+        setContext({ ...context });
+      }
     }
   };
   return (

@@ -31,12 +31,10 @@ const Synth: React.SFC<MonoSynthProps> = ({ beat, synth }) => {
       setHold(false);
       synth.arpNotes = [];
       synth.arpIndex = 0;
-      console.log("hold OFF", holdNotes.current);
     });
     socket.on("arpHoldOn", () => {
       setHold(true);
       synth.arpNotes = [...holdNotes.current];
-      console.log("hold ON", holdNotes.current);
     });
     return () => {
       socket.off("arpNotes");
