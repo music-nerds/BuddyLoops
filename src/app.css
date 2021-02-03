@@ -2,7 +2,11 @@
   --bg: #000000;
   --gray: #232323;
   --text: #fff5f5;
-  --green: #b2d430;
+  --green: #86d729;
+  --synth: #1a8b9d;
+  --synthHL: #68c4d2;
+  --synthContrast: #33cccc;
+  --synthContrastHL: #66ffff;
   --blue: #1a8b9d;
   --highlight: #68c4d2;
   --sampler: #616161;
@@ -25,7 +29,6 @@ body {
   font-family: Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
     sans-serif;
 }
-
 .fullPage {
   width: 100vw;
   max-width: 100vw;
@@ -41,7 +44,7 @@ body {
   overflow: scroll;
   box-sizing: border-box;
   height: 100vh;
-  /* touch-action: none; */
+  user-select: none;
 }
 
 .container {
@@ -53,7 +56,7 @@ body {
   overflow-x: scroll;
   box-sizing: border-box;
   flex-shrink: 0;
-  /* touch-action: none; */
+  user-select: none;
 }
 
 .flex-row {

@@ -107,7 +107,9 @@ const Sampler: React.FC<Props> = ({
           onClick={() => toggleView("soundbank")}
           onTouchStart={() => toggleView("soundbank")}
         >
-          <MusicNoteIcon />
+          <MusicNoteIcon
+            style={{ color: `${view === "soundbank" ? "white" : "#aaa"}` }}
+          />
         </div>
         <div
           id="pattern"
@@ -117,7 +119,9 @@ const Sampler: React.FC<Props> = ({
           onClick={() => toggleView("pattern")}
           onTouchStart={() => toggleView("pattern")}
         >
-          <GridOnIcon />
+          <GridOnIcon
+            style={{ color: `${view === "pattern" ? "white" : "#aaa"}` }}
+          />
         </div>
       </div>
       {view === "soundbank" && (
