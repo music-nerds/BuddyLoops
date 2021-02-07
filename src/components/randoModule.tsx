@@ -9,8 +9,7 @@ import {
 } from "../app";
 import ContextOverlay from "./contextOverlay";
 import Transport from "./transport";
-import Sampler from "./sampler";
-import Synth from "./synth";
+import Instruments from "./instruments";
 import UserIndicators from "./userIndicators";
 
 interface NewUser {
@@ -247,19 +246,20 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
           toggleInstrument={toggleInstrument}
           instrument={instrument}
         />
-        {instrument === "sampler" && (
-          <Sampler
-            socketID={socketID}
-            beat={beat}
-            selectPattern={selectPattern}
-            currPattern={currPattern}
-            view={view}
-            toggleView={toggleView}
-            audition={audition}
-            toggleAudition={toggleAudition}
-          />
-        )}
-        {instrument === "synth" && <Synth beat={beat} synth={context.synth} />}
+        <Instruments
+          socketID={socketID}
+          beat={beat}
+          selectPattern={selectPattern}
+          currPattern={currPattern}
+          view={view}
+          toggleView={toggleView}
+          audition={audition}
+          toggleAudition={toggleAudition}
+          synth={context.synth}
+          instrument={instrument}
+        />
+        {/* {instrument === "sampler" && <Sampler />}
+        {instrument === "synth" && <Synth beat={beat} synth={context.synth} />} */}
       </div>
     </div>
   );
