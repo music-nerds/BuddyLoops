@@ -218,7 +218,7 @@ const Transport: React.FC<Props> = ({
             style={{ height: 24, verticalAlign: "center", padding: "0 8px" }}
             onClick={clipboard}
           >
-            Share
+            Invite
           </Button>
         </div>
       </div>
