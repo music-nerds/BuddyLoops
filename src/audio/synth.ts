@@ -88,6 +88,10 @@ export class MonoSynth {
     }
   };
 
+  loadNewPattern(_pattern: (0 | 1)[][]): void {
+    this.pattern = _pattern;
+  }
+
   playNote(note: number, time: number, tempo: number): void {
     const delay = (time - this.context.currentTime) * 1000;
     if (this.attack) clearTimeout(this.attack);

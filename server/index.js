@@ -131,6 +131,9 @@ io.on("connection", (socket) => {
   socket.on("synthLaunch", (id) => {
     socket.to(id).emit("synthLaunch");
   });
+  socket.on("loadSet", (id, setId) => {
+    socket.to(id).emit("receiveSet", setId);
+  })
 });
 
 http.listen(PORT, () => {

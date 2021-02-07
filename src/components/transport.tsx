@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Slider from "@material-ui/core/Slider";
-// import Switch from "@material-ui/core/Switch";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import PlayArrowSharpIcon from "@material-ui/icons/PlayArrowSharp";
@@ -15,6 +14,8 @@ import Button from "@material-ui/core/Button";
 import drum from '../../images/icons/drum.png';
 import piano from '../../images/icons/piano.png';
 import axios from 'axios';
+import SetCard from './setCard';
+import { Set } from '../audio/dataInterfaces';
 import "./transport.css";
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => (
@@ -31,8 +32,9 @@ interface Props {
 }
 
 const Transport: React.FC<Props> = ({ id, setBeat, instrument, toggleInstrument }) => {
-  const [open, setOpen] = useState(false);
-  const { context } = useContext(ReactAudioContext);
+  const [linkOpen, setLinkOpen] = useState(false);
+  const [kitOpen, setKitOpen] = useState(false);
+  const { context, setContext } = useContext(ReactAudioContext);
   const [tempo, setTempo] = useState<number>(context.tempo);
   const [swing, setSwing] = useState<number>(0);
   const [playing, setIsPlaying] = useState<boolean>(false);
@@ -60,6 +62,7 @@ const Transport: React.FC<Props> = ({ id, setBeat, instrument, toggleInstrument 
     socket.on("receivePlay", (target: number) => {
       console.log("received play", target);
       playAtTime(target);
+      setIsPlaying(true);
     });
 
     return () => {
@@ -71,6 +74,7 @@ const Transport: React.FC<Props> = ({ id, setBeat, instrument, toggleInstrument 
   useEffect(() => {
     socket.on("receiveStop", () => {
       console.log("received stop", Date.now());
+      setIsPlaying(false);
       stop(context);
       setBeat(-1);
     });
@@ -106,7 +110,7 @@ const Transport: React.FC<Props> = ({ id, setBeat, instrument, toggleInstrument 
     const url: string = window.location.href;
     try {
       await navigator.clipboard.writeText(url);
-      setOpen(true);
+      setLinkOpen(true);
     } catch (err) {
       console.error("failed to copy", err);
     }
@@ -114,7 +118,8 @@ const Transport: React.FC<Props> = ({ id, setBeat, instrument, toggleInstrument 
 
   const close = (event?: React.SyntheticEvent, reason?: string): void => {
     if (reason === "clickaway") return;
-    setOpen(false);
+    setLinkOpen(false);
+    setKitOpen(false);
   };
 
   const updateTempo = (event: any, newValue: number | number[]) => {
@@ -140,11 +145,22 @@ const Transport: React.FC<Props> = ({ id, setBeat, instrument, toggleInstrument 
       setTempo(value);
       context.updateTempo(value);
     });
+    socket.on('receiveSet', (id:string) => {
+      const set:(Set|undefined) = kits.find((s:Set) => s.id === id);
+      stop(context);
+      setIsPlaying(false);
+      context.loadNewSet(set);
+      setContext({...context});
+      setTempo(context.tempo);
+      setSwing(context.swing);
+      setKitOpen(true);
+    })
     return () => {
       socket.off("swingChange");
       socket.off("tempoChange");
+      socket.off('receiveSet');
     };
-  }, [context, socket]);
+  }, [context, socket, kits, setContext]);
 
   useEffect(() => {
     axios.get('/api/getkits')
@@ -157,9 +173,17 @@ const Transport: React.FC<Props> = ({ id, setBeat, instrument, toggleInstrument 
     setMenuOpen(!menuOpen);
   }
 
-  const loadSet = (set:any) => {
+  const loadSet = (set:Set) => {
+    handleStop();
+    stop(context);
+    setIsPlaying(false);
     context.loadNewSet(set);
+    setContext({...context});
+    setTempo(context.tempo);
+    setSwing(context.swing);
+    socket.emit('loadSet', socketID, set.id);
     setMenuOpen(false);
+    setKitOpen(true);
   }
 
   return (
@@ -233,22 +257,21 @@ const Transport: React.FC<Props> = ({ id, setBeat, instrument, toggleInstrument 
             style={{ height: 24, verticalAlign: "center", padding: "0 8px", margin: '5px' }}
             onClick={openMenu}
           ></Button>
-          <div className={menuOpen ? 'set-menu open' : 'set-menu'}>
-            {
-              kits.map((set:any) => {
-                return (
-                  <div onClick={() => loadSet(set)} className='set-menu-item' key={set.id}>
-                    <p>{set.name}</p>
-                  </div>
-                )
-              })
-            }
-          </div>
         </div>
       </div>
-      <Snackbar open={open} autoHideDuration={5000} onClose={close}>
+      <div className={menuOpen ? 'set-menu open' : 'set-menu'}>
+        {
+          kits.map((set:Set) => <SetCard set={set} loadSet={loadSet} key={set.id} />)
+        }
+        </div>
+      <Snackbar open={linkOpen} autoHideDuration={5000} onClose={close}>
         <Alert onClose={close} severity="success">
           Link copied to clipboard, send to a friend!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={kitOpen} autoHideDuration={5000} onClose={close}>
+        <Alert onClose={close} severity="success">
+          New Set Loaded
         </Alert>
       </Snackbar>
     </div>

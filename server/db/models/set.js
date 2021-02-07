@@ -1,5 +1,5 @@
 const db = require('../db');
-const { UUID, UUIDV4, INTEGER, STRING } = require('sequelize');
+const { UUID, UUIDV4, INTEGER, STRING, ARRAY } = require('sequelize');
 
 const Set = db.define('set', {
   id: {
@@ -26,6 +26,27 @@ const Set = db.define('set', {
   swing: {
     type: INTEGER,
     defaultValue: 0,
+  },
+  synthPattern: {
+    type: ARRAY(ARRAY(INTEGER)),
+    defaultValue: [
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0],
+    ],
   },
 });
 

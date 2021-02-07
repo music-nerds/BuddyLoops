@@ -234,6 +234,7 @@ export const createAudioContext = (): StepContext => {
         const seq = initializeRow(this.context, row.name, row.audioPath, row.pattern)
         return seq;
       })
+      this.synth.loadNewPattern(set.synthPattern);
     }
   };
 };

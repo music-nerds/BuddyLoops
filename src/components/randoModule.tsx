@@ -12,7 +12,7 @@ import Transport from "./transport";
 import Sampler from "./sampler";
 import Synth from "./synth";
 import UserIndicators from "./userIndicators";
-import LowerNavigator from './lowerNavigator';
+// import LowerNavigator from './lowerNavigator';
 
 interface NewUser {
   id: string;
