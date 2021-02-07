@@ -9,8 +9,7 @@ import {
 } from "../app";
 import ContextOverlay from "./contextOverlay";
 import Transport from "./transport";
-import Sampler from "./sampler";
-import Synth from "./synth";
+import Instruments from "./instruments";
 import UserIndicators from "./userIndicators";
 
 interface NewUser {
@@ -238,28 +237,32 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
     <div className="fullPage">
       <div className="container">
         <UserIndicators numUsers={numUsers} />
-        {!ready && <ContextOverlay setReady={setReady} />}
-        <Transport
-          id={socketID}
-          setBeat={setBeat}
-          audition={audition}
-          toggleAudition={toggleAudition}
-          toggleInstrument={toggleInstrument}
-          instrument={instrument}
-        />
-        {instrument === "sampler" && (
-          <Sampler
-            socketID={socketID}
-            beat={beat}
-            selectPattern={selectPattern}
-            currPattern={currPattern}
-            view={view}
-            toggleView={toggleView}
-            audition={audition}
-            toggleAudition={toggleAudition}
-          />
+        {!ready ? (
+          <ContextOverlay setReady={setReady} />
+        ) : (
+          <>
+            <Transport
+              id={socketID}
+              setBeat={setBeat}
+              audition={audition}
+              toggleAudition={toggleAudition}
+              toggleInstrument={toggleInstrument}
+              instrument={instrument}
+            />
+            <Instruments
+              socketID={socketID}
+              beat={beat}
+              selectPattern={selectPattern}
+              currPattern={currPattern}
+              view={view}
+              toggleView={toggleView}
+              audition={audition}
+              toggleAudition={toggleAudition}
+              synth={context.synth}
+              instrument={instrument}
+            />
+          </>
         )}
-        {instrument === "synth" && <Synth beat={beat} synth={context.synth} />}
       </div>
     </div>
   );

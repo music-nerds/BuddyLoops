@@ -1,5 +1,5 @@
-import React, { useEffect, useContext } from "react";
-import { ReactAudioContext, SocketContext } from "../app";
+import React, { useContext } from "react";
+import { ReactAudioContext } from "../app";
 import StepRow from "./stepRow";
 import SampleSelector from "./sampleSelector";
 import Audition from "./audition";
@@ -20,12 +20,6 @@ interface Props {
   toggleAudition: () => void;
 }
 
-interface PatternChange {
-  name: string;
-  pattern: (0 | 1)[];
-  id: string;
-}
-
 const Sampler: React.FC<Props> = ({
   socketID,
   beat,
@@ -36,65 +30,7 @@ const Sampler: React.FC<Props> = ({
   audition,
   toggleAudition,
 }) => {
-  const { context, setContext } = useContext(ReactAudioContext);
-  const socket = useContext(SocketContext);
-
-  useEffect(() => {
-    socket.on("patternChange", (data: PatternChange) => {
-      const seq = context.sequencers.find((seq) => seq.name === data.name);
-      if (seq) {
-        seq.pattern = data.pattern;
-      }
-      if (!context.isPlaying) {
-        // causes bug if isPlaying is true
-        // stop button loses reference to context
-        setContext({ ...context });
-      }
-    });
-
-    socket.on("receiveRowLaunch", (name: string) => {
-      // if(name === context.sequencers[currPattern].name){
-      //   sequencer.shouldPlayNextLoop = !row.shouldPlayNextLoop;
-      //   // setLaunchEnabled(row.shouldPlayNextLoop);
-      // }
-      const sequencer = context.sequencers.find((seq) => seq.name === name)!;
-      sequencer.shouldPlayNextLoop = !sequencer.shouldPlayNextLoop;
-    });
-
-    socket.on("receiveDrumToggle", () => {
-      context.toggleSequencersEnabled();
-    });
-
-    socket.on("receiveMomentaryOn", (id: number) => {
-      context.setAudition(id);
-    });
-
-    socket.on("receiveMomentaryOff", (id: number) => {
-      context.endAudition(id);
-    });
-
-    return () => {
-      socket.off("patternChange");
-      socket.off("receiveRowLaunch");
-      socket.off("receiveDrumToggle");
-      socket.off("sendMomentaryOn");
-      socket.off("sendMomentaryOff");
-    };
-    // }, [context, context.sequencers, row])
-  }, [context, context.sequencers, setContext, socket]);
-
-  useEffect(() => {
-    socket.on("clearAllSamplerPatterns", () => {
-      context.clearAllPatterns();
-    });
-    socket.on("clearSamplerPattern", (patternIndex: number) => {
-      context.sequencers[patternIndex].clearPattern();
-    });
-    return () => {
-      socket.off("clearAllSamplerPatterns");
-      socket.off("clearSamplerPattern");
-    };
-  }, [socket, context]);
+  const { context } = useContext(ReactAudioContext);
 
   return (
     <div className="sampler-container">
