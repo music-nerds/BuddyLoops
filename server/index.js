@@ -2,7 +2,6 @@ const express = require("express");
 const path = require("path");
 const chalk = require("chalk");
 const cors = require("cors");
-const enforce = require('express-sslify');
 
 const app = express();
 
@@ -18,11 +17,6 @@ const PUBLIC_PATH = path.join(__dirname, "../public");
 const DIST_PATH = path.join(__dirname, "../dist");
 const PORT = process.env.PORT || 3000;
 
-const environment = process.env.NODE_ENV || 'development';
-
-if (environment !== 'development') {
-  app.use(enforce.HTTPS());
-}
 app.use(cors());
 app.use(express.json());
 app.use(express.static(PUBLIC_PATH));
