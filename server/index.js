@@ -17,6 +17,17 @@ const PUBLIC_PATH = path.join(__dirname, "../public");
 const DIST_PATH = path.join(__dirname, "../dist");
 const PORT = process.env.PORT || 3000;
 
+const environment = process.env.NODE_ENV || "development";
+
+function requireHTTPS(req, res, next) {
+  // The 'x-forwarded-proto' check is for Heroku
+  if (!req.secure && req.get('x-forwarded-proto') !== 'https' && environment !== "development") {
+    return res.redirect('https://' + req.get('host') + req.url);
+  }
+  next();
+}
+
+app.use(requireHTTPS);
 app.use(cors());
 app.use(express.json());
 app.use(express.static(PUBLIC_PATH));
