@@ -237,29 +237,32 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
     <div className="fullPage">
       <div className="container">
         <UserIndicators numUsers={numUsers} />
-        {!ready && <ContextOverlay setReady={setReady} />}
-        <Transport
-          id={socketID}
-          setBeat={setBeat}
-          audition={audition}
-          toggleAudition={toggleAudition}
-          toggleInstrument={toggleInstrument}
-          instrument={instrument}
-        />
-        <Instruments
-          socketID={socketID}
-          beat={beat}
-          selectPattern={selectPattern}
-          currPattern={currPattern}
-          view={view}
-          toggleView={toggleView}
-          audition={audition}
-          toggleAudition={toggleAudition}
-          synth={context.synth}
-          instrument={instrument}
-        />
-        {/* {instrument === "sampler" && <Sampler />}
-        {instrument === "synth" && <Synth beat={beat} synth={context.synth} />} */}
+        {!ready ? (
+          <ContextOverlay setReady={setReady} />
+        ) : (
+          <>
+            <Transport
+              id={socketID}
+              setBeat={setBeat}
+              audition={audition}
+              toggleAudition={toggleAudition}
+              toggleInstrument={toggleInstrument}
+              instrument={instrument}
+            />
+            <Instruments
+              socketID={socketID}
+              beat={beat}
+              selectPattern={selectPattern}
+              currPattern={currPattern}
+              view={view}
+              toggleView={toggleView}
+              audition={audition}
+              toggleAudition={toggleAudition}
+              synth={context.synth}
+              instrument={instrument}
+            />
+          </>
+        )}
       </div>
     </div>
   );
