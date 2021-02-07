@@ -1,14 +1,18 @@
 #synth {
-  width: 100%;
+  width: 95%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  user-select: none;
+  touch-action: none;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 10px 10px 0 0;
+  margin-bottom: 4rem;
 }
 #mono-synth-controls {
   display: flex;
   align-items: center;
   flex-direction: column;
-  margin-bottom: 0.5rem;
   width: 100%;
   max-width: 1024px;
   box-sizing: border-box;
@@ -52,36 +56,35 @@
 }
 
 .synth-squares {
-  background-color: #111;
-  /* width: 100%; */
   width: calc((50px + (0.125rem * 2)) * 8);
   box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
-  /* flex-direction: column; */
   align-items: center;
   justify-content: center;
+  padding-bottom: 1rem;
 }
 
 .synth-square-row {
   display: flex;
   flex-direction: column-reverse;
-  margin: 1rem 0;
+  margin-top: 1rem;
 }
 
 .synth-square {
   width: 50px;
   height: 50px;
   box-sizing: border-box;
-  border: 2px solid var(--blue);
+  border: 2px solid var(--synth);
   margin: 0.125rem;
+  background-color: #111;
 }
 .synth-square.on-beat {
-  border: 2px solid var(--highlight);
+  border: 2px solid var(--synthHL);
 }
 
 .synth-square.active-square {
-  background-color: var(--blue);
+  background-color: var(--synth);
 }
 .synth-square.active-beat,
 .synth-square.synth-square.active-beat.on-beat {
@@ -89,15 +92,16 @@
 }
 
 .toggle {
-  color: var(--blue);
+  color: var(--synth);
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem 1rem;
+  box-sizing: border-box;
+  padding: 5px 10px;
   width: 100%;
   align-items: center;
   text-transform: uppercase;
-  border-bottom: 2px solid #000;
-  background-color: #111;
+  border: 1px solid #000;
+  /* background-color: var(--gray); */
   z-index: 2;
 }
 .chevron {
@@ -112,7 +116,7 @@
 
 div.controls {
   transition: var(--transitionTime);
-  background-color: #111;
+  background-color: var(--gray);
   width: 100%;
   max-height: 0;
   overflow: hidden;
@@ -121,10 +125,86 @@ div.controls {
   align-items: center;
 }
 
-.synth-launch {
-  background-color: var(--blue);
-  padding: 0.5rem 1rem;
+.synth-launch,
+.clear-synth-pattern {
+  background-color: var(--synth);
+  padding: 0.25rem 1.5rem;
   border-radius: 5px;
+  color: whitesmoke;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.clear-synth-pattern {
+  padding: 1rem;
+}
+#arp {
+  width: 100%;
+}
+#arp-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap-reverse;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  user-select: none;
+}
+
+.arp-square {
+  height: 15vh;
+  flex-basis: 33.3333%;
+  box-sizing: border-box;
+  border: 1px solid black;
+  background-color: var(--synth);
+  transition: 100ms;
+  touch-action: none;
+  user-select: none;
+}
+.arp-square.root {
+  background-color: var(--synthHL);
+}
+.arp-square.selected {
+  background-color: var(--synthContrast);
+}
+.arp-square.selected.root {
+  background-color: var(--synthContrastHL);
+}
+#arp-fx {
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px;
+}
+.hold-btn {
+  padding: 0.5rem 1rem;
+  background-color: var(--synth);
+  width: 4rem;
+  color: #eee;
+}
+.hold-btn.enabled {
+  background-color: var(--synthContrast);
+}
+.synth-tabs {
+  height: 3rem;
+  width: 100%;
+  display: flex;
+  border-bottom: 1px solid var(--gray);
+  box-sizing: border-box;
+}
+.synth-tabs > div {
+  width: 50%;
+  height: 100%;
+  background-color: var(--gray);
+  border-radius: 10px 10px 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.synth-tabs > div.selected {
+  background-color: var(--sampler);
 }
 
 @media (max-width: 768px) {
@@ -144,7 +224,7 @@ div.controls {
     height: 48px;
   }
   #mono-synth-controls {
-    width: 500px;
+    width: 100%;
   }
   .synth-wave {
     width: 100%;
@@ -176,9 +256,20 @@ div.controls {
     width: 100%;
   }
 }
+@media screen and (max-width: 600px) {
+  .synth-squares {
+    background-color: #111;
+    width: calc((50px + (0.125rem * 2)) * 8);
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+  }
+}
 @media (max-width: 480px) {
   #mono-synth-controls {
-    width: 320px;
+    width: 100%;
   }
 
   .synth-squares {
@@ -197,19 +288,12 @@ div.controls {
   .synth-square {
     height: 24px;
   }
-  .synth-launch {
-    padding: 0.25rem 0.5rem;
-  }
-}
 
-@media screen and (max-width: 600px) {
-  .synth-squares {
-    background-color: #111;
-    width: calc((50px + (0.125rem * 2)) * 8);
-    box-sizing: border-box;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    align-items: center;
+  .clear-synth-pattern {
+    font-size: 0.5rem;
+    height: 100%;
+  }
+  .synth-launch {
+    padding: 0.5rem 1.5rem;
   }
 }

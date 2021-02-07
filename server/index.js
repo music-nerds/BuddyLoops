@@ -134,6 +134,15 @@ io.on("connection", (socket) => {
   socket.on("loadSet", (id, setId) => {
     socket.to(id).emit("receiveSet", setId);
   })
+  socket.on("arpNotes", (id, notesArr) => {
+    socket.to(id).emit("arpNotes", notesArr);
+  });
+  socket.on("arpHoldOff", (id) => {
+    socket.to(id).emit("arpHoldOff");
+  });
+  socket.on("arpHoldOn", (id) => {
+    socket.to(id).emit("arpHoldOn");
+  });
 });
 
 http.listen(PORT, () => {

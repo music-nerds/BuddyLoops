@@ -22,10 +22,12 @@ export class MonoSynth {
   releaseTime: number;
   portamentoTime: number;
   noteLength: number;
-  release: NodeJS.Timeout | null;
-  attack: NodeJS.Timeout | null;
   isPlaying: boolean;
   shouldPlayNextLoop: boolean;
+  arpNotes: number[];
+  arpStyle: string;
+  arpIndex: number;
+  arpEnabled: boolean;
   constructor(context: AudioContext, type: OscillatorType) {
     this.context = context;
     this.osc = this.context.createOscillator();
@@ -43,10 +45,12 @@ export class MonoSynth {
     this.releaseTime = 0.25;
     this.portamentoTime = 0;
     this.noteLength = 0.5;
-    this.attack = null;
-    this.release = null;
     this.isPlaying = true;
     this.shouldPlayNextLoop = true;
+    this.arpNotes = [];
+    this.arpStyle = "order";
+    this.arpIndex = 0;
+    this.arpEnabled = true;
   }
 
   pattern: (0 | 1)[][] = [
@@ -74,6 +78,11 @@ export class MonoSynth {
     notes["A"],
     notes["C"] * 2,
     notes["D"] * 2,
+    notes["F"] * 2,
+    notes["G"] * 2,
+    notes["A"] * 2,
+    notes["C"] * 4,
+    notes["D"] * 4,
   ];
   octave: number = 1 / 4;
   updatePattern = (value: 0 | 1, beat: number, note: number): void => {
@@ -87,40 +96,32 @@ export class MonoSynth {
       });
     }
   };
+  clearPattern(): void {
+    this.pattern = this.pattern.map((p) => [0, 0, 0, 0, 0, 0]);
+  }
 
   loadNewPattern(_pattern: (0 | 1)[][]): void {
     this.pattern = _pattern;
   }
 
   playNote(note: number, time: number, tempo: number): void {
-    const delay = (time - this.context.currentTime) * 1000;
-    if (this.attack) clearTimeout(this.attack);
-    if (this.release) clearTimeout(this.release);
     // set frequency
     this.osc.frequency.setValueAtTime(note, time);
-    this.attack = setTimeout(() => {
-      // cancel release of last note
-      this.output.gain.cancelScheduledValues(this.context.currentTime);
-      // set turn up the volume with attackTime
-      this.output.gain.setTargetAtTime(
-        0.4,
-        this.context.currentTime,
-        this.attackTime / 4
-      );
-      // stop note at note length
-      this.release = setTimeout(() => {
-        this.stopNote();
-      }, (60 / (tempo * 2)) * 1000 * this.noteLength);
-    }, delay);
+    // manage gain events
+    this.output.gain.cancelScheduledValues(time);
+    this.output.gain.setValueAtTime(this.getGainValue(), time);
+    this.output.gain.setTargetAtTime(0.4, time + 0.0001, this.attackTime / 5);
+
+    this.stopNote(time + (60 / (tempo * 4)) * this.noteLength);
   }
 
-  stopNote(): void {
+  stopNote(time: number): void {
     // turn down the volume with releaseTime
-    this.output.gain.cancelScheduledValues(this.context.currentTime);
-    this.output.gain.setTargetAtTime(
-      0,
-      this.context.currentTime,
-      this.releaseTime / 4
-    );
+    this.output.gain.cancelScheduledValues(time);
+    this.output.gain.setTargetAtTime(0, time + 0.0001, this.releaseTime / 5);
+  }
+
+  getGainValue(): number {
+    return this.output.gain.value;
   }
 }

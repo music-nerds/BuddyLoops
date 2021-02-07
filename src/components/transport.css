@@ -71,20 +71,26 @@ input[type="number"]::-webkit-outer-spin-button {
 .transport-instrument-button {
   height: 2.5rem;
   width: 2.5rem;
-  background-color: var(--blue);
   margin: 0 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 5px;
-  transition: all 0.2s cubic-bezier(.3,.54,.77,.95);
+  transition: all 0.2s cubic-bezier(0.3, 0.54, 0.77, 0.95);
   user-select: none;
   -webkit-user-select: none;
 }
 
+.transport-instrument-button.sampler {
+  background-color: var(--blue);
+}
+.transport-instrument-button.synth {
+  background-color: var(--synth);
+}
+
 .transport-instrument-button.selected {
   border: 2px solid white;
-  transition: all 0.2s cubic-bezier(.3,.54,.77,.95);
+  transition: all 0.2s cubic-bezier(0.3, 0.54, 0.77, 0.95);
 }
 
 .transport-instrument-button:hover {
@@ -176,3 +182,5 @@ input[type="number"]::-webkit-outer-spin-button {
   }
   
 }
+
+

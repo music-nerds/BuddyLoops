@@ -36,7 +36,7 @@ const Transport: React.FC<Props> = ({ id, setBeat, instrument, toggleInstrument 
   const [kitOpen, setKitOpen] = useState(false);
   const { context, setContext } = useContext(ReactAudioContext);
   const [tempo, setTempo] = useState<number>(context.tempo);
-  const [swing, setSwing] = useState<number>(0);
+  const [swing, setSwing] = useState<number>(context.swing);
   const [playing, setIsPlaying] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [kits, setKits] = useState([]);
@@ -101,10 +101,8 @@ const Transport: React.FC<Props> = ({ id, setBeat, instrument, toggleInstrument 
   };
 
   const togglePlay = (): void => {
-    !context.isPlaying
-    ? handlePlay()
-    : handleStop()
-  }
+    !context.isPlaying ? handlePlay() : handleStop();
+  };
 
   const clipboard = async (): Promise<void> => {
     const url: string = window.location.href;
@@ -213,28 +211,40 @@ const Transport: React.FC<Props> = ({ id, setBeat, instrument, toggleInstrument 
       <div className="transport-top-row">
         <div className="play-stop">
           <Button color="secondary" onClick={togglePlay}>
-            {
-              !playing
-              ? <PlayArrowSharpIcon style={{ fontSize: 56 }} />
-              : <StopSharpIcon style={{ fontSize: 56 }} />
-            }
+            {!playing ? (
+              <PlayArrowSharpIcon style={{ fontSize: 56 }} />
+            ) : (
+              <StopSharpIcon style={{ fontSize: 56 }} />
+            )}
           </Button>
         </div>
-        <div className='transport-instrument-select'>
-          <div className={instrument === 'sampler' ? 'transport-instrument-button selected' : 'transport-instrument-button'}>
-            <img 
-              className='transport-instrument-icon'
-              src={drum} 
-              alt='sampler icon'
-              onClick={() => toggleInstrument('sampler')}
+        <div className="transport-instrument-select">
+          <div
+            className={
+              instrument === "sampler"
+                ? "transport-instrument-button sampler selected"
+                : "transport-instrument-button sampler"
+            }
+          >
+            <img
+              className="transport-instrument-icon"
+              src={drum}
+              alt="sampler icon"
+              onClick={() => toggleInstrument("sampler")}
             />
           </div>
-          <div className={instrument === 'synth' ? 'transport-instrument-button selected' : 'transport-instrument-button'}>
-            <img 
-              className='transport-instrument-icon'
-              src={piano} 
-              alt='synth icon'
-              onClick={() => toggleInstrument('synth')}
+          <div
+            className={
+              instrument === "synth"
+                ? "transport-instrument-button synth selected"
+                : "transport-instrument-button synth"
+            }
+          >
+            <img
+              className="transport-instrument-icon"
+              src={piano}
+              alt="synth icon"
+              onClick={() => toggleInstrument("synth")}
             />
           </div>
         </div>
