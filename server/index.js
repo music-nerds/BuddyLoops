@@ -54,6 +54,7 @@ io.on("connection", (socket) => {
     this.rooms.forEach((room) => {
       io.to(room).emit("userLeft", socket.client.id);
     });
+    console.log(`${socket.client.id} LEFT`);
   });
   socket.on("getOffset", (id, timeObj) => {
     // get time data

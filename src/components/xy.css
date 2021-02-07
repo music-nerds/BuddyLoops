@@ -1,0 +1,14 @@
+.xy {
+  width: 8rem;
+  height: 8rem;
+  background-color: #111;
+  position: relative;
+}
+
+.xy-ball {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: var(--blue);
+  position: absolute;
+}

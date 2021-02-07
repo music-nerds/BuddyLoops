@@ -163,7 +163,7 @@ export const createAudioContext = (): StepContext => {
     kilmer125bpm[15]
   );
 
-  const synth = new MonoSynth(context, "square");
+  const synth = new MonoSynth(context, "sawtooth");
   return {
     context,
     destination,

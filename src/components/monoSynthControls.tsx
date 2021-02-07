@@ -47,6 +47,8 @@ const MonoSynthControls: React.SFC<MonoSynthControlsProps> = ({
   const handleWave = (event: any) => {
     setWave(event.target.value);
     synth.osc.type = event.target.value;
+    synth.osc2.type = event.target.value;
+    synth.osc2.type = event.target.value;
     socket.emit("synthWave", socketID, event.target.value);
   };
 
@@ -87,6 +89,7 @@ const MonoSynthControls: React.SFC<MonoSynthControlsProps> = ({
     socket.on("synthWave", (val: OscillatorType) => {
       setWave(val);
       synth.osc.type = val;
+      synth.osc2.type = val;
     });
     socket.on("synthNoteLength", (val: number) => {
       setNoteLength(val);

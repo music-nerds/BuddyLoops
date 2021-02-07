@@ -1,3 +1,5 @@
+import { AnalogDelay } from "./effects";
+
 export const notes = {
   C: 261.63,
   Db: 277.18,
@@ -16,7 +18,10 @@ export const notes = {
 export class MonoSynth {
   context: AudioContext;
   osc: OscillatorNode;
+  osc2: OscillatorNode;
+  osc3: OscillatorNode;
   output: GainNode;
+  merger: ChannelMergerNode;
   filter: BiquadFilterNode;
   attackTime: number;
   releaseTime: number;
@@ -25,22 +30,37 @@ export class MonoSynth {
   isPlaying: boolean;
   shouldPlayNextLoop: boolean;
   arpNotes: number[];
-  arpStyle: string;
   arpIndex: number;
-  arpEnabled: boolean;
+  spread: boolean;
+  spreadAmount: number;
+  fmOsc: OscillatorNode;
+  fmOscGain: GainNode;
+  delay: AnalogDelay;
   constructor(context: AudioContext, type: OscillatorType) {
     this.context = context;
     this.osc = this.context.createOscillator();
     this.osc.type = type;
+    this.osc2 = this.context.createOscillator();
+    this.osc2.type = type;
+    this.osc3 = this.context.createOscillator();
+    this.osc3.type = "square";
     this.output = this.context.createGain();
     this.output.gain.value = 0;
     this.filter = this.context.createBiquadFilter();
     this.filter.type = "lowpass";
     this.filter.frequency.value = 5000;
-    this.osc.connect(this.filter);
+    this.merger = context.createChannelMerger();
+    this.delay = new AnalogDelay(this.context);
+    this.osc.connect(this.merger, 0, 0);
+    this.osc2.connect(this.merger, 0, 1);
+    this.osc3.connect(this.merger, 0, 2);
+    this.merger.connect(this.filter);
     this.filter.connect(this.output);
     this.output.connect(this.context.destination);
+    this.output.connect(this.delay.input);
     this.osc.start();
+    this.osc2.start();
+    this.osc3.start();
     this.attackTime = 0.01;
     this.releaseTime = 0.25;
     this.portamentoTime = 0;
@@ -48,9 +68,17 @@ export class MonoSynth {
     this.isPlaying = true;
     this.shouldPlayNextLoop = true;
     this.arpNotes = [];
-    this.arpStyle = "order";
     this.arpIndex = 0;
-    this.arpEnabled = true;
+    this.spread = true;
+    this.spreadAmount = 5;
+    this.fmOsc = context.createOscillator();
+    this.fmOsc.type = "sine";
+    this.fmOscGain = context.createGain();
+    this.fmOscGain.gain.value = 100;
+    // this.fmOsc.connect(this.fmOscGain);
+    this.fmOscGain.connect(this.osc.frequency);
+    this.fmOscGain.connect(this.osc2.frequency);
+    // this.fmOsc.start();
   }
 
   pattern: (0 | 1)[][] = [
@@ -102,7 +130,22 @@ export class MonoSynth {
 
   playNote(note: number, time: number, tempo: number): void {
     // set frequency
-    this.osc.frequency.setValueAtTime(note, time);
+    // this.fmOsc.frequency.setValueAtTime(note / 2, time);
+    if (this.spread) {
+      this.osc.frequency.setValueAtTime(
+        this.freqPlusCents(note, this.spreadAmount),
+        time
+      );
+      this.osc2.frequency.setValueAtTime(
+        this.freqMinusCents(note, this.spreadAmount),
+        time
+      );
+      this.osc3.frequency.setValueAtTime(note, time);
+    } else {
+      this.osc.frequency.setValueAtTime(note, time);
+      this.osc2.frequency.setValueAtTime(note, time);
+      this.osc3.frequency.setValueAtTime(note, time);
+    }
     // manage gain events
     this.output.gain.cancelScheduledValues(time);
     this.output.gain.setValueAtTime(this.getGainValue(), time);
@@ -119,5 +162,13 @@ export class MonoSynth {
 
   getGainValue(): number {
     return this.output.gain.value;
+  }
+
+  freqPlusCents(freq: number, cents: number): number {
+    // 1200th root of 2 is 1 cent
+    return freq * Math.pow(1.0005777895065548, cents);
+  }
+  freqMinusCents(freq: number, cents: number): number {
+    return freq / Math.pow(1.0005777895065548, cents);
   }
 }
