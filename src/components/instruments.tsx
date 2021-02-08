@@ -170,7 +170,6 @@ const Instruments: React.FC<InstrumentsProps> = ({
       socket.off("setEnvelope");
       socket.off("setDelay");
       socket.off("synthLaunch");
-    };      
     };
   }, [socket, synth]);
   return (
