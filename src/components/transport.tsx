@@ -59,6 +59,7 @@ const Transport: React.FC<Props> = ({
     socket.on("receivePlay", (target: number) => {
       console.log("received play", target);
       playAtTime(target);
+      setIsPlaying(true);
     });
 
     return () => {
