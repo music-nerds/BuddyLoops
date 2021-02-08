@@ -119,8 +119,15 @@ const Instruments: React.FC<InstrumentsProps> = ({
         setContext({ ...context });
       }
     });
+    socket.on("synthPatternChange", (pattern: (0 | 1)[][]) => {
+      synth.pattern = pattern;
+      if (!context.isPlaying) {
+        setContext({ ...context });
+      }
+    });
     return () => {
       socket.off("clearSynthPattern");
+      socket.off("synthPatternChange");
     };
   }, [socket, synth, setContext, context]);
   useEffect(() => {
@@ -157,6 +164,7 @@ const Instruments: React.FC<InstrumentsProps> = ({
     socket.on("synthLaunch", () => {
       synth.shouldPlayNextLoop = !synth.shouldPlayNextLoop;
     });
+
     return () => {
       socket.off("setFilter");
       socket.off("setEnvelope");
