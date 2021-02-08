@@ -141,22 +141,6 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
     }
   };
 
-  const handleHoldToggle = () => {
-    if (hold) {
-      setHold(false);
-      synth.arpNotes = [];
-      synth.arpIndex = 0;
-      socket.emit("arpHoldOff", socketID);
-    } else {
-      setHold(true);
-      synth.arpNotes = [...holdNotes.current];
-      socket.emit("arpHoldOn", socketID);
-    }
-    if (!context.isPlaying) {
-      setContext({ ...context });
-    }
-  };
-
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLDivElement;
     const index = Number(target.dataset.index);
@@ -254,14 +238,6 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
             onMouseEnter={handleMouseEnter}
           ></div>
         ))}
-      </div>
-      <div id="arp-fx">
-        <div
-          className={`hold-btn ${hold ? "enabled" : ""}`}
-          onClick={handleHoldToggle}
-        >
-          Hold
-        </div>
       </div>
     </div>
   );

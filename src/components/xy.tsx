@@ -24,9 +24,11 @@ const XY: React.SFC<XYProps> = ({ setParamValues, initX, initY }) => {
   const p4 = useRef(0);
   const mouseDown = useRef(false);
   useEffect(() => {
-    if (ball.current) {
-      let top = (initX / 128) * (128 - ball.current.clientHeight);
-      let left = (initY / 128) * (128 - ball.current.clientWidth);
+    if (ball.current && boundary) {
+      let top =
+        (initX / boundary.width) * (boundary.width - ball.current.clientHeight);
+      let left =
+        (initY / boundary.width) * (boundary.width - ball.current.clientWidth);
       ball.current.style.top = `${top}px`;
       ball.current.style.left = `${left}px`;
     }
@@ -37,7 +39,7 @@ const XY: React.SFC<XYProps> = ({ setParamValues, initX, initY }) => {
         ballRef.style.left = `0`;
       }
     };
-  }, []); // eslint-disable-line
+  }, [boundary]); // eslint-disable-line
   useLayoutEffect(() => {
     setBoundary(box.current?.getBoundingClientRect());
     setBallSize(ball.current?.getBoundingClientRect());
@@ -49,7 +51,6 @@ const XY: React.SFC<XYProps> = ({ setParamValues, initX, initY }) => {
   }, []);
   const handleTouchMove = useCallback(
     (e: React.TouchEvent<HTMLDivElement>) => {
-      e.preventDefault();
       // calculate the new cursor position:
       p1.current = p3.current - e.changedTouches[0].clientX;
       p2.current = p4.current - e.changedTouches[0].clientY;
@@ -103,8 +104,8 @@ const XY: React.SFC<XYProps> = ({ setParamValues, initX, initY }) => {
             if (left > boundary.width - ballSize.width) {
               left = boundary.width - ballSize.width;
             }
-            let x = top / (boundary.height - ballSize.height);
-            let y = left / (boundary.width - ballSize.width);
+            let x = left / (boundary.width - ballSize.width);
+            let y = top / (boundary.height - ballSize.height);
             setParamValues(x, y);
           }
           // set the element's new position:

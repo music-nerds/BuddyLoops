@@ -1,5 +1,12 @@
-import React, { useState } from "react";
+import React, {
+  useState,
+  useRef,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+} from "react";
 import { useHistory } from "react-router-dom";
+import { SocketContext, ReactAudioContext } from "../app";
 import MonoSynthControls from "./monoSynthControls";
 import MonoSynthSquares from "./monoSynthSquares";
 import MonoSynthArp from "./monoSynthArp";
@@ -17,14 +24,49 @@ interface MonoSynthProps {
   holdNotes: React.MutableRefObject<number[]>;
 }
 
-const Synth: React.SFC<MonoSynthProps> = ({
-  beat,
-  synth,
-  hold,
-  setHold,
-  holdNotes,
-}) => {
+const Synth: React.SFC<MonoSynthProps> = ({ beat, synth }) => {
+  const { context, setContext } = useContext(ReactAudioContext);
+  const socket = useContext(SocketContext);
   const [view, setView] = useState("arp");
+  const [hold, setHold] = useState(false);
+  const [width, setWidth] = useState(1);
+  const holdNotes: React.MutableRefObject<number[]> = useRef([]);
+  const synthDiv = useRef<HTMLDivElement | null>(null);
+
+  useLayoutEffect(() => {
+    if (synthDiv.current) {
+      const divSize = synthDiv.current.getBoundingClientRect();
+      if (divSize.width <= 375) {
+        setWidth(96);
+      } else {
+        setWidth(128);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    socket.on("arpNotes", (notesArr: number[]) => {
+      if (!hold) {
+        synth.arpNotes = notesArr;
+      } else {
+        holdNotes.current.concat(notesArr);
+      }
+    });
+    socket.on("arpHoldOff", () => {
+      setHold(false);
+      synth.arpNotes = [];
+      synth.arpIndex = 0;
+    });
+    socket.on("arpHoldOn", () => {
+      setHold(true);
+      synth.arpNotes = [...holdNotes.current];
+    });
+    return () => {
+      socket.off("arpNotes");
+      socket.off("arpHoldOff");
+      socket.off("arpHoldOn");
+    };
+  }, [synth, socket, hold]);
 
   const {
     location: { pathname },
@@ -33,26 +75,45 @@ const Synth: React.SFC<MonoSynthProps> = ({
 
   const setFilterValues = (x: number, y: number) => {
     synth.filter.frequency.linearRampToValueAtTime(
-      Math.pow(10, 2 * y + 2), // scales 0 - 1 logarithmically between 100 and 10000
+      Math.pow(10, 2 * x + 2), // scales 0 - 1 logarithmically between 100 and 10000
       synth.context.currentTime + 0.0001
     );
     synth.filter.Q.linearRampToValueAtTime(
-      12 / (x * 11 + 1),
+      12 / (y * 11 + 1), // scales 0 - 1 to 1 - 12
       synth.context.currentTime + 0.0001
     );
   };
   const setDelayValues = (x: number, y: number) => {
     synth.delay.feedback.gain.linearRampToValueAtTime(
-      y * 0.75, // 1 is too much
+      x * 0.75, // invert value, limit to .75
       synth.context.currentTime + 0.0001
     );
     synth.delay.output.gain.linearRampToValueAtTime(
-      1 - x, // invert value
+      1 - y,
       synth.context.currentTime + 0.0001
     );
   };
+  const setEnvelopeValues = (x: number, y: number) => {
+    synth.releaseTime = x;
+    synth.noteLength = 1 - 0.75 * y;
+  };
+  const handleHoldToggle = () => {
+    if (hold) {
+      setHold(false);
+      synth.arpNotes = [];
+      synth.arpIndex = 0;
+      socket.emit("arpHoldOff", socketID);
+    } else {
+      setHold(true);
+      synth.arpNotes = [...holdNotes.current];
+      socket.emit("arpHoldOn", socketID);
+    }
+    if (!context.isPlaying) {
+      setContext({ ...context });
+    }
+  };
   return (
-    <div id="synth">
+    <div id="synth" ref={synthDiv}>
       <div className="synth-tabs">
         <div
           className={`synth-pattern-tab ${view === "arp" ? "selected" : ""}`}
@@ -89,16 +150,31 @@ const Synth: React.SFC<MonoSynthProps> = ({
         />
       )}
       <div className="synth-effects-playground">
-        <XY
-          setParamValues={setFilterValues}
-          initX={(128 / 11) * (11 - (synth.filter.Q.value - 1))}
-          initY={128 * (synth.filter.frequency.value / 10000)}
-        />
-        <XY
-          setParamValues={setDelayValues}
-          initX={128 * (1 - synth.delay.output.gain.value)}
-          initY={synth.delay.feedback.gain.value * 128}
-        />
+        <div className="hold">
+          <div
+            className={`hold-btn ${hold ? "enabled" : ""}`}
+            onClick={handleHoldToggle}
+          >
+            HOLD
+          </div>
+        </div>
+        <div className="xy-pads">
+          <XY
+            setParamValues={setFilterValues}
+            initX={(width / 11) * (11 - (synth.filter.Q.value - 1))}
+            initY={width * (synth.filter.frequency.value / 10000)}
+          />
+          <XY
+            setParamValues={setEnvelopeValues}
+            initX={width * synth.releaseTime}
+            initY={width * synth.noteLength}
+          />
+          <XY
+            setParamValues={setDelayValues}
+            initX={width * (1 - synth.delay.output.gain.value)}
+            initY={synth.delay.feedback.gain.value * width}
+          />
+        </div>
       </div>
     </div>
   );

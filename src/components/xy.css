@@ -3,6 +3,7 @@
   height: 8rem;
   background-color: #111;
   position: relative;
+  margin: 1rem 0;
 }
 
 .xy-ball {
@@ -11,4 +12,10 @@
   border-radius: 50%;
   background-color: var(--blue);
   position: absolute;
+}
+@media (max-width: 375px) {
+  .xy {
+    width: 96px;
+    height: 96px;
+  }
 }

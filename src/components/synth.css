@@ -178,10 +178,22 @@ div.controls {
   justify-content: space-between;
   padding: 4px;
 }
+.hold,
 .hold-btn {
-  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+}
+.hold-btn {
+  margin-top: 1rem;
+  flex: 1;
+  border-radius: 5px;
+  padding: 1rem;
   background-color: var(--synth);
   width: 4rem;
+  height: 2rem;
   color: #eee;
 }
 .hold-btn.enabled {
@@ -208,6 +220,12 @@ div.controls {
 }
 
 .synth-effects-playground {
+  /* display: flex;
+  justify-content: space-around;
+  align-items: center; */
+  width: 100%;
+}
+.xy-pads {
   display: flex;
   justify-content: space-around;
   width: 100%;
@@ -291,6 +309,13 @@ div.controls {
   }
 }
 @media (max-width: 375px) {
+  .synth-effects-playground {
+    flex-direction: column;
+  }
+  .xy-pads,
+  .hold {
+    margin: 0.5rem 0;
+  }
   .synth-square {
     height: 24px;
   }
