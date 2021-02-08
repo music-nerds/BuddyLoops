@@ -61,6 +61,7 @@ const Transport: React.FC<Props> = ({
     socket.on("receivePlay", (target: number) => {
       console.log("received play", target);
       playAtTime(target);
+      setIsPlaying(true);
     });
 
     return () => {
@@ -73,6 +74,7 @@ const Transport: React.FC<Props> = ({
     socket.on("receiveStop", () => {
       console.log("received stop", Date.now());
       stop(context);
+      setIsPlaying(false);
       setBeat(-1);
     });
     socket.on("receiveState", (hostState: AppState) => {

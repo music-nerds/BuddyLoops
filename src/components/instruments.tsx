@@ -95,6 +95,7 @@ const Instruments: React.FC<InstrumentsProps> = ({
       socket.off("clearSamplerPattern");
     };
   }, [socket, context]);
+
   useEffect(() => {
     socket.on("arpNotes", (notesArr: number[]) => {
       synth.arpNotes = notesArr;
@@ -117,6 +118,18 @@ const Instruments: React.FC<InstrumentsProps> = ({
       socket.off("arpHoldOn");
     };
   }, [synth, socket, hold, holdNotes, setHold]);
+
+  useEffect(() => {
+    socket.on("synthPatternChange", (pattern: (0 | 1)[][]) => {
+      synth.pattern = pattern;
+      if (!context.isPlaying) {
+        setContext({ ...context });
+      }
+    });
+    return () => {
+      socket.off("synthPatternChange");
+    };
+  }, [socket, context, setContext, synth]);
   return (
     <div style={{ width: "100%" }}>
       {instrument === "sampler" ? (

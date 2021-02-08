@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useContext, useState, useRef } from "react";
 import { MonoSynth } from "../audio/synth";
 import { ReactAudioContext, SocketContext } from "../app";
 import { useHistory } from "react-router-dom";
@@ -82,17 +82,6 @@ const MonoSynthSquares: React.SFC<MonoSynthSquaresProps> = ({
     curDiv.current = null;
     prevDiv.current = null;
   };
-  useEffect(() => {
-    socket.on("synthPatternChange", (pattern: (0 | 1)[][]) => {
-      synth.pattern = pattern;
-      if (!context.isPlaying) {
-        setContext({ ...context });
-      }
-    });
-    return () => {
-      socket.off("synthPatternChange");
-    };
-  }, [socket, context, setContext, synth]);
 
   return (
     <div
