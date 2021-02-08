@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Slider from "@material-ui/core/Slider";
-// import Switch from "@material-ui/core/Switch";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import PlayArrowSharpIcon from "@material-ui/icons/PlayArrowSharp";
@@ -35,10 +34,9 @@ const Transport: React.FC<Props> = ({
   toggleInstrument,
 }) => {
   const [open, setOpen] = useState(false);
-  const { context } = useContext(ReactAudioContext);
+  const { context, setContext } = useContext(ReactAudioContext);
   const [tempo, setTempo] = useState<number>(context.tempo);
   const [swing, setSwing] = useState<number>(context.swing);
-  const [playing, setIsPlaying] = useState<boolean>(false);
   const {
     location: { pathname },
   } = useHistory();
@@ -73,6 +71,9 @@ const Transport: React.FC<Props> = ({
     socket.on("receiveStop", () => {
       console.log("received stop", Date.now());
       stop(context);
+      if (!context.isPlaying) {
+        setContext({ ...context });
+      }
       setBeat(-1);
     });
     socket.on("receiveState", (hostState: AppState) => {
@@ -84,16 +85,14 @@ const Transport: React.FC<Props> = ({
       socket.off("receiveStop");
       socket.off("receiveState");
     };
-  }, [context, setBeat, socket]);
+  }, [context, setBeat, socket, setContext]);
 
   const handlePlay = (): void => {
-    setIsPlaying(true);
     socket.emit("sendPlay", id, timeArr);
   };
 
   const handleStop = (): void => {
     setBeat(-1);
-    setIsPlaying(false);
     socket.emit("sendStop", id);
   };
 
@@ -171,7 +170,7 @@ const Transport: React.FC<Props> = ({
       <div className="transport-top-row">
         <div className="play-stop">
           <Button color="secondary" onClick={togglePlay}>
-            {!playing ? (
+            {!context.isPlaying ? (
               <PlayArrowSharpIcon style={{ fontSize: 56 }} />
             ) : (
               <StopSharpIcon style={{ fontSize: 56 }} />

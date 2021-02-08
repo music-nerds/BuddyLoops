@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useRef,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-} from "react";
+import React, { useState, useRef, useContext, useLayoutEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { SocketContext, ReactAudioContext } from "../app";
 import MonoSynthControls from "./monoSynthControls";
@@ -24,14 +18,22 @@ interface MonoSynthProps {
   holdNotes: React.MutableRefObject<number[]>;
 }
 
-const Synth: React.SFC<MonoSynthProps> = ({ beat, synth }) => {
+const Synth: React.SFC<MonoSynthProps> = ({
+  beat,
+  synth,
+  hold,
+  setHold,
+  holdNotes,
+}) => {
   const { context, setContext } = useContext(ReactAudioContext);
   const socket = useContext(SocketContext);
   const [view, setView] = useState("arp");
-  const [hold, setHold] = useState(false);
   const [width, setWidth] = useState(1);
-  const holdNotes: React.MutableRefObject<number[]> = useRef([]);
   const synthDiv = useRef<HTMLDivElement | null>(null);
+  const {
+    location: { pathname },
+  } = useHistory();
+  const socketID = pathname.slice(1);
 
   useLayoutEffect(() => {
     if (synthDiv.current) {
@@ -44,58 +46,38 @@ const Synth: React.SFC<MonoSynthProps> = ({ beat, synth }) => {
     }
   }, []);
 
-  useEffect(() => {
-    socket.on("arpNotes", (notesArr: number[]) => {
-      if (!hold) {
-        synth.arpNotes = notesArr;
-      } else {
-        holdNotes.current.concat(notesArr);
-      }
-    });
-    socket.on("arpHoldOff", () => {
-      setHold(false);
-      synth.arpNotes = [];
-      synth.arpIndex = 0;
-    });
-    socket.on("arpHoldOn", () => {
-      setHold(true);
-      synth.arpNotes = [...holdNotes.current];
-    });
-    return () => {
-      socket.off("arpNotes");
-      socket.off("arpHoldOff");
-      socket.off("arpHoldOn");
-    };
-  }, [synth, socket, hold]);
-
-  const {
-    location: { pathname },
-  } = useHistory();
-  const socketID = pathname.slice(1);
-
   const setFilterValues = (x: number, y: number) => {
+    const freq = Math.pow(10, 2 * x + 2); // scales 0 - 1 logarithmically between 100 and 10000
+    const q = 12 / (y * 11 + 1); // scales 0 - 1 to 1 - 12
     synth.filter.frequency.linearRampToValueAtTime(
-      Math.pow(10, 2 * x + 2), // scales 0 - 1 logarithmically between 100 and 10000
+      freq,
       synth.context.currentTime + 0.0001
     );
     synth.filter.Q.linearRampToValueAtTime(
-      12 / (y * 11 + 1), // scales 0 - 1 to 1 - 12
+      q,
       synth.context.currentTime + 0.0001
     );
+    socket.emit("setFilter", socketID, x, y);
   };
   const setDelayValues = (x: number, y: number) => {
+    const feedback = x * 0.75; // limit max to .75
+    const gain = 1 - y; // invert value
     synth.delay.feedback.gain.linearRampToValueAtTime(
-      x * 0.75, // invert value, limit to .75
+      feedback,
       synth.context.currentTime + 0.0001
     );
     synth.delay.output.gain.linearRampToValueAtTime(
-      1 - y,
+      gain,
       synth.context.currentTime + 0.0001
     );
+    socket.emit("setDelay", socketID, x, y);
   };
   const setEnvelopeValues = (x: number, y: number) => {
-    synth.releaseTime = x;
-    synth.noteLength = 1 - 0.75 * y;
+    const time = 0.95 * x + 0.05;
+    const length = 1 - 0.75 * y;
+    synth.releaseTime = time;
+    synth.noteLength = length;
+    socket.emit("setEnvelope", socketID, x, y);
   };
   const handleHoldToggle = () => {
     if (hold) {
@@ -163,16 +145,19 @@ const Synth: React.SFC<MonoSynthProps> = ({ beat, synth }) => {
             setParamValues={setFilterValues}
             initX={(width / 11) * (11 - (synth.filter.Q.value - 1))}
             initY={width * (synth.filter.frequency.value / 10000)}
+            name="Filter"
           />
           <XY
             setParamValues={setEnvelopeValues}
             initX={width * synth.releaseTime}
             initY={width * synth.noteLength}
+            name="Envelope"
           />
           <XY
             setParamValues={setDelayValues}
             initX={width * (1 - synth.delay.output.gain.value)}
             initY={synth.delay.feedback.gain.value * width}
+            name="Delay"
           />
         </div>
       </div>

@@ -4,16 +4,26 @@ import React, {
   useLayoutEffect,
   useEffect,
   useCallback,
+  useContext,
 } from "react";
+import { SocketContext } from "../app";
+
 import "./xy.css";
 
 export interface XYProps {
   setParamValues: (x: number, y: number) => void;
   initX: number; // scale between 0 - 128
   initY: number; // scale between 0 - 128
+  name: string; // name should start with Capital letter for socket to work
 }
 
-const XY: React.SFC<XYProps> = ({ setParamValues, initX, initY }) => {
+interface XYParams {
+  x: number;
+  y: number;
+}
+
+const XY: React.SFC<XYProps> = ({ setParamValues, initX, initY, name }) => {
+  const socket = useContext(SocketContext);
   const box = useRef<HTMLDivElement | null>(null);
   const ball = useRef<HTMLDivElement | null>(null);
   const [boundary, setBoundary] = useState<DOMRect>();
@@ -40,6 +50,19 @@ const XY: React.SFC<XYProps> = ({ setParamValues, initX, initY }) => {
       }
     };
   }, [boundary]); // eslint-disable-line
+  useEffect(() => {
+    socket.on(`send${name}`, (params: XYParams) => {
+      if (ball.current && boundary && ballSize) {
+        let left = params.x * (boundary.width - ballSize.width);
+        let top = params.y * (boundary.height - ballSize.height);
+        ball.current.style.top = top + "px";
+        ball.current.style.left = left + "px";
+      }
+    });
+    return () => {
+      socket.off(`set${name}`);
+    };
+  });
   useLayoutEffect(() => {
     setBoundary(box.current?.getBoundingClientRect());
     setBallSize(ball.current?.getBoundingClientRect());
@@ -70,8 +93,8 @@ const XY: React.SFC<XYProps> = ({ setParamValues, initX, initY }) => {
           if (left > boundary.width - ballSize.width) {
             left = boundary.width - ballSize.width;
           }
-          let x = top / (boundary.height - ballSize.height);
-          let y = left / (boundary.width - ballSize.width);
+          let x = left / (boundary.width - ballSize.width);
+          let y = top / (boundary.height - ballSize.height);
           setParamValues(x, y);
         }
         // set the element's new position:
@@ -148,60 +171,3 @@ const XY: React.SFC<XYProps> = ({ setParamValues, initX, initY }) => {
 };
 
 export default XY;
-
-// const box = document.getElementById("box");
-//       const ball = document.getElementById("ball");
-//       const boundary = box.getBoundingClientRect();
-//       const ballSize = ball.getBoundingClientRect();
-//       console.log(boundary);
-//       dragElement(ball);
-
-//       function dragElement(el) {
-//         let pos1 = 0,
-//           pos2 = 0,
-//           pos3 = 0,
-//           pos4 = 0;
-//         el.onmousedown = dragMouseDown;
-
-//         function dragMouseDown(e) {
-//           e = e || window.event;
-//           e.preventDefault();
-//           el.classList.add("highlight");
-//           // get the mouse cursor position at startup:
-//           pos3 = e.clientX;
-//           pos4 = e.clientY;
-//           document.onmouseup = closeDragElement;
-//           // call a function whenever the cursor moves:
-//           document.onmousemove = elementDrag;
-//         }
-
-//         function elementDrag(e) {
-//           e = e || window.event;
-//           e.preventDefault();
-//           // calculate the new cursor position:
-//           pos1 = pos3 - e.clientX;
-//           pos2 = pos4 - e.clientY;
-//           pos3 = e.clientX;
-//           pos4 = e.clientY;
-//           // calculate top and left of ball
-//           let top = el.offsetTop - pos2;
-//           let left = el.offsetLeft - pos1;
-//           // constrain to box
-//           if (top < 0) top = 0;
-//           if (left < 0) left = 0;
-//           if (top > boundary.height - ballSize.height)
-//             top = boundary.height - ballSize.height;
-//           if (left > boundary.width - ballSize.width)
-//             left = boundary.width - ballSize.width;
-//           // set the element's new position:
-//           el.style.top = top + "px";
-//           el.style.left = left + "px";
-//         }
-
-//         function closeDragElement() {
-//           el.classList.remove("highlight");
-//           // stop moving when mouse button is released
-//           document.onmouseup = null;
-//           document.onmousemove = null;
-//         }
-//       }

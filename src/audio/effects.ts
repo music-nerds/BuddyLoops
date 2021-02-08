@@ -20,7 +20,7 @@ export class AnalogDelay {
     this.hp.frequency.value = 250;
     this.input = this.context.createGain();
     this.output = this.context.createGain();
-    this.output.gain.value = 0.7;
+    this.output.gain.value = 0.25;
 
     // wet signal
     this.input.connect(this.filter);
