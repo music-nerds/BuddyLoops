@@ -159,7 +159,6 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
     });
     let timeoutID: number;
     socket.on("receiveState", (hostContext: AppState) => {
-      // context.isPlaying = hostContext.isPlaying;
       context.nextCycleTime = hostContext.nextCycleTime;
       context.tempo = hostContext.tempo;
       context.swing = hostContext.swing;
@@ -176,11 +175,35 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
           sameSeq.shouldPlayNextLoop = seq.shouldPlayNextLoop;
         }
       });
+      const {
+        synthState: {
+          attackTime,
+          releaseTime,
+          pattern,
+          noteLength,
+          wave,
+          filterFreq,
+          q,
+        },
+      } = hostContext;
+      const { synth } = context;
+      synth.attackTime = attackTime;
+      synth.releaseTime = releaseTime;
+      synth.pattern = pattern;
+      synth.noteLength = noteLength;
+      synth.osc.type = wave;
+      synth.filter.frequency.linearRampToValueAtTime(
+        filterFreq,
+        context.context.currentTime + 0.01
+      );
+      synth.filter.Q.linearRampToValueAtTime(
+        q,
+        context.context.currentTime + 0.01
+      );
 
       if (!context.isPlaying) {
         setContext({ ...context });
       }
-      // console.log("RECEIVE STATE", hostContext);
     });
     socket.on("userJoined", (data: NewUser) => {
       console.log("NEW USER", data);
