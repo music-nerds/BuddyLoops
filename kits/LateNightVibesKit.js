@@ -79,7 +79,7 @@ const lateNightVibesKit = async () => {
   });
   await Steprow.create({
     name: 'Kick',
-    audioPath: 'https://firebasestorage.googleapis.com/v0/b/buddyloops-fd8dc.appspot.com/o/Late%20Nite%20Vibes%20Kit%2F13_Kick.wav?alt=media&token=3230d5c0-5e44-4f79-96fb-d9af698f6e58',
+    audioPath: 'https://firebasestorage.googleapis.com/v0/b/buddyloops-fd8dc.appspot.com/o/Late%20Nite%20Vibes%20Kit%2F13_KickLo.wav?alt=media&token=45a86ce0-681e-4c08-a45b-0c8c2f391667',
     pattern: [1,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0],
     setId: set.id,
   });
