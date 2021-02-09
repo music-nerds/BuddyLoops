@@ -1,18 +1,21 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Slider from "@material-ui/core/Slider";
-// import Switch from "@material-ui/core/Switch";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import PlayArrowSharpIcon from "@material-ui/icons/PlayArrowSharp";
 import StopSharpIcon from "@material-ui/icons/StopSharp";
 import GroupIcon from "@material-ui/icons/Group";
+import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import { ReactAudioContext, SocketContext, Timing, DeviceID } from "../app";
 import { AppState } from "./randoModule";
 import { play, stop } from "../audio/audioFunctions";
 import Button from "@material-ui/core/Button";
-import drum from "../../images/icons/drum.png";
-import piano from "../../images/icons/piano.png";
+import drum from '../../images/icons/drum.png';
+import piano from '../../images/icons/piano.png';
+import axios from 'axios';
+import SetCard from './setCard';
+import { Set } from '../audio/dataInterfaces';
 import "./transport.css";
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => (
@@ -28,17 +31,15 @@ interface Props {
   instrument: string;
 }
 
-const Transport: React.FC<Props> = ({
-  id,
-  setBeat,
-  instrument,
-  toggleInstrument,
-}) => {
-  const [open, setOpen] = useState(false);
-  const { context } = useContext(ReactAudioContext);
+const Transport: React.FC<Props> = ({ id, setBeat, instrument, toggleInstrument }) => {
+  const [linkOpen, setLinkOpen] = useState(false);
+  const [kitOpen, setKitOpen] = useState(false);
+  const { context, setContext } = useContext(ReactAudioContext);
   const [tempo, setTempo] = useState<number>(context.tempo);
   const [swing, setSwing] = useState<number>(context.swing);
   const [playing, setIsPlaying] = useState<boolean>(false);
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [kits, setKits] = useState([]);
   const {
     location: { pathname },
   } = useHistory();
@@ -73,6 +74,7 @@ const Transport: React.FC<Props> = ({
   useEffect(() => {
     socket.on("receiveStop", () => {
       console.log("received stop", Date.now());
+      setIsPlaying(false);
       stop(context);
       setIsPlaying(false);
       setBeat(-1);
@@ -107,7 +109,7 @@ const Transport: React.FC<Props> = ({
     const url: string = window.location.href;
     try {
       await navigator.clipboard.writeText(url);
-      setOpen(true);
+      setLinkOpen(true);
     } catch (err) {
       console.error("failed to copy", err);
     }
@@ -115,7 +117,8 @@ const Transport: React.FC<Props> = ({
 
   const close = (event?: React.SyntheticEvent, reason?: string): void => {
     if (reason === "clickaway") return;
-    setOpen(false);
+    setLinkOpen(false);
+    setKitOpen(false);
   };
 
   const updateTempo = (event: any, newValue: number | number[]) => {
@@ -141,11 +144,47 @@ const Transport: React.FC<Props> = ({
       setTempo(value);
       context.updateTempo(value);
     });
+    socket.on('receiveSet', (id:string) => {
+      const set:(Set|undefined) = kits.find((s:Set) => s.id === id);
+      stop(context);
+      setIsPlaying(false);
+      context.loadNewSet(set);
+      setContext({...context});
+      setTempo(context.tempo);
+      setSwing(context.swing);
+      setKitOpen(true);
+    })
     return () => {
       socket.off("swingChange");
       socket.off("tempoChange");
+      socket.off('receiveSet');
     };
-  }, [context, socket]);
+  }, [context, socket, kits, setContext]);
+
+  useEffect(() => {
+    axios.get('/api/getkits')
+      .then(({ data }) => {
+        setKits(data);
+      })
+  }, [])
+
+  const openMenu = () => {
+    setMenuOpen(!menuOpen);
+  }
+
+  const loadSet = (set:Set) => {
+    handleStop();
+    stop(context);
+    setIsPlaying(false);
+    context.loadNewSet(set);
+    setContext({...context});
+    setTempo(context.tempo);
+    setSwing(context.swing);
+    socket.emit('loadSet', socketID, set.id);
+    setMenuOpen(false);
+    setKitOpen(true);
+  }
+
   return (
     <div id="transport">
       <div className="transport-bottom-row">
@@ -217,16 +256,33 @@ const Transport: React.FC<Props> = ({
             color="primary"
             variant="contained"
             size="small"
-            style={{ height: 24, verticalAlign: "center", padding: "0 8px" }}
+            style={{ height: 24, verticalAlign: "center", padding: "0 8px", margin: '5px' }}
             onClick={clipboard}
-          >
-            Invite
-          </Button>
+          ></Button>
+          <Button
+            startIcon={<FolderOpenIcon fontSize="large" />}
+            className="share-btn"
+            color="primary"
+            variant="contained"
+            size="small"
+            style={{ height: 24, verticalAlign: "center", padding: "0 8px", margin: '5px' }}
+            onClick={openMenu}
+          ></Button>
         </div>
       </div>
-      <Snackbar open={open} autoHideDuration={5000} onClose={close}>
+      <div className={menuOpen ? 'set-menu open' : 'set-menu'}>
+        {
+          kits.map((set:Set) => <SetCard set={set} loadSet={loadSet} key={set.id} />)
+        }
+        </div>
+      <Snackbar open={linkOpen} autoHideDuration={5000} onClose={close}>
         <Alert onClose={close} severity="success">
           Link copied to clipboard, send to a friend!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={kitOpen} autoHideDuration={5000} onClose={close}>
+        <Alert onClose={close} severity="success">
+          New Set Loaded
         </Alert>
       </Snackbar>
     </div>

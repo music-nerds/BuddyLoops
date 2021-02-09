@@ -3,8 +3,7 @@
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  /* user-select: none; */
-  /* -webkit-user-select: none; */
+  position: relative;
 }
 
 .transport-top-row {
@@ -28,10 +27,12 @@
   display: flex;
   justify-content: center;
 }
-.share-btn-div {
-  flex: 2;
+
+.load-set-button-div {
+  /* flex: 2; */
   display: flex;
-  justify-content: flex-end;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -61,7 +62,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .transport-instrument-select {
   display: flex;
   justify-content: space-between;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   user-select: none;
   -webkit-user-select: none;
@@ -103,6 +104,61 @@ input[type="number"]::-webkit-outer-spin-button {
   -webkit-user-select: none;
 }
 
+.share-btn-div {
+  position: relative;
+}
+
+.set-menu {
+  height: 0px;
+  width: 100%;
+  position: absolute;
+  background-color: rgba(0,0,0,0.8);
+  transition: height .2s cubic-bezier(.87,.39,.91,.7);
+  z-index: 10;
+  top: 0;
+  margin-top: 3rem;
+  overflow: hidden;
+  border-radius: 5px;
+}
+
+.set-menu.open {
+  transition: height .2s cubic-bezier(.87,.39,.91,.7);
+  height: 80vh;
+}
+
+.set-menu-item {
+  background-color: var(--gray);
+  border-radius: 5px;
+  display: flex;
+  margin: 1rem;
+  box-shadow: 0px 1px 1px rgba(26, 139, 157, 0.7);
+  justify-content: flex-start;
+  padding-left: 3rem;
+  align-items: center;
+  direction: ltr;
+  transition: box-shadow 0.2s linear;
+}
+
+.set-menu-item > p {
+  font-size: 1.5rem;
+
+}
+
+.set-menu-item:hover {
+  cursor: pointer;
+  box-shadow: 0px 0px 0px 1px rgb(255, 255, 255);
+  transition: box-shadow 0.2s linear;
+}
+
+.set-menu-item:active {
+  box-shadow: none;
+  transition: box-shadow 0.2s linear;
+}
+
+.set-menu-item > p {
+  color: var(--text);
+}
+
 @media screen and (max-width: 1088px) {
   #transport {
     flex-direction: column-reverse;
@@ -121,7 +177,10 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 @media screen and (max-width: 600px) {
-  /* .transport-instrument-select {
-    display: none;
-  } */
+  .set-menu {
+    margin-top: 4rem;
+  }
+  
 }
+
+

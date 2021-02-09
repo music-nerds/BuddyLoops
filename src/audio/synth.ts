@@ -100,6 +100,10 @@ export class MonoSynth {
     this.pattern = this.pattern.map((p) => [0, 0, 0, 0, 0, 0]);
   }
 
+  loadNewPattern(_pattern: (0 | 1)[][]): void {
+    this.pattern = _pattern;
+  }
+
   playNote(note: number, time: number, tempo: number): void {
     // set frequency
     this.osc.frequency.setValueAtTime(note, time);
