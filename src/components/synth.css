@@ -231,6 +231,7 @@ div.controls {
     rgba(18, 84, 94, 1) 100%
   );
 }
+
 .synth-tabs {
   height: 3rem;
   width: 100%;
@@ -249,12 +250,14 @@ div.controls {
 }
 .synth-tabs > div.selected {
   background-color: var(--sampler);
+  background: linear-gradient(
+    180deg,
+    rgba(119, 119, 119, 1) 0%,
+    rgba(35, 35, 35, 1) 100%
+  );
 }
 
 .synth-effects-playground {
-  /* display: flex;
-  justify-content: space-around;
-  align-items: center; */
   width: 100%;
 }
 .xy-pads {

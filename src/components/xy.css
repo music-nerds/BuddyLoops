@@ -2,6 +2,7 @@
   width: 8rem;
   height: 8rem;
   background-color: #111;
+  box-shadow: 0px 0px 4px #ccc;
   position: relative;
   margin: 1rem 0;
 }
