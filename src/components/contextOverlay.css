@@ -38,8 +38,10 @@
 .context-overlay button:hover {
   transform: scale(1.1);
 }
-h1.tagline {
-  font-size: 1rem;
+h1.loading {
+  font-size: 2rem;
+  color: rgb(208, 0, 208);
+  font-family: "Press Start 2P";
 }
 
 @media (max-width: 768px) {
