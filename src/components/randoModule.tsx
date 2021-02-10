@@ -76,7 +76,6 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
     });
   }, [context.sequencers]);
   useEffect(() => {
-    // prevents retriggering if user hits 'back'button
     context.subscribeSquares(setBeat);
     // sync devices to each other
     socket.emit("handshake", socketID);
