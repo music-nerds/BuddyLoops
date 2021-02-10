@@ -85,6 +85,11 @@
 
 .synth-square.active-square {
   background-color: var(--synth);
+  background: linear-gradient(
+    180deg,
+    rgba(26, 139, 157, 1) 0%,
+    rgba(9, 53, 60, 1) 100%
+  );
 }
 .synth-square.active-beat,
 .synth-square.synth-square.active-beat.on-beat {

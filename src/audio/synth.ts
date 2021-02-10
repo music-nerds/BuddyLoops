@@ -148,8 +148,8 @@ export class MonoSynth {
     }
     // manage gain events
     this.output.gain.cancelScheduledValues(time);
-    this.output.gain.setValueAtTime(this.getGainValue(), time);
-    this.output.gain.setTargetAtTime(0.4, time + 0.0001, this.attackTime / 5);
+    // this.output.gain.setValueAtTime(this.getGainValue(), time);
+    this.output.gain.setTargetAtTime(0.4, time, this.attackTime / 5);
 
     this.stopNote(time + (60 / (tempo * 4)) * this.noteLength);
   }
@@ -170,5 +170,10 @@ export class MonoSynth {
   }
   freqMinusCents(freq: number, cents: number): number {
     return freq / Math.pow(1.0005777895065548, cents);
+  }
+  updateDelayTime(tempo: number) {
+    // default is dotted eighth note
+    const time = (60 / tempo) * 0.75;
+    this.delay.setDelayTime(time);
   }
 }

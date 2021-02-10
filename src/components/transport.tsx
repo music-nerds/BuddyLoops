@@ -118,6 +118,7 @@ const Transport: React.FC<Props> = ({
   const updateTempo = (event: any, newValue: number | number[]) => {
     context.updateTempo(newValue as number);
     setTempo(newValue as number);
+    context.synth.updateDelayTime(context.tempo);
     socket.emit("tempoChange", socketID, newValue);
   };
 

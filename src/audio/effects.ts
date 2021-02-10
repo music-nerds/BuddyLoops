@@ -33,6 +33,9 @@ export class AnalogDelay {
     this.output.connect(this.context.destination);
   }
   setDelayTime(time: number) {
-    this.delay.delayTime.setValueAtTime(time, this.context.currentTime);
+    this.delay.delayTime.linearRampToValueAtTime(
+      time,
+      this.context.currentTime + 0.01
+    );
   }
 }

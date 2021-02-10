@@ -36,9 +36,9 @@ const XY: React.SFC<XYProps> = ({ setParamValues, initX, initY, name }) => {
   useEffect(() => {
     if (ball.current && boundary) {
       let top =
-        (initX / boundary.width) * (boundary.width - ball.current.clientHeight);
+        (initY / boundary.width) * (boundary.width - ball.current.clientHeight);
       let left =
-        (initY / boundary.width) * (boundary.width - ball.current.clientWidth);
+        (initX / boundary.width) * (boundary.width - ball.current.clientWidth);
       ball.current.style.top = `${top}px`;
       ball.current.style.left = `${left}px`;
     }
