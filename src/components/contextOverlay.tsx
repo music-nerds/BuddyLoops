@@ -8,8 +8,9 @@ const logo = require("../../public/images/logo.png").default;
 
 interface Props {
   setReady: React.Dispatch<React.SetStateAction<boolean>>;
+  connected: boolean;
 }
-const ContextOverlay: React.SFC<Props> = ({ setReady }) => {
+const ContextOverlay: React.SFC<Props> = ({ setReady, connected }) => {
   const { context } = useContext(ReactAudioContext);
   const timeArr = useContext(Timing);
   const deviceID = useContext(DeviceID);
@@ -36,10 +37,13 @@ const ContextOverlay: React.SFC<Props> = ({ setReady }) => {
     <div className={"context-overlay"}>
       <img src={logo} alt="Buddy Loops Logo" className="logo" />
       <div className="call-to-action">
-        <h1 className="tagline">Make Music With Friends in Real Time</h1>
-        <Button variant="outlined" onClick={handleStart}>
-          Join Session
-        </Button>
+        {connected ? (
+          <Button variant="outlined" onClick={handleStart}>
+            Join Session
+          </Button>
+        ) : (
+          <h1 className="loading">Loading...</h1>
+        )}
       </div>
     </div>
   );
