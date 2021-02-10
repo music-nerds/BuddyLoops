@@ -1,5 +1,7 @@
 import React, { useContext, useState } from "react";
+import { connect } from "react-redux";
 import { ReactAudioContext } from "../app";
+import { BeatState } from "../redux/store";
 
 interface Props {
   selectPattern: (pattern: number) => void;
@@ -20,7 +22,7 @@ const SampleSelector: React.FC<Props> = ({
     setSelected(Number(target.dataset.pattern));
     selectPattern(Number(target.dataset.pattern));
   };
-
+  console.log('SELECTOR RENDERING');
   return (
     <div>
       {new Array(16).fill(null).map((n, idx) =>
@@ -52,4 +54,6 @@ const SampleSelector: React.FC<Props> = ({
   );
 };
 
-export default SampleSelector;
+const mapState = (state:BeatState)=> state;
+
+export default connect(mapState, {})(SampleSelector);

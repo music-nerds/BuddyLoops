@@ -8,10 +8,10 @@ import SeqSquare from "./seqSquare";
 interface RowProps {
   row: StepRow;
   id: string;
-  beat: number;
+  // beat: number;
 }
 
-const Row: React.FC<RowProps> = ({ row, id, beat }) => {
+const Row: React.FC<RowProps> = ({ row, id }) => {
   const socket = useContext(SocketContext);
   const {
     context: { sequencersArePlaying },
@@ -87,6 +87,7 @@ const Row: React.FC<RowProps> = ({ row, id, beat }) => {
     curDiv.current = null;
     prevDiv.current = null;
   };
+  console.log('STEP ROW RENDERING');
   return (
     <div
       ref={div}
@@ -106,7 +107,7 @@ const Row: React.FC<RowProps> = ({ row, id, beat }) => {
             handleToggle={handleToggle}
             enabled={enabled}
             index={idx}
-            beat={beat}
+            // beat={beat}
             key={idx}
             mouseDown={mouseDown}
             sequencersArePlaying={sequencersArePlaying}

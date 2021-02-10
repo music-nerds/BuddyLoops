@@ -87,8 +87,10 @@ export interface StepContext {
   scheduleAheadTime: number;
   lookAhead: number;
   timerId: number | undefined;
-  subscribeSquares: (fn: React.Dispatch<React.SetStateAction<number>>) => void;
-  subscribers: React.Dispatch<React.SetStateAction<number>>[];
+  // subscribeSquares: (fn: React.Dispatch<React.SetStateAction<number>>) => void;
+  subscribeSquares:any;
+  subscribers:any;
+  // subscribers: React.Dispatch<React.SetStateAction<number>>[];
   updateTempo: (bpm: number) => void;
   updateSwing: (swingValue: number) => void;
   hostID?: string;

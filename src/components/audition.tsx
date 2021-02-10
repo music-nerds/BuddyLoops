@@ -3,6 +3,8 @@ import { ReactAudioContext, SocketContext } from "../app";
 import { useHistory } from "react-router-dom";
 import { audition } from "../audio/audioFunctions";
 import "./stepRow.css";
+import { BeatState } from "../redux/store";
+import { connect } from "react-redux";
 
 interface Props {
   selectPattern: (pattern: number) => void;
@@ -158,7 +160,7 @@ const Audition: React.FC<Props> = ({ selectPattern, beat, currPattern }) => {
       socket.emit("sendMomentaryOff", socketID, id);
     }
   };
-
+  console.log('AUDITION RENDERING');
   return (
     <div onMouseLeave={auditionEndLeaveSampler}>
       {new Array(16).fill(null).map((n, idx) =>
@@ -203,4 +205,6 @@ const Audition: React.FC<Props> = ({ selectPattern, beat, currPattern }) => {
   );
 };
 
-export default Audition;
+const mapState = (state:BeatState)=> state;
+
+export default connect(mapState, {})(Audition);

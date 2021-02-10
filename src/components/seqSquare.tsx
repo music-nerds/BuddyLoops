@@ -1,4 +1,6 @@
 import React from "react";
+import { connect } from "react-redux";
+import { BeatState } from "../redux/store";
 
 interface SquareProps {
   beat: number;
@@ -34,6 +36,7 @@ const SeqSquare: React.FC<SquareProps> = ({
     const target = e.target as HTMLDivElement;
     target.classList.remove("active-square");
   };
+  console.log('SEQ SQUARE RENDERING');
   return (
     <div
       data-index={index}
@@ -52,4 +55,6 @@ const SeqSquare: React.FC<SquareProps> = ({
   );
 };
 
-export default SeqSquare;
+const mapState = (state:BeatState)=> state;
+
+export default connect(mapState, {})(SeqSquare);

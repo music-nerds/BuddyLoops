@@ -7,6 +7,8 @@ import {
   TimeObj,
   Timing,
 } from "../app";
+import { connect  } from 'react-redux';
+import { setBeat } from '../redux/store';
 import ContextOverlay from "./contextOverlay";
 import Transport from "./transport";
 import Instruments from "./instruments";
@@ -48,10 +50,11 @@ export interface AppState {
 interface Props {
   ready: boolean;
   setReady: React.Dispatch<React.SetStateAction<boolean>>;
+  setBeat: (beat: number) => void;
 }
-const Rando: React.FC<Props> = ({ ready, setReady }) => {
+const Rando: React.FC<Props> = ({ ready, setReady, setBeat }) => {
   const { context, setContext } = useContext(ReactAudioContext);
-  const [beat, setBeat] = useState(-1);
+  // const [beat, setBeat] = useState(-1);
   const [audition, setAudition] = useState(true);
   const [connected, setConnected] = useState(false);
   const socket = useContext(SocketContext);
@@ -257,7 +260,7 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
   const toggleAudition = () => {
     setAudition(!audition);
   };
-
+  console.log('RANDO RENDERING');
   return (
     <div className="fullPage">
       <div className="container">
@@ -268,7 +271,7 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
           <>
             <Transport
               id={socketID}
-              setBeat={setBeat}
+              // setBeat={setBeat}
               audition={audition}
               toggleAudition={toggleAudition}
               toggleInstrument={toggleInstrument}
@@ -276,7 +279,7 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
             />
             <Instruments
               socketID={socketID}
-              beat={beat}
+              // beat={beat}
               selectPattern={selectPattern}
               currPattern={currPattern}
               view={view}
@@ -293,4 +296,4 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
   );
 };
 
-export default Rando;
+export default connect(null, { setBeat })(Rando);
