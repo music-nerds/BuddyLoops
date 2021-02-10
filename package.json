@@ -4,10 +4,10 @@
   "description": "Boilerplate for typescript and webpack dev evironment",
   "main": "app.js",
   "scripts": {
-    "build": "webpack --mode=\"production\"",
+    "build": "webpack --config webpack.prod.js",
     "start": "node server",
     "dev": "webpack serve",
-    "start:dev": "webpack --watch & nodemon server",
+    "start:dev": "webpack --watch --config webpack.dev.js & nodemon server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -56,6 +56,7 @@
     "typescript": "^4.0.5",
     "webpack": "^5.3.2",
     "webpack-cli": "^4.1.0",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.0",
+    "webpack-merge": "^5.7.3"
   }
 }
