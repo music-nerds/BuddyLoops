@@ -25,7 +25,7 @@ const setBeatAction = (beat: number) => {
   };
 };
 
-export const setBeat = (beat: number) => (dispatch:any) => {
+export const setBeat = (beat: number) => (dispatch: any) => {
   dispatch(setBeatAction(beat));
 }
 

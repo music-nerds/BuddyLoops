@@ -16,6 +16,7 @@ import Button from "@material-ui/core/Button";
 import drum from "../../images/icons/drum.png";
 import piano from "../../images/icons/piano.png";
 import "./transport.css";
+// import { Dispatch, AnyAction } from 'redux';
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => (
   <MuiAlert elevation={6} variant="filled" {...props} />
@@ -23,7 +24,7 @@ const Alert: React.FC<AlertProps> = (props: AlertProps) => (
 
 interface Props {
   id: string;
-  setBeat:any;
+  setBeat: (beat: number) => void;
   audition: boolean;
   toggleAudition: () => void;
   toggleInstrument: (instrument: string) => void;

@@ -55,6 +55,6 @@ const SeqSquare: React.FC<SquareProps> = ({
   );
 };
 
-const mapState = (state:BeatState)=> state;
+const mapState = (state:BeatState) => state;
 
 export default connect(mapState, {})(SeqSquare);

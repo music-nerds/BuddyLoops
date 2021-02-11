@@ -4,7 +4,8 @@ import { useHistory } from "react-router-dom";
 import { audition } from "../audio/audioFunctions";
 import "./stepRow.css";
 import { BeatState } from "../redux/store";
-import { connect } from "react-redux";
+// import { connect } from "react-redux";
+import AuditionSquare from './auditionSquare';
 
 interface Props {
   selectPattern: (pattern: number) => void;
@@ -165,38 +166,51 @@ const Audition: React.FC<Props> = ({ selectPattern, beat, currPattern }) => {
     <div onMouseLeave={auditionEndLeaveSampler}>
       {new Array(16).fill(null).map((n, idx) =>
         context.sequencers[idx] ? (
-          <div
+          <AuditionSquare
             key={idx}
-            id={`${idx}`}
-            onMouseDown={auditionStart}
-            onMouseUp={(e) => auditionEndUp(e, idx)}
-            onMouseLeave={(e) => auditionEndLeave(e, idx)}
-            onMouseEnter={auditionStartEnter}
-            onTouchStart={touchStart}
-            onTouchMove={touchMove}
-            onTouchEnd={touchEnd}
-            style={{
-              backgroundColor: `${
-                context.sequencers[idx].pattern[beat] === 1 &&
-                context.sequencersArePlaying
-                  ? "var(--highlight)"
-                  : "var(--blue)"
-              }`,
-            }}
-            className={`aud-square ${
-              idx === currPattern ? "active-beat" : ""
-            } ${selectedNum === idx ? "active" : ""}`}
-            data-index={idx}
-          >
-            {/* 
-              ALL CHILD ELEMENTS NEED THE DATA INDEX PROPERTY
-              OTHERWISE, IT WILL BREAK IF CLICKED ON. 
-              E.TARGET IS THE MOST HIGHLY NESTED ELEMENT
-            */}
-            <span data-index={idx} className="sample-name">
-              {context.sequencers[idx].name}
-            </span>
-          </div>
+            idx={idx}
+            currPattern={currPattern}
+            selectedNum={selectedNum}
+            auditionEndLeave={auditionEndLeave}
+            auditionEndUp={auditionEndUp}
+            auditionStart={auditionStart}
+            touchEnd={touchEnd}
+            auditionStartEnter={auditionStartEnter}
+            touchMove={touchMove}
+            touchStart={touchStart}
+          />
+          // <div
+          //   key={idx}
+          //   id={`${idx}`}
+          //   onMouseDown={auditionStart}
+          //   onMouseUp={(e) => auditionEndUp(e, idx)}
+          //   onMouseLeave={(e) => auditionEndLeave(e, idx)}
+          //   onMouseEnter={auditionStartEnter}
+          //   onTouchStart={touchStart}
+          //   onTouchMove={touchMove}
+          //   onTouchEnd={touchEnd}
+          //   style={{
+          //     backgroundColor: `${
+          //       context.sequencers[idx].pattern[beat] === 1 &&
+          //       context.sequencersArePlaying
+          //         ? "var(--highlight)"
+          //         : "var(--blue)"
+          //     }`,
+          //   }}
+          //   className={`aud-square ${
+          //     idx === currPattern ? "active-beat" : ""
+          //   } ${selectedNum === idx ? "active" : ""}`}
+          //   data-index={idx}
+          // >
+          //   {/* 
+          //     ALL CHILD ELEMENTS NEED THE DATA INDEX PROPERTY
+          //     OTHERWISE, IT WILL BREAK IF CLICKED ON. 
+          //     E.TARGET IS THE MOST HIGHLY NESTED ELEMENT
+          //   */}
+          //   <span data-index={idx} className="sample-name">
+          //     {context.sequencers[idx].name}
+          //   </span>
+          // </div>
         ) : (
           <div key={idx} className="seq-square"></div>
         )
@@ -207,4 +221,5 @@ const Audition: React.FC<Props> = ({ selectPattern, beat, currPattern }) => {
 
 const mapState = (state:BeatState)=> state;
 
-export default connect(mapState, {})(Audition);
+// export default connect(mapState, {})(Audition);
+export default Audition;
