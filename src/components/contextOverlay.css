@@ -108,9 +108,10 @@ h1.loading {
     margin-top: 1rem;
   }
 }
-@media (max-width: 420px) {
+
+@media (max-width: 600px) {
   h1#site-title {
-    font-size: 1.75rem;
+    font-size: 3rem;
   }
   h2#tagline {
     font-size: 0.75rem;
@@ -124,5 +125,10 @@ h1.loading {
     display: flex;
     padding-top: 2rem;
     font-size: 1rem;
+  }
+}
+@media (max-width: 500px) {
+  h1#site-title {
+    font-size: 2rem;
   }
 }
