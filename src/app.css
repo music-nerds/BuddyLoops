@@ -24,13 +24,15 @@
 
 @font-face {
   font-family: "Audiowide";
-  src: local("./fonts/Audiowide-Regular.ttf") format("truetype");
+  src: url("./fonts/Audiowide-Regular.ttf") format("truetype");
   font-weight: normal;
+  font-style: normal;
 }
 @font-face {
   font-family: "Montserrat";
-  src: local("./fonts/Montserrat-Regular.ttf") format("truetype");
+  src: url("./fonts/Montserrat-Regular.ttf") format("truetype");
   font-weight: normal;
+  font-style: normal;
 }
 
 body {

@@ -122,3 +122,8 @@ button#sessionStart:hover {
     margin-top: 1rem;
   }
 }
+@media (max-width: 420px) {
+  h1#site-title {
+    font-size: 2rem;
+  }
+}

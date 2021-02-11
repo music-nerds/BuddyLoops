@@ -13,8 +13,6 @@ import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import { ThemeProvider as MuiThemeProvider } from "@material-ui/core/styles";
 import { createAudioContext, StepContext } from "./audio/createContext";
 import { v4 as uuidv4 } from "uuid";
-import "./fonts/Audiowide-Regular.ttf";
-import "./fonts/Montserrat-Regular.ttf";
 import "./app.css";
 import io from "socket.io-client";
 
