@@ -36,6 +36,11 @@
 
 .tab-selected {
   background-color: var(--sampler);
+  background: linear-gradient(
+    180deg,
+    rgba(119, 119, 119, 1) 0%,
+    rgba(35, 35, 35, 1) 100%
+  );
 }
 
 .sampler-tab:hover {
@@ -83,6 +88,7 @@
 
 .fx-panel-launch {
   background-color: var(--blue);
+  background: var(--blueGradient);
   padding: 0.25rem 1.5rem;
   box-sizing: border-box;
   cursor: pointer;
@@ -96,6 +102,7 @@
 #clear-button {
   height: 100%;
   background-color: var(--blue);
+  background: var(--blueGradient);
   color: white;
   display: flex;
   justify-content: center;

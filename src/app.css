@@ -7,6 +7,16 @@
   --synthHL: #68c4d2;
   --synthContrast: #33cccc;
   --synthContrastHL: #66ffff;
+  --blueGradient: linear-gradient(
+    180deg,
+    rgba(26, 139, 157, 1) 0%,
+    rgba(9, 53, 60, 1) 100%
+  );
+  --blueGradientHL: linear-gradient(
+    180deg,
+    rgba(87, 206, 223, 1) 0%,
+    rgba(18, 84, 94, 1) 100%
+  );
   --blue: #1a8b9d;
   --highlight: #68c4d2;
   --sampler: #616161;
