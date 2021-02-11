@@ -237,4 +237,4 @@ const Transport: React.FC<Props> = ({
   );
 };
 
-export default connect(null, { setBeat})(Transport);
+export default connect(null, { setBeat })(Transport);

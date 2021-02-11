@@ -9,11 +9,10 @@ import AuditionSquare from './auditionSquare';
 
 interface Props {
   selectPattern: (pattern: number) => void;
-  beat: number;
   currPattern: number;
 }
 
-const Audition: React.FC<Props> = ({ selectPattern, beat, currPattern }) => {
+const Audition: React.FC<Props> = ({ selectPattern, currPattern }) => {
   const { context } = useContext(ReactAudioContext);
   const socket = useContext(SocketContext);
   const {
@@ -179,38 +178,6 @@ const Audition: React.FC<Props> = ({ selectPattern, beat, currPattern }) => {
             touchMove={touchMove}
             touchStart={touchStart}
           />
-          // <div
-          //   key={idx}
-          //   id={`${idx}`}
-          //   onMouseDown={auditionStart}
-          //   onMouseUp={(e) => auditionEndUp(e, idx)}
-          //   onMouseLeave={(e) => auditionEndLeave(e, idx)}
-          //   onMouseEnter={auditionStartEnter}
-          //   onTouchStart={touchStart}
-          //   onTouchMove={touchMove}
-          //   onTouchEnd={touchEnd}
-          //   style={{
-          //     backgroundColor: `${
-          //       context.sequencers[idx].pattern[beat] === 1 &&
-          //       context.sequencersArePlaying
-          //         ? "var(--highlight)"
-          //         : "var(--blue)"
-          //     }`,
-          //   }}
-          //   className={`aud-square ${
-          //     idx === currPattern ? "active-beat" : ""
-          //   } ${selectedNum === idx ? "active" : ""}`}
-          //   data-index={idx}
-          // >
-          //   {/* 
-          //     ALL CHILD ELEMENTS NEED THE DATA INDEX PROPERTY
-          //     OTHERWISE, IT WILL BREAK IF CLICKED ON. 
-          //     E.TARGET IS THE MOST HIGHLY NESTED ELEMENT
-          //   */}
-          //   <span data-index={idx} className="sample-name">
-          //     {context.sequencers[idx].name}
-          //   </span>
-          // </div>
         ) : (
           <div key={idx} className="seq-square"></div>
         )
