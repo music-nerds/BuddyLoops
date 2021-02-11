@@ -26,14 +26,14 @@ h2#tagline {
 }
 
 h1#site-title {
-  font-family: "Audiowide";
+  font-family: Audiowide;
   font-size: 8rem;
   margin: 0;
 }
 h2#tagline {
   margin: 1.5rem;
   font-size: 1.5rem;
-  font-family: "Montserrat";
+  font-family: Montserrat;
 }
 
 h1#site-title span {
