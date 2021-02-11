@@ -30,42 +30,44 @@ const Synth: React.SFC<MonoSynthProps> = ({
   } = useHistory();
   const socketID = pathname.slice(1);
   return (
-    <div id="synth">
-      <div className="synth-tabs">
-        <div
-          className={`synth-pattern-tab ${view === "arp" ? "selected" : ""}`}
-          onClick={() => setView("arp")}
-        >
-          <MusicNoteIcon
-            style={{ color: `${view === "arp" ? "white" : "#aaa"}` }}
-          />
+    <div id="synth-container">
+      <div id="synth">
+        <div className="synth-tabs">
+          <div
+            className={`synth-pattern-tab ${view === "arp" ? "selected" : ""}`}
+            onClick={() => setView("arp")}
+          >
+            <MusicNoteIcon
+              style={{ color: `${view === "arp" ? "white" : "#aaa"}` }}
+            />
+          </div>
+          <div
+            className={`synth-pattern-tab ${
+              view === "pattern" ? "selected" : ""
+            }`}
+            onClick={() => setView("pattern")}
+          >
+            <GridOnIcon
+              style={{
+                color: `${view === "pattern" ? "white" : "#aaa"}`,
+              }}
+            />
+          </div>
         </div>
-        <div
-          className={`synth-pattern-tab ${
-            view === "pattern" ? "selected" : ""
-          }`}
-          onClick={() => setView("pattern")}
-        >
-          <GridOnIcon
-            style={{
-              color: `${view === "pattern" ? "white" : "#aaa"}`,
-            }}
+        <MonoSynthControls synth={synth} socketID={socketID} />
+        {view === "pattern" ? (
+          <MonoSynthSquares synth={synth} beat={beat} />
+        ) : (
+          <MonoSynthArp
+            synth={synth}
+            holdNotes={holdNotes}
+            hold={hold}
+            setHold={setHold}
+            beat={beat}
+            socketID={socketID}
           />
-        </div>
+        )}
       </div>
-      <MonoSynthControls synth={synth} socketID={socketID} />
-      {view === "pattern" ? (
-        <MonoSynthSquares synth={synth} beat={beat} />
-      ) : (
-        <MonoSynthArp
-          synth={synth}
-          holdNotes={holdNotes}
-          hold={hold}
-          setHold={setHold}
-          beat={beat}
-          socketID={socketID}
-        />
-      )}
     </div>
   );
 };

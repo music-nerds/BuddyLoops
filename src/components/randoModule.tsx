@@ -261,11 +261,11 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
   return (
     <div className="fullPage">
       <div className="container">
-        <UserIndicators numUsers={numUsers} />
         {!ready ? (
           <ContextOverlay setReady={setReady} connected={connected} />
         ) : (
           <>
+            <UserIndicators numUsers={numUsers} />
             <Transport
               id={socketID}
               setBeat={setBeat}
