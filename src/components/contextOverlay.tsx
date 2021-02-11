@@ -46,7 +46,10 @@ const ContextOverlay: React.SFC<Props> = ({ setReady, connected }) => {
     <div className={"context-overlay"}>
       <h1 id="site-title">
         {title.split("").map((char, i) => (
-          <span style={{ animationDelay: `${(i / title.length) * 2}s` }}>
+          <span
+            style={{ animationDelay: `${(i / title.length) * 2}s` }}
+            key={i}
+          >
             {char}
           </span>
         ))}

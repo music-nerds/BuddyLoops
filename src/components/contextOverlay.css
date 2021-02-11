@@ -110,7 +110,7 @@ h1.loading {
 }
 @media (max-width: 420px) {
   h1#site-title {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
   h2#tagline {
     font-size: 0.75rem;
