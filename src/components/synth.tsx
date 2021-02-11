@@ -67,29 +67,31 @@ const Synth: React.SFC<MonoSynthProps> = ({
     }
   }, [context, hold, setHold, synth, socket, socketID, holdNotes, setContext]);
   return (
-    <div id="synth" ref={synthDiv}>
-      <SynthTabs view={view} setView={setView} />
-      <MonoSynthControls synth={synth} socketID={socketID} />
-      {view === "pattern" ? (
-        <MonoSynthSquares synth={synth} beat={beat} />
-      ) : (
-        <MonoSynthArp
-          synth={synth}
-          holdNotes={holdNotes}
+    <div id="synth-container">
+      <div id="synth" ref={synthDiv}>
+        <SynthTabs view={view} setView={setView} />
+        <MonoSynthControls synth={synth} socketID={socketID} />
+        {view === "pattern" ? (
+          <MonoSynthSquares synth={synth} beat={beat} />
+        ) : (
+          <MonoSynthArp
+            synth={synth}
+            holdNotes={holdNotes}
+            hold={hold}
+            setHold={setHold}
+            beat={beat}
+            socketID={socketID}
+          />
+        )}
+        <SynthEFX
           hold={hold}
-          setHold={setHold}
-          beat={beat}
+          handleHoldToggle={handleHoldToggle}
+          holdNotes={holdNotes}
+          width={width}
           socketID={socketID}
+          synth={synth}
         />
-      )}
-      <SynthEFX
-        hold={hold}
-        handleHoldToggle={handleHoldToggle}
-        holdNotes={holdNotes}
-        width={width}
-        socketID={socketID}
-        synth={synth}
-      />
+      </div>
     </div>
   );
 };

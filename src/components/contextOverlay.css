@@ -2,37 +2,91 @@
   display: none;
 }
 .context-overlay {
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  box-sizing: border-box;
-  top: 0;
-  left: 0;
   display: flex;
-  align-items: center;
   flex-direction: column;
-  background: url("/public/images/bg.jpg");
-  background-position: center;
-  background-attachment: fixed;
-  background-size: cover;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background: #111;
+  text-align: center;
+  box-sizing: border-box;
   z-index: 10;
 }
-.context-overlay button {
-  color: #f0f;
-  border: 2px solid #f0f;
+
+h1#site-title,
+h2#tagline {
+  color: whitesmoke;
+}
+
+h1#site-title {
+  font-family: Audiowide;
+  font-size: 8rem;
+  margin: 0;
+}
+h2#tagline {
+  margin: 1.5rem;
+  font-size: 1.5rem;
+  font-family: "Montserrat";
+}
+
+h1#site-title span {
+  position: relative;
+  display: inline-block;
+  animation: light-text 2s infinite;
+}
+
+@keyframes light-text {
+  0% {
+    color: var(--blue);
+  }
+  33% {
+    color: whitesmoke;
+  }
+  100% {
+    color: whitesmoke;
+  }
+}
+
+button#sessionStart {
+  color: var(--blue);
+  text-shadow: 0px 2px 2px rgba(0, 0, 0, 1);
+  box-shadow: 0 0 2rem var(--blue);
+  border-radius: 3rem;
   padding: 1rem 2rem;
   font-size: 2rem;
   font-weight: 700;
-  font-family: "Press Start 2P";
-  margin-top: 3rem;
-  font-family: "Press Start 2P";
+  font-family: "Audiowide";
   background-color: rgba(0, 0, 0, 0.5);
+  background: linear-gradient(
+    180deg,
+    rgba(43, 43, 43, 1) 0%,
+    rgba(0, 0, 0, 1) 100%
+  );
+  transition: 400ms;
+  transition-timing-function: cubic-bezier(0.73, -0.05, 0.13, 2.14);
+  margin: 2rem;
+  opacity: 1;
 }
-.context-overlay button:hover {
-  transform: scale(1.03);
+div#invisible {
+  transition: 2000ms;
+  opacity: 1;
+  height: 300px;
 }
-h1.tagline {
-  font-size: 1rem;
+div#invisible.invisible {
+  opacity: 0;
+}
+
+button#sessionStart:hover {
+  transform: scale(0.95);
+  box-shadow: 0 0 0.5rem var(--blue);
+}
+h1.loading {
+  font-size: 2rem;
+  color: var(--blue);
+  font-family: "Audiowide";
+  height: 300px;
+  margin: 0;
 }
 
 @media (max-width: 768px) {
@@ -42,12 +96,39 @@ h1.tagline {
   img.logo {
     max-width: 75%;
   }
-  h1.tagline {
-    font-size: 0.75rem;
+  h1#site-title {
+    font-size: 4rem;
+  }
+  h2#tagline {
+    font-size: 1rem;
   }
   .context-overlay button {
     padding: 0.5rem 1rem;
     font-size: 1rem;
     margin-top: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  h1#site-title {
+    font-size: 3rem;
+  }
+  h2#tagline {
+    font-size: 0.75rem;
+  }
+  button#sessionStart {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    margin-top: 1rem;
+  }
+  h1.loading {
+    display: flex;
+    padding-top: 2rem;
+    font-size: 1rem;
+  }
+}
+@media (max-width: 500px) {
+  h1#site-title {
+    font-size: 2rem;
   }
 }

@@ -53,6 +53,7 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
   const { context, setContext } = useContext(ReactAudioContext);
   const [beat, setBeat] = useState(-1);
   const [audition, setAudition] = useState(true);
+  const [connected, setConnected] = useState(false);
   const socket = useContext(SocketContext);
   const deviceID = useContext(DeviceID);
   let timeArr = useContext(Timing);
@@ -75,8 +76,6 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
     });
   }, [context.sequencers]);
   useEffect(() => {
-    // This might get moved later as different instruments may have
-    // different needs, but for now it's ok here.
     context.subscribeSquares(setBeat);
     // sync devices to each other
     socket.emit("handshake", socketID);
@@ -93,8 +92,11 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
       timeObj.roundTripTime =
         timeObj.deviceReceiveTime - timeObj.deviceSendTime;
       timeObj.offset = timeObj.deviceReceiveTime - timeObj.serverTime;
-      timeArr.push(timeObj);
+      if (!timeArr.find((obj) => obj.deviceID === deviceID)) {
+        timeArr.push(timeObj);
+      }
       setNumUsers(timeArr.length);
+      setConnected(true);
       if (timeObj.deviceID !== deviceID) {
         const myTimeObj = timeArr.find((obj) => obj.deviceID === deviceID);
         socket.emit("notifyTime", socketID, myTimeObj);
@@ -259,11 +261,11 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
   return (
     <div className="fullPage">
       <div className="container">
-        <UserIndicators numUsers={numUsers} />
         {!ready ? (
-          <ContextOverlay setReady={setReady} />
+          <ContextOverlay setReady={setReady} connected={connected} />
         ) : (
           <>
+            <UserIndicators numUsers={numUsers} />
             <Transport
               id={socketID}
               setBeat={setBeat}
