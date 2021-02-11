@@ -22,6 +22,19 @@
   user-select: none;
 }
 
+@font-face {
+  font-family: "Audiowide";
+  src: url("./fonts/Audiowide-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Montserrat";
+  src: url("./fonts/Montserrat-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   margin: 0;
   color: var(--text);

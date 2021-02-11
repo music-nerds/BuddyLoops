@@ -29,6 +29,14 @@ module.exports = {
         ],
       },
       {
+        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        use: [
+          {
+            loader: "url-loader",
+          },
+        ],
+      },
+      {
         test: /\.(ogg|mp3|wav|mpe?g)$/i,
         loader: "file-loader",
         options: {
