@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState, useEffect } from "react";
+import React, { useContext, useRef, useState, useEffect, useCallback } from "react";
 import { ReactAudioContext, SocketContext } from "../app";
 import { useHistory } from "react-router-dom";
 import { audition } from "../audio/audioFunctions";
@@ -36,7 +36,7 @@ const Audition: React.FC<Props> = ({ selectPattern, currPattern }) => {
     };
   }, [context, socket, socketID]);
 
-  const startAudition = (
+  const startAudition = useCallback((
     event:
       | React.MouseEvent<HTMLDivElement, MouseEvent>
       | React.TouchEvent<HTMLDivElement>
@@ -51,7 +51,7 @@ const Audition: React.FC<Props> = ({ selectPattern, currPattern }) => {
       context.setAudition(id);
       socket.emit("sendMomentaryOn", socketID, id);
     }
-  };
+  }, [selectPattern, setSelectedNum, context, socket, socketID]);
 
   const endAudtion = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
