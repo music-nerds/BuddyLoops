@@ -38,4 +38,16 @@ export class AnalogDelay {
       this.context.currentTime + 0.01
     );
   }
+  setDelayFeedback(level: number) {
+    this.feedback.gain.linearRampToValueAtTime(
+      level,
+      this.context.currentTime + 0.01
+    );
+  }
+  setDelayGain(level: number) {
+    this.output.gain.linearRampToValueAtTime(
+      level,
+      this.context.currentTime + 0.01
+    );
+  }
 }

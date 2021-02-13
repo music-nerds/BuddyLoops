@@ -15,6 +15,7 @@ export interface XYProps {
   initX: number; // scale between 0 - 128
   initY: number; // scale between 0 - 128
   name: string; // name should start with Capital letter for socket to work
+  preset: string;
 }
 
 interface XYParams {
@@ -22,7 +23,13 @@ interface XYParams {
   y: number;
 }
 
-const XY: React.SFC<XYProps> = ({ setParamValues, initX, initY, name }) => {
+const XY: React.SFC<XYProps> = ({
+  setParamValues,
+  initX,
+  initY,
+  name,
+  preset,
+}) => {
   const socket = useContext(SocketContext);
   const box = useRef<HTMLDivElement | null>(null);
   const ball = useRef<HTMLDivElement | null>(null);
@@ -33,7 +40,7 @@ const XY: React.SFC<XYProps> = ({ setParamValues, initX, initY, name }) => {
   const p3 = useRef(0);
   const p4 = useRef(0);
   const mouseDown = useRef(false);
-  useEffect(() => {
+  const setBallPosition = useCallback(() => {
     if (ball.current && boundary) {
       let top =
         (initY / boundary.width) * (boundary.width - ball.current.clientHeight);
@@ -42,6 +49,9 @@ const XY: React.SFC<XYProps> = ({ setParamValues, initX, initY, name }) => {
       ball.current.style.top = `${top}px`;
       ball.current.style.left = `${left}px`;
     }
+  }, [boundary, initX, initY]);
+  useEffect(() => {
+    setBallPosition();
     let ballRef = ball.current;
     return () => {
       if (ballRef) {
@@ -49,7 +59,8 @@ const XY: React.SFC<XYProps> = ({ setParamValues, initX, initY, name }) => {
         ballRef.style.left = `0`;
       }
     };
-  }, [boundary]); // eslint-disable-line
+  }, [boundary, preset]); // eslint-disable-line
+
   useEffect(() => {
     socket.on(`send${name}`, (params: XYParams) => {
       if (ball.current && boundary && ballSize) {

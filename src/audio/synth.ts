@@ -1,4 +1,5 @@
 import { AnalogDelay } from "./effects";
+import presets from "./synthPresets";
 
 export const notes = {
   C: 261.63,
@@ -35,7 +36,9 @@ export class MonoSynth {
   spreadAmount: number;
   fmOsc: OscillatorNode;
   fmOscGain: GainNode;
+  isFmOscConnected: boolean;
   delay: AnalogDelay;
+  name: string;
   constructor(context: AudioContext, type: OscillatorType) {
     this.context = context;
     this.osc = this.context.createOscillator();
@@ -75,10 +78,11 @@ export class MonoSynth {
     this.fmOsc.type = "sine";
     this.fmOscGain = context.createGain();
     this.fmOscGain.gain.value = 100;
+    this.isFmOscConnected = false;
     // this.fmOsc.connect(this.fmOscGain);
     this.fmOscGain.connect(this.osc.frequency);
-    this.fmOscGain.connect(this.osc2.frequency);
-    // this.fmOsc.start();
+    this.fmOsc.start();
+    this.name = "Buzz Saw";
   }
 
   pattern: (0 | 1)[][] = [
@@ -130,7 +134,7 @@ export class MonoSynth {
 
   playNote(note: number, time: number, tempo: number): void {
     // set frequency
-    // this.fmOsc.frequency.setValueAtTime(note / 2, time);
+    this.fmOsc.frequency.setValueAtTime(note / 2, time);
     if (this.spread) {
       this.osc.frequency.setValueAtTime(
         this.freqPlusCents(note, this.spreadAmount),
@@ -175,5 +179,27 @@ export class MonoSynth {
     // default is dotted eighth note
     const time = (60 / tempo) * 0.75;
     this.delay.setDelayTime(time);
+  }
+  changePreset(key: string) {
+    if (key in presets) {
+      const data = presets[key];
+      console.log("PRESET CHANGE", data);
+      this.name = data.name;
+      this.osc.type = data.oscType;
+      this.osc2.type = data.osc2Type;
+      this.osc3.type = data.osc3Type;
+      if (data.isFmOscConnected) {
+        if (!this.isFmOscConnected) this.fmOsc.connect(this.fmOscGain);
+      } else {
+        if (this.isFmOscConnected) this.fmOsc.disconnect(this.fmOscGain);
+      }
+      this.isFmOscConnected = data.isFmOscConnected;
+      this.attackTime = data.attackTime;
+      this.noteLength = data.noteLength;
+      this.releaseTime = data.releaseTime;
+      this.delay.setDelayTime(data.delayTime);
+      this.delay.setDelayFeedback(data.delayFeedback);
+      this.delay.setDelayGain(data.delayGain);
+    }
   }
 }

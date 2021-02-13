@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { MonoSynth } from "../audio/synth";
 import { ReactAudioContext } from "../app";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
@@ -17,6 +17,16 @@ const MonoSynthControls: React.SFC<MonoSynthControlsProps> = ({
   const toggle: React.RefObject<HTMLDivElement> | null = useRef(null);
   const { context, setContext } = useContext(ReactAudioContext);
   const socket = useContext(SocketContext);
+  const [preset, setPreset] = useState(synth.name);
+
+  const handlePreset = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const name = e.target.value as string;
+    setPreset(name);
+    synth.changePreset(name);
+    if (!context.isPlaying) {
+      setContext({ ...context });
+    }
+  };
 
   const handleLaunch = (
     e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
@@ -37,6 +47,18 @@ const MonoSynthControls: React.SFC<MonoSynthControlsProps> = ({
       <div className="toggle" ref={toggle}>
         <div className="clear-synth-pattern" onClick={clearPattern}>
           Clear Pattern
+        </div>
+        <div className="preset-select">
+          <select
+            name="preset"
+            id="preset"
+            value={preset}
+            onChange={handlePreset}
+          >
+            <option value="buzzSaw">Buzz Saw</option>
+            <option value="deepSine">Deep Sine</option>
+          </select>
+          <span className="select-arrow"></span>
         </div>
         <div className="synth-launch" onClick={handleLaunch}>
           {synth.shouldPlayNextLoop ? (

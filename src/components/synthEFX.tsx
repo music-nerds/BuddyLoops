@@ -42,14 +42,8 @@ const SynthEFX: React.FC<SynthEFXProps> = ({
     (x: number, y: number) => {
       const feedback = x * 0.75; // limit max to .75
       const gain = 1 - y; // invert value
-      synth.delay.feedback.gain.linearRampToValueAtTime(
-        feedback,
-        synth.context.currentTime + 0.0001
-      );
-      synth.delay.output.gain.linearRampToValueAtTime(
-        gain,
-        synth.context.currentTime + 0.0001
-      );
+      synth.delay.setDelayFeedback(feedback);
+      synth.delay.setDelayGain(gain);
       socket.emit("setDelay", socketID, x, y);
     },
     [socket, socketID, synth]
@@ -77,18 +71,21 @@ const SynthEFX: React.FC<SynthEFXProps> = ({
           initY={(width / 11) * (11 - (synth.filter.Q.value - 1))}
           initX={width * (Math.log10(synth.filter.frequency.value) / 4)} // logarithmically scales value
           name="Filter"
+          preset={synth.name}
         />
         <XY
           setParamValues={setEnvelopeValues}
           initX={width * synth.releaseTime}
-          initY={width * synth.noteLength}
+          initY={width * (1 - synth.noteLength)}
           name="Envelope"
+          preset={synth.name}
         />
         <XY
           setParamValues={setDelayValues}
           initY={width * (1 - synth.delay.output.gain.value)}
           initX={synth.delay.feedback.gain.value * width}
           name="Delay"
+          preset={synth.name}
         />
       </div>
     </div>
