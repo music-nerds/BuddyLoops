@@ -152,6 +152,9 @@ io.on("connection", (socket) => {
   socket.on("arpHoldOn", (id) => {
     socket.to(id).emit("arpHoldOn");
   });
+  socket.on("changePreset", (id, name) => {
+    socket.to(id).emit("changePreset", name);
+  });
 });
 
 http.listen(PORT, () => {

@@ -11,10 +11,12 @@ export interface SynthPreset {
   delayTime: number;
   delayGain: number;
   delayFeedback: number;
+  filterFreq: number;
+  q: number;
 }
 
 const buzzSaw: SynthPreset = {
-  name: "Buzz Saw",
+  name: "buzzSaw",
   oscType: "sawtooth",
   osc2Type: "sawtooth",
   osc3Type: "square",
@@ -25,12 +27,14 @@ const buzzSaw: SynthPreset = {
   delayTime: 0.36,
   delayGain: 0.25,
   delayFeedback: 0.3,
+  filterFreq: 2000,
+  q: 1,
 };
 const deepSine: SynthPreset = {
-  name: "Deep Sine",
+  name: "deepSine",
   oscType: "sine",
-  osc2Type: "sine",
-  osc3Type: "sine",
+  osc2Type: "triangle",
+  osc3Type: "triangle",
   isFmOscConnected: true,
   fmOscGain: 100,
   attackTime: 0.01,
@@ -39,6 +43,8 @@ const deepSine: SynthPreset = {
   delayTime: 0.36,
   delayGain: 0,
   delayFeedback: 0,
+  filterFreq: 2000,
+  q: 1,
 };
 
 interface PresetLibrary {

@@ -49,6 +49,13 @@ const XY: React.SFC<XYProps> = ({
       ball.current.style.top = `${top}px`;
       ball.current.style.left = `${left}px`;
     }
+    let ballRef = ball.current;
+    return () => {
+      if (ballRef) {
+        ballRef.style.top = `0`;
+        ballRef.style.left = `0`;
+      }
+    };
   }, [boundary, initX, initY]);
   useEffect(() => {
     setBallPosition();

@@ -125,6 +125,13 @@ const Instruments: React.FC<InstrumentsProps> = ({
         setContext({ ...context });
       }
     });
+    socket.on("changePreset", (name: string) => {
+      synth.changePreset(name);
+      console.log(synth.name);
+      if (!context.isPlaying) {
+        setContext({ ...context });
+      }
+    });
     return () => {
       socket.off("clearSynthPattern");
       socket.off("synthPatternChange");

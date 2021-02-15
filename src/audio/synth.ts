@@ -82,7 +82,7 @@ export class MonoSynth {
     // this.fmOsc.connect(this.fmOscGain);
     this.fmOscGain.connect(this.osc.frequency);
     this.fmOsc.start();
-    this.name = "Buzz Saw";
+    this.name = "buzzSaw";
   }
 
   pattern: (0 | 1)[][] = [
@@ -183,7 +183,6 @@ export class MonoSynth {
   changePreset(key: string) {
     if (key in presets) {
       const data = presets[key];
-      console.log("PRESET CHANGE", data);
       this.name = data.name;
       this.osc.type = data.oscType;
       this.osc2.type = data.osc2Type;
@@ -200,6 +199,8 @@ export class MonoSynth {
       this.delay.setDelayTime(data.delayTime);
       this.delay.setDelayFeedback(data.delayFeedback);
       this.delay.setDelayGain(data.delayGain);
+      this.filter.frequency.value = data.filterFreq;
+      this.filter.Q.value = data.q;
     }
   }
 }

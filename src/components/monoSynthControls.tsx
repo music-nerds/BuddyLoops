@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useRef, useState, useEffect } from "react";
 import { MonoSynth } from "../audio/synth";
 import { ReactAudioContext } from "../app";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
@@ -18,11 +18,12 @@ const MonoSynthControls: React.SFC<MonoSynthControlsProps> = ({
   const { context, setContext } = useContext(ReactAudioContext);
   const socket = useContext(SocketContext);
   const [preset, setPreset] = useState(synth.name);
-
+  console.log(preset);
   const handlePreset = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const name = e.target.value as string;
     setPreset(name);
     synth.changePreset(name);
+    socket.emit("changePreset", socketID, name);
     if (!context.isPlaying) {
       setContext({ ...context });
     }
@@ -42,6 +43,11 @@ const MonoSynthControls: React.SFC<MonoSynthControlsProps> = ({
       setContext({ ...context });
     }
   };
+  useEffect(() => {
+    socket.on("changePreset", (name: string) => {
+      setPreset(name);
+    });
+  }, [socket, setPreset]);
   return (
     <div id="mono-synth-controls">
       <div className="toggle" ref={toggle}>
