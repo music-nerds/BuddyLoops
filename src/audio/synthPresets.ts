@@ -33,8 +33,8 @@ const buzzSaw: SynthPreset = {
 const deepSine: SynthPreset = {
   name: "deepSine",
   oscType: "sine",
-  osc2Type: "triangle",
-  osc3Type: "triangle",
+  osc2Type: "sawtooth",
+  osc3Type: "sawtooth",
   isFmOscConnected: true,
   fmOscGain: 100,
   attackTime: 0.01,
