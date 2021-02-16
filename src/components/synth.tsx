@@ -9,7 +9,6 @@ import GridOnIcon from "@material-ui/icons/GridOn";
 import MusicNoteIcon from "@material-ui/icons/MusicNote";
 
 interface MonoSynthProps {
-  // beat: number;
   synth: MonoSynth;
   hold: boolean;
   setHold: React.Dispatch<React.SetStateAction<boolean>>;
@@ -17,7 +16,6 @@ interface MonoSynthProps {
 }
 
 const Synth: React.SFC<MonoSynthProps> = ({
-  // beat,
   synth,
   hold,
   setHold,
@@ -62,7 +60,6 @@ const Synth: React.SFC<MonoSynthProps> = ({
           holdNotes={holdNotes}
           hold={hold}
           setHold={setHold}
-          // beat={beat}
           socketID={socketID}
         />
       )}
@@ -70,4 +67,4 @@ const Synth: React.SFC<MonoSynthProps> = ({
   );
 };
 
-export default Synth;
+export default React.memo(Synth);

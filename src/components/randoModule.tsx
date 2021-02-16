@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import {
   ReactAudioContext,
@@ -54,7 +54,6 @@ interface Props {
 }
 const Rando: React.FC<Props> = ({ ready, setReady, setBeat }) => {
   const { context, setContext } = useContext(ReactAudioContext);
-  // const [beat, setBeat] = useState(-1);
   const [audition, setAudition] = useState(true);
   const [connected, setConnected] = useState(false);
   const socket = useContext(SocketContext);
@@ -242,25 +241,25 @@ const Rando: React.FC<Props> = ({ ready, setReady, setBeat }) => {
     };
   }, [timeArr, context, deviceID, socket, socketID, setContext]);
 
-  const selectPattern = (pattern: number): void => {
+  const selectPattern = useCallback((pattern: number): void => {
     setCurrPattern(pattern);
     if (!audition) {
       setView("pattern");
     }
-  };
+  }, [audition]);
 
-  const toggleView = (view: string) => {
+  const toggleView = useCallback((view: string) => {
     setView(view);
-  };
+  }, []);
 
-  const toggleInstrument = (instrument: string) => {
+  const toggleInstrument = useCallback((instrument: string) => {
     setInstrument(instrument);
-  };
+  }, []);
 
-  const toggleAudition = () => {
-    setAudition(!audition);
-  };
-  console.log('RANDO RENDERING');
+  const toggleAudition = useCallback(() => {
+    setAudition(audition => !audition);
+  }, []);
+  
   return (
     <div className="fullPage">
       <div className="container">
@@ -271,7 +270,6 @@ const Rando: React.FC<Props> = ({ ready, setReady, setBeat }) => {
           <>
             <Transport
               id={socketID}
-              // setBeat={setBeat}
               audition={audition}
               toggleAudition={toggleAudition}
               toggleInstrument={toggleInstrument}
@@ -279,7 +277,6 @@ const Rando: React.FC<Props> = ({ ready, setReady, setBeat }) => {
             />
             <Instruments
               socketID={socketID}
-              // beat={beat}
               selectPattern={selectPattern}
               currPattern={currPattern}
               view={view}

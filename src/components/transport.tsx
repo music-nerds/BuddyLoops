@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 import { connect } from 'react-redux';
 import { setBeat } from '../redux/store';
 import Slider from "@material-ui/core/Slider";
-// import Switch from "@material-ui/core/Switch";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import PlayArrowSharpIcon from "@material-ui/icons/PlayArrowSharp";
@@ -16,7 +15,6 @@ import Button from "@material-ui/core/Button";
 import drum from "../../images/icons/drum.png";
 import piano from "../../images/icons/piano.png";
 import "./transport.css";
-// import { Dispatch, AnyAction } from 'redux';
 
 const Alert: React.FC<AlertProps> = (props: AlertProps) => (
   <MuiAlert elevation={6} variant="filled" {...props} />
@@ -237,4 +235,4 @@ const Transport: React.FC<Props> = ({
   );
 };
 
-export default connect(null, { setBeat })(Transport);
+export default React.memo(connect(null, { setBeat })(Transport));

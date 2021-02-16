@@ -5,9 +5,11 @@ import { BeatState } from "../redux/store";
 interface SquareProps {
   beat: number;
   index: number;
+  handleMouseOut: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  handleMouseUp: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  handleDrag: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   handleToggle: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   enabled: 0 | 1;
-  mouseDown: boolean;
   sequencersArePlaying: boolean;
 }
 
@@ -15,28 +17,12 @@ const SeqSquare: React.FC<SquareProps> = ({
   beat,
   index,
   handleToggle,
+  handleDrag,
+  handleMouseOut,
+  handleMouseUp,
   enabled,
-  mouseDown,
   sequencersArePlaying,
 }) => {
-  const handleDrag = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    const target = e.target as HTMLDivElement;
-    if (mouseDown) {
-      handleToggle(e);
-      target.classList.add("active-square");
-    }
-  };
-  const handleMouseOut = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    const target = e.target as HTMLDivElement;
-    if (mouseDown) {
-      target.classList.remove("active-square");
-    }
-  };
-  const handleMouseUp = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    const target = e.target as HTMLDivElement;
-    target.classList.remove("active-square");
-  };
-  console.log('SEQ SQUARE RENDERING');
   return (
     <div
       data-index={index}
@@ -57,4 +43,4 @@ const SeqSquare: React.FC<SquareProps> = ({
 
 const mapState = (state:BeatState) => state;
 
-export default connect(mapState, {})(SeqSquare);
+export default React.memo(connect(mapState, {})(SeqSquare));

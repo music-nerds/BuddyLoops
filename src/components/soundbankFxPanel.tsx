@@ -70,4 +70,4 @@ const SoundbankFxPanel: React.FC<Props> = ({ audition, toggleAudition }) => {
   );
 };
 
-export default SoundbankFxPanel;
+export default React.memo(SoundbankFxPanel);
