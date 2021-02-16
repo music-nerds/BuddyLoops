@@ -16,13 +16,13 @@ import io from 'socket.io-client';
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#1a8b9d'
+      main: "#1a8b9d",
     },
     secondary: {
-      main: '#ffffff',
+      main: "#ffffff",
     },
   },
-})
+});
 
 const socket = io();
 
@@ -49,7 +49,10 @@ interface RAC {
   setContext: (ctx: StepContext) => void;
 }
 
-export const ReactAudioContext = createContext<RAC>({context: audioCtx, setContext: () => console.log('setting up context...')});
+export const ReactAudioContext = createContext<RAC>({
+  context: audioCtx,
+  setContext: () => console.log("setting up context..."),
+});
 export const SocketContext = createContext<SocketIOClient.Socket>(socket);
 export const DeviceID = createContext<string>(deviceID);
 export const Timing = createContext<TimeObj[]>(timeArr);
@@ -83,15 +86,15 @@ const App: React.FC = () => {
           </DeviceID.Provider>
         </SocketContext.Provider>
     </ReactAudioContext.Provider>
-  )
-}
+  );
+};
 
-const app: HTMLElement = document.getElementById('app')!;
+const app: HTMLElement = document.getElementById("app")!;
 ReactDOM.render(
   <CssBaseline>
     <MuiThemeProvider theme={theme}>
       <App />
     </MuiThemeProvider>
   </CssBaseline>,
-  app)
-;
+  app
+);
