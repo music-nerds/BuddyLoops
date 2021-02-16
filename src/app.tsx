@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, Profiler } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-dom';
@@ -62,26 +62,36 @@ const App: React.FC = () => {
       console.log('connect event')
     })
   }, [])
+  const logProfile = (id: any, phase: any, actualTime:any, baseTime:any, startTime:any, commitTime:any) => {
+    console.log('******PROFILE******');
+    console.log("PHASE:", phase);
+    console.log("ACTUAL TIME:", actualTime);
+    console.log("BASE TIME:", baseTime);
+    console.log("START TIME:", startTime);
+    console.log("COMMIT TIME:", commitTime);
+  } 
   return (
-    <ReactAudioContext.Provider value={{context, setContext}}>
-        <SocketContext.Provider value={socket}>
-          <DeviceID.Provider value={deviceID}>
-            <Timing.Provider value={timeArr}>
-              <Provider store={store}>
-                <Router
-                  basename="/"
-                >
-                  <Switch>
-                    <Route exact path="/" render={() => <Landing setReady={setReady} />} />
-                    <Route path="/:id" render={() => <Rando ready={ready} setReady={setReady} />} />
-                    <Redirect to="/" />
-                  </Switch>
-                </Router>
-              </Provider>
-            </Timing.Provider>
-          </DeviceID.Provider>
-        </SocketContext.Provider>
-    </ReactAudioContext.Provider>
+    <Profiler id='app' onRender={logProfile}>
+      <ReactAudioContext.Provider value={{context, setContext}}>
+          <SocketContext.Provider value={socket}>
+            <DeviceID.Provider value={deviceID}>
+              <Timing.Provider value={timeArr}>
+                <Provider store={store}>
+                  <Router
+                    basename="/"
+                  >
+                    <Switch>
+                      <Route exact path="/" render={() => <Landing setReady={setReady} />} />
+                      <Route path="/:id" render={() => <Rando ready={ready} setReady={setReady} />} />
+                      <Redirect to="/" />
+                    </Switch>
+                  </Router>
+                </Provider>
+              </Timing.Provider>
+            </DeviceID.Provider>
+          </SocketContext.Provider>
+      </ReactAudioContext.Provider>
+    </Profiler>
   )
 }
 
