@@ -68,4 +68,4 @@ const AuditionSquare: React.FC<Props> = ({
 
 const mapState = (state:BeatState) => state;
 
-export default connect(mapState, {})(AuditionSquare);
+export default React.memo(connect(mapState, {})(AuditionSquare));

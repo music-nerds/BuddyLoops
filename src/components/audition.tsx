@@ -3,7 +3,7 @@ import { ReactAudioContext, SocketContext } from "../app";
 import { useHistory } from "react-router-dom";
 import { audition } from "../audio/audioFunctions";
 import "./stepRow.css";
-import { BeatState } from "../redux/store";
+// import { BeatState } from "../redux/store";
 // import { connect } from "react-redux";
 import AuditionSquare from './auditionSquare';
 
@@ -53,7 +53,7 @@ const Audition: React.FC<Props> = ({ selectPattern, currPattern }) => {
     }
   }, [selectPattern, setSelectedNum, context, socket, socketID]);
 
-  const endAudtion = (
+  const endAudtion = useCallback((
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     id: number
   ) => {
@@ -61,50 +61,54 @@ const Audition: React.FC<Props> = ({ selectPattern, currPattern }) => {
     context.endAudition(id);
     setSelectedNum(-1);
     socket.emit("sendMomentaryOff", socketID, id);
-  };
+  }, [context, socket, setSelectedNum, socketID]);
 
-  const auditionEndUp = (
+  const auditionEndUp = useCallback((
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     id: number
   ) => {
     mouseDown.current = false;
     endAudtion(event, id);
-  };
+  }, [endAudtion]);
 
-  const auditionEndLeave = (
+  const auditionEndLeave = useCallback((
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     id: number
   ) => {
     endAudtion(event, id);
-  };
-  const auditionEndLeaveSampler = (
+  }, [endAudtion]);
+
+  const auditionEndLeaveSampler = useCallback((
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     event.preventDefault();
     setSelectedNum(-1);
     mouseDown.current = false;
-  };
+  }, [setSelectedNum]);
 
-  const auditionStart = (
+  const auditionStart = useCallback((
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     mouseDown.current = true;
     startAudition(event);
-  };
-  const auditionStartEnter = (
+  }, [startAudition]);
+
+  const auditionStartEnter = useCallback((
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     if (mouseDown.current) {
       startAudition(event);
     }
-  };
-  const touchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+  }, [startAudition]);
+
+  const touchStart = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
     e.preventDefault();
     mouseDown.current = true;
     curDiv.current = e.target as HTMLDivElement;
     startAudition(e);
-  };
-  const touchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+  }, [startAudition]);
+
+  const touchMove = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
     e.preventDefault();
     const loc = e.changedTouches[0];
     const location = document.elementFromPoint(
@@ -136,9 +140,9 @@ const Audition: React.FC<Props> = ({ selectPattern, currPattern }) => {
         socket.emit("sendMomentaryOff", socketID, prevId);
       }
     }
-  };
+  }, [selectPattern, setSelectedNum, context, socket, socketID]);
 
-  const touchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+  const touchEnd = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
     e.preventDefault();
     const loc = e.changedTouches[0];
     const location = document.elementFromPoint(
@@ -159,7 +163,8 @@ const Audition: React.FC<Props> = ({ selectPattern, currPattern }) => {
       context.endAudition(id);
       socket.emit("sendMomentaryOff", socketID, id);
     }
-  };
+  }, [setSelectedNum, context, socket, socketID]);
+
   console.log('AUDITION RENDERING');
   return (
     <div onMouseLeave={auditionEndLeaveSampler}>
@@ -186,7 +191,7 @@ const Audition: React.FC<Props> = ({ selectPattern, currPattern }) => {
   );
 };
 
-const mapState = (state:BeatState)=> state;
+// const mapState = (state:BeatState)=> state;
 
 // export default connect(mapState, {})(Audition);
 export default Audition;
