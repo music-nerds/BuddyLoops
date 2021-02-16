@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { connect } from 'react-redux';
+import { setBeat } from '../redux/store';
 import Slider from "@material-ui/core/Slider";
-// import Switch from "@material-ui/core/Switch";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import PlayArrowSharpIcon from "@material-ui/icons/PlayArrowSharp";
@@ -21,7 +22,7 @@ const Alert: React.FC<AlertProps> = (props: AlertProps) => (
 
 interface Props {
   id: string;
-  setBeat: React.Dispatch<React.SetStateAction<number>>;
+  setBeat: (beat: number) => void;
   audition: boolean;
   toggleAudition: () => void;
   toggleInstrument: (instrument: string) => void;
@@ -146,6 +147,7 @@ const Transport: React.FC<Props> = ({
       socket.off("tempoChange");
     };
   }, [context, socket]);
+  console.log('TRANSPORT RENDERING');
   return (
     <div id="transport">
       <div className="transport-bottom-row">
@@ -233,4 +235,4 @@ const Transport: React.FC<Props> = ({
   );
 };
 
-export default Transport;
+export default React.memo(connect(null, { setBeat })(Transport));

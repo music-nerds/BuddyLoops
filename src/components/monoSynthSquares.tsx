@@ -2,6 +2,8 @@ import React, { useContext, useState, useRef } from "react";
 import { MonoSynth } from "../audio/synth";
 import { ReactAudioContext, SocketContext } from "../app";
 import { useHistory } from "react-router-dom";
+import { BeatState } from "../redux/store";
+import { connect } from "react-redux";
 
 export interface MonoSynthSquaresProps {
   synth: MonoSynth;
@@ -126,4 +128,6 @@ const MonoSynthSquares: React.SFC<MonoSynthSquaresProps> = ({
   );
 };
 
-export default MonoSynthSquares;
+const mapState = (state:BeatState)=> state;
+
+export default connect(mapState, {})(MonoSynthSquares);

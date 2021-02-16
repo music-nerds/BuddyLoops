@@ -110,7 +110,7 @@ export const scheduleNote = (ctx: StepContext, beatNumber: number): void => {
   }
 
   // paint the dom
-  ctx.subscribers.forEach((fn) => {
+  ctx.subscribers.forEach((fn:(beat:number) => void) => {
     fn(beatNumber);
   });
   if (beatNumber === 0) {

@@ -87,8 +87,10 @@ export interface StepContext {
   scheduleAheadTime: number;
   lookAhead: number;
   timerId: number | undefined;
-  subscribeSquares: (fn: React.Dispatch<React.SetStateAction<number>>) => void;
-  subscribers: React.Dispatch<React.SetStateAction<number>>[];
+  // subscribeSquares: (fn: ThunkAction<any, any, any, any>) => void;
+  subscribeSquares: any;
+  subscribers: any;
+  // subscribers: ThunkAction<any, any, any, any>[];
   updateTempo: (bpm: number) => void;
   updateSwing: (swingValue: number) => void;
   hostID?: string;
@@ -210,7 +212,8 @@ export const createAudioContext = (): StepContext => {
       this.audition[id] = false;
     },
     subscribeSquares: function (
-      fn: React.Dispatch<React.SetStateAction<number>>
+      // fn: React.Dispatch<React.SetStateAction<number>>
+      fn: (beat:number) => void
     ) {
       this.subscribers.push(fn);
     },

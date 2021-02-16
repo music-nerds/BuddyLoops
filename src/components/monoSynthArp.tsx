@@ -2,6 +2,8 @@ import React, { useRef, useContext } from "react";
 import { MonoSynth } from "../audio/synth";
 import { ReactAudioContext, SocketContext } from "../app";
 import "./synth.css";
+import { BeatState } from "../redux/store";
+import { connect } from "react-redux";
 
 export interface MonoSynthArpProps {
   synth: MonoSynth;
@@ -267,4 +269,6 @@ const MonoSynthArp: React.FC<MonoSynthArpProps> = ({
   );
 };
 
-export default MonoSynthArp;
+const mapState = (state:BeatState)=> state;
+
+export default connect(mapState, {})(MonoSynthArp);

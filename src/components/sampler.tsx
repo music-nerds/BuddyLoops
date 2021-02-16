@@ -11,7 +11,6 @@ import "./sampler.css";
 
 interface Props {
   socketID: string;
-  beat: number;
   currPattern: number;
   selectPattern: (pattern: number) => void;
   view: string;
@@ -22,7 +21,6 @@ interface Props {
 
 const Sampler: React.FC<Props> = ({
   socketID,
-  beat,
   currPattern,
   selectPattern,
   view,
@@ -31,7 +29,6 @@ const Sampler: React.FC<Props> = ({
   toggleAudition,
 }) => {
   const { context } = useContext(ReactAudioContext);
-
   return (
     <div className="sampler-container">
       <div className="sampler-tabs">
@@ -69,12 +66,10 @@ const Sampler: React.FC<Props> = ({
           <StepRow
             row={context.sequencers[currPattern]}
             id={socketID}
-            beat={beat}
           />
         )}
         {view === "soundbank" && !audition && (
           <SampleSelector
-            beat={beat}
             currPattern={currPattern}
             selectPattern={selectPattern}
           />
@@ -82,7 +77,6 @@ const Sampler: React.FC<Props> = ({
         {view === "soundbank" && audition && (
           <Audition
             selectPattern={selectPattern}
-            beat={beat}
             currPattern={currPattern}
           />
         )}
@@ -91,4 +85,4 @@ const Sampler: React.FC<Props> = ({
   );
 };
 
-export default Sampler;
+export default React.memo(Sampler);

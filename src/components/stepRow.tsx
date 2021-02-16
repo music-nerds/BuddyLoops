@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useState } from "react";
+import React, { useRef, useContext, useState, useCallback } from "react";
 import { SocketContext, ReactAudioContext } from "../app";
 import { StepRow } from "../audio/createContext";
 import "./stepRow.css";
@@ -8,10 +8,9 @@ import SeqSquare from "./seqSquare";
 interface RowProps {
   row: StepRow;
   id: string;
-  beat: number;
 }
 
-const Row: React.FC<RowProps> = ({ row, id, beat }) => {
+const Row: React.FC<RowProps> = ({ row, id }) => {
   const socket = useContext(SocketContext);
   const {
     context: { sequencersArePlaying },
@@ -21,7 +20,7 @@ const Row: React.FC<RowProps> = ({ row, id, beat }) => {
   const curDiv: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
   const prevDiv: React.MutableRefObject<HTMLDivElement | null> = useRef(null);
 
-  const handleToggle = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleToggle = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLDivElement;
     const index = Number(target.dataset.index)!;
     target.classList.add("active-square");
@@ -37,8 +36,9 @@ const Row: React.FC<RowProps> = ({ row, id, beat }) => {
       pattern: row.pattern,
       id,
     });
-  };
-  const handleDragToggle = (target: HTMLDivElement) => {
+  }, [id, row.name, row.pattern, socket]);
+
+  const handleDragToggle = useCallback((target: HTMLDivElement) => {
     const index = Number(target.dataset.index);
     if (row.pattern[index] === 0) {
       target.setAttribute("aria-checked", "true");
@@ -52,7 +52,8 @@ const Row: React.FC<RowProps> = ({ row, id, beat }) => {
       pattern: row.pattern,
       id,
     });
-  };
+  }, [row.pattern, id, socket, row.name]);
+
   const down = () => {
     setMouseDown(true);
   };
@@ -87,6 +88,27 @@ const Row: React.FC<RowProps> = ({ row, id, beat }) => {
     curDiv.current = null;
     prevDiv.current = null;
   };
+
+  const handleDrag = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const target = e.target as HTMLDivElement;
+    if (mouseDown) {
+      handleToggle(e);
+      target.classList.add("active-square");
+    }
+  }, [handleToggle, mouseDown]);
+
+  const handleMouseOut = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const target = e.target as HTMLDivElement;
+    if (mouseDown) {
+      target.classList.remove("active-square");
+    }
+  }, [mouseDown]);
+
+  const handleMouseUp = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const target = e.target as HTMLDivElement;
+    target.classList.remove("active-square");
+  }, []);
+
   return (
     <div
       ref={div}
@@ -104,11 +126,12 @@ const Row: React.FC<RowProps> = ({ row, id, beat }) => {
         return (
           <SeqSquare
             handleToggle={handleToggle}
+            handleDrag={handleDrag}
+            handleMouseOut={handleMouseOut}
+            handleMouseUp={handleMouseUp}
             enabled={enabled}
             index={idx}
-            beat={beat}
             key={idx}
-            mouseDown={mouseDown}
             sequencersArePlaying={sequencersArePlaying}
           />
         );
@@ -117,4 +140,4 @@ const Row: React.FC<RowProps> = ({ row, id, beat }) => {
   );
 };
 
-export default Row;
+export default React.memo(Row);

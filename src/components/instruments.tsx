@@ -7,7 +7,6 @@ import { MonoSynth } from "../audio/synth";
 export interface InstrumentsProps {
   instrument: string;
   socketID: string;
-  beat: number;
   currPattern: number;
   selectPattern: (pattern: number) => void;
   view: string;
@@ -26,7 +25,6 @@ interface PatternChange {
 const Instruments: React.FC<InstrumentsProps> = ({
   instrument,
   socketID,
-  beat,
   currPattern,
   selectPattern,
   view,
@@ -130,12 +128,12 @@ const Instruments: React.FC<InstrumentsProps> = ({
       socket.off("synthPatternChange");
     };
   }, [socket, context, setContext, synth]);
+  
   return (
     <div style={{ width: "100%" }}>
       {instrument === "sampler" ? (
         <Sampler
           socketID={socketID}
-          beat={beat}
           selectPattern={selectPattern}
           currPattern={currPattern}
           view={view}
@@ -145,7 +143,6 @@ const Instruments: React.FC<InstrumentsProps> = ({
         />
       ) : (
         <Synth
-          beat={beat}
           synth={synth}
           hold={hold}
           setHold={setHold}
@@ -156,4 +153,4 @@ const Instruments: React.FC<InstrumentsProps> = ({
   );
 };
 
-export default Instruments;
+export default React.memo(Instruments);

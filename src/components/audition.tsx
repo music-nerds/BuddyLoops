@@ -1,16 +1,16 @@
-import React, { useContext, useRef, useState, useEffect } from "react";
+import React, { useContext, useRef, useState, useEffect, useCallback } from "react";
 import { ReactAudioContext, SocketContext } from "../app";
 import { useHistory } from "react-router-dom";
 import { audition } from "../audio/audioFunctions";
 import "./stepRow.css";
+import AuditionSquare from './auditionSquare';
 
 interface Props {
   selectPattern: (pattern: number) => void;
-  beat: number;
   currPattern: number;
 }
 
-const Audition: React.FC<Props> = ({ selectPattern, beat, currPattern }) => {
+const Audition: React.FC<Props> = ({ selectPattern, currPattern }) => {
   const { context } = useContext(ReactAudioContext);
   const socket = useContext(SocketContext);
   const {
@@ -34,7 +34,7 @@ const Audition: React.FC<Props> = ({ selectPattern, beat, currPattern }) => {
     };
   }, [context, socket, socketID]);
 
-  const startAudition = (
+  const startAudition = useCallback((
     event:
       | React.MouseEvent<HTMLDivElement, MouseEvent>
       | React.TouchEvent<HTMLDivElement>
@@ -49,9 +49,9 @@ const Audition: React.FC<Props> = ({ selectPattern, beat, currPattern }) => {
       context.setAudition(id);
       socket.emit("sendMomentaryOn", socketID, id);
     }
-  };
+  }, [selectPattern, setSelectedNum, context, socket, socketID]);
 
-  const endAudtion = (
+  const endAudtion = useCallback((
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     id: number
   ) => {
@@ -59,50 +59,54 @@ const Audition: React.FC<Props> = ({ selectPattern, beat, currPattern }) => {
     context.endAudition(id);
     setSelectedNum(-1);
     socket.emit("sendMomentaryOff", socketID, id);
-  };
+  }, [context, socket, setSelectedNum, socketID]);
 
-  const auditionEndUp = (
+  const auditionEndUp = useCallback((
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     id: number
   ) => {
     mouseDown.current = false;
     endAudtion(event, id);
-  };
+  }, [endAudtion]);
 
-  const auditionEndLeave = (
+  const auditionEndLeave = useCallback((
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     id: number
   ) => {
     endAudtion(event, id);
-  };
-  const auditionEndLeaveSampler = (
+  }, [endAudtion]);
+
+  const auditionEndLeaveSampler = useCallback((
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     event.preventDefault();
     setSelectedNum(-1);
     mouseDown.current = false;
-  };
+  }, [setSelectedNum]);
 
-  const auditionStart = (
+  const auditionStart = useCallback((
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     mouseDown.current = true;
     startAudition(event);
-  };
-  const auditionStartEnter = (
+  }, [startAudition]);
+
+  const auditionStartEnter = useCallback((
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     if (mouseDown.current) {
       startAudition(event);
     }
-  };
-  const touchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+  }, [startAudition]);
+
+  const touchStart = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
     e.preventDefault();
     mouseDown.current = true;
     curDiv.current = e.target as HTMLDivElement;
     startAudition(e);
-  };
-  const touchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+  }, [startAudition]);
+
+  const touchMove = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
     e.preventDefault();
     const loc = e.changedTouches[0];
     const location = document.elementFromPoint(
@@ -134,9 +138,9 @@ const Audition: React.FC<Props> = ({ selectPattern, beat, currPattern }) => {
         socket.emit("sendMomentaryOff", socketID, prevId);
       }
     }
-  };
+  }, [selectPattern, setSelectedNum, context, socket, socketID]);
 
-  const touchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+  const touchEnd = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
     e.preventDefault();
     const loc = e.changedTouches[0];
     const location = document.elementFromPoint(
@@ -157,44 +161,25 @@ const Audition: React.FC<Props> = ({ selectPattern, beat, currPattern }) => {
       context.endAudition(id);
       socket.emit("sendMomentaryOff", socketID, id);
     }
-  };
+  }, [setSelectedNum, context, socket, socketID]);
 
   return (
     <div onMouseLeave={auditionEndLeaveSampler}>
       {new Array(16).fill(null).map((n, idx) =>
         context.sequencers[idx] ? (
-          <div
+          <AuditionSquare
             key={idx}
-            id={`${idx}`}
-            onMouseDown={auditionStart}
-            onMouseUp={(e) => auditionEndUp(e, idx)}
-            onMouseLeave={(e) => auditionEndLeave(e, idx)}
-            onMouseEnter={auditionStartEnter}
-            onTouchStart={touchStart}
-            onTouchMove={touchMove}
-            onTouchEnd={touchEnd}
-            style={{
-              backgroundColor: `${
-                context.sequencers[idx].pattern[beat] === 1 &&
-                context.sequencersArePlaying
-                  ? "var(--highlight)"
-                  : "var(--blue)"
-              }`,
-            }}
-            className={`aud-square ${
-              idx === currPattern ? "active-beat" : ""
-            } ${selectedNum === idx ? "active" : ""}`}
-            data-index={idx}
-          >
-            {/* 
-              ALL CHILD ELEMENTS NEED THE DATA INDEX PROPERTY
-              OTHERWISE, IT WILL BREAK IF CLICKED ON. 
-              E.TARGET IS THE MOST HIGHLY NESTED ELEMENT
-            */}
-            <span data-index={idx} className="sample-name">
-              {context.sequencers[idx].name}
-            </span>
-          </div>
+            idx={idx}
+            currPattern={currPattern}
+            selectedNum={selectedNum}
+            auditionEndLeave={auditionEndLeave}
+            auditionEndUp={auditionEndUp}
+            auditionStart={auditionStart}
+            touchEnd={touchEnd}
+            auditionStartEnter={auditionStartEnter}
+            touchMove={touchMove}
+            touchStart={touchStart}
+          />
         ) : (
           <div key={idx} className="seq-square"></div>
         )
@@ -203,4 +188,4 @@ const Audition: React.FC<Props> = ({ selectPattern, beat, currPattern }) => {
   );
 };
 
-export default Audition;
+export default React.memo(Audition);

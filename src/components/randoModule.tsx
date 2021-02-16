@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import {
   ReactAudioContext,
@@ -7,6 +7,8 @@ import {
   TimeObj,
   Timing,
 } from "../app";
+import { connect  } from 'react-redux';
+import { setBeat } from '../redux/store';
 import ContextOverlay from "./contextOverlay";
 import Transport from "./transport";
 import Instruments from "./instruments";
@@ -48,10 +50,10 @@ export interface AppState {
 interface Props {
   ready: boolean;
   setReady: React.Dispatch<React.SetStateAction<boolean>>;
+  setBeat: (beat: number) => void;
 }
-const Rando: React.FC<Props> = ({ ready, setReady }) => {
+const Rando: React.FC<Props> = ({ ready, setReady, setBeat }) => {
   const { context, setContext } = useContext(ReactAudioContext);
-  const [beat, setBeat] = useState(-1);
   const [audition, setAudition] = useState(true);
   const [connected, setConnected] = useState(false);
   const socket = useContext(SocketContext);
@@ -239,25 +241,25 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
     };
   }, [timeArr, context, deviceID, socket, socketID, setContext]);
 
-  const selectPattern = (pattern: number): void => {
+  const selectPattern = useCallback((pattern: number): void => {
     setCurrPattern(pattern);
     if (!audition) {
       setView("pattern");
     }
-  };
+  }, [audition]);
 
-  const toggleView = (view: string) => {
+  const toggleView = useCallback((view: string) => {
     setView(view);
-  };
+  }, []);
 
-  const toggleInstrument = (instrument: string) => {
+  const toggleInstrument = useCallback((instrument: string) => {
     setInstrument(instrument);
-  };
+  }, []);
 
-  const toggleAudition = () => {
-    setAudition(!audition);
-  };
-
+  const toggleAudition = useCallback(() => {
+    setAudition(audition => !audition);
+  }, []);
+  
   return (
     <div className="fullPage">
       <div className="container">
@@ -268,7 +270,6 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
             <UserIndicators numUsers={numUsers} />
             <Transport
               id={socketID}
-              setBeat={setBeat}
               audition={audition}
               toggleAudition={toggleAudition}
               toggleInstrument={toggleInstrument}
@@ -276,7 +277,6 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
             />
             <Instruments
               socketID={socketID}
-              beat={beat}
               selectPattern={selectPattern}
               currPattern={currPattern}
               view={view}
@@ -293,4 +293,4 @@ const Rando: React.FC<Props> = ({ ready, setReady }) => {
   );
 };
 
-export default Rando;
+export default connect(null, { setBeat })(Rando);

@@ -79,4 +79,4 @@ const PatternFxPanel: React.FC<Props> = ({ currPattern }) => {
   );
 };
 
-export default PatternFxPanel;
+export default React.memo(PatternFxPanel);

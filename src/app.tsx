@@ -1,20 +1,17 @@
-import React, { createContext, useState, useEffect } from "react";
-import ReactDOM from "react-dom";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Redirect,
-  Route,
-} from "react-router-dom";
-import Rando from "./components/randoModule";
-import Landing from "./components/landing";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
-import { ThemeProvider as MuiThemeProvider } from "@material-ui/core/styles";
-import { createAudioContext, StepContext } from "./audio/createContext";
-import { v4 as uuidv4 } from "uuid";
-import "./app.css";
-import io from "socket.io-client";
+import React, { createContext, useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-dom';
+import Rando from './components/randoModule';
+import Landing from './components/landing';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
+import { createAudioContext, StepContext } from './audio/createContext';
+import store from './redux/store';
+import { v4 as uuidv4 } from 'uuid';
+import './app.css';
+import io from 'socket.io-client';
 
 const theme = createMuiTheme({
   palette: {
@@ -64,32 +61,30 @@ const App: React.FC = () => {
   const [context, setContext] = useState(audioCtx);
   const [ready, setReady] = useState(false);
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("connect event");
-    });
-  }, []);
+    socket.on('connect', () => {
+      console.log('connect event')
+    })
+  }, [])
+
   return (
-    <ReactAudioContext.Provider value={{ context, setContext }}>
-      <SocketContext.Provider value={socket}>
-        <DeviceID.Provider value={deviceID}>
-          <Timing.Provider value={timeArr}>
-            <Router basename="/">
-              <Switch>
-                <Route
-                  exact
-                  path="/"
-                  render={() => <Landing setReady={setReady} />}
-                />
-                <Route
-                  path="/:id"
-                  render={() => <Rando ready={ready} setReady={setReady} />}
-                />
-                <Redirect to="/" />
-              </Switch>
-            </Router>
-          </Timing.Provider>
-        </DeviceID.Provider>
-      </SocketContext.Provider>
+    <ReactAudioContext.Provider value={{context, setContext}}>
+        <SocketContext.Provider value={socket}>
+          <DeviceID.Provider value={deviceID}>
+            <Timing.Provider value={timeArr}>
+              <Provider store={store}>
+                <Router
+                  basename="/"
+                >
+                  <Switch>
+                    <Route exact path="/" render={() => <Landing setReady={setReady} />} />
+                    <Route path="/:id" render={() => <Rando ready={ready} setReady={setReady} />} />
+                    <Redirect to="/" />
+                  </Switch>
+                </Router>
+              </Provider>
+            </Timing.Provider>
+          </DeviceID.Provider>
+        </SocketContext.Provider>
     </ReactAudioContext.Provider>
   );
 };
