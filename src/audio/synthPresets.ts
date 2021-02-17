@@ -25,9 +25,9 @@ const buzzSaw: SynthPreset = {
   noteLength: 0.5,
   releaseTime: 0.25,
   delayTime: 0.36,
-  delayGain: 0.25,
-  delayFeedback: 0.3,
-  filterFreq: 2000,
+  delayGain: 0,
+  delayFeedback: 0,
+  filterFreq: 5000,
   q: 1,
 };
 const deepSine: SynthPreset = {

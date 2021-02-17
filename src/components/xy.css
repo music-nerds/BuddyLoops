@@ -17,8 +17,11 @@
     rgba(26, 139, 157, 1) 0%,
     rgba(9, 53, 60, 1) 100%
   );
-
   position: absolute;
+}
+p.fx-label {
+  color: whitesmoke;
+  text-align: center;
 }
 @media (max-width: 375px) {
   .xy {

@@ -175,15 +175,18 @@ const XY: React.SFC<XYProps> = ({
   }, []);
 
   return (
-    <div className="xy" ref={box} onMouseMove={handleMouseMove}>
-      <div
-        className="xy-ball"
-        ref={ball}
-        onTouchStart={handleTouchDown}
-        onTouchMove={handleTouchMove}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-      />
+    <div className="xy-container">
+      <div className="xy" ref={box} onMouseMove={handleMouseMove}>
+        <div
+          className="xy-ball"
+          ref={ball}
+          onTouchStart={handleTouchDown}
+          onTouchMove={handleTouchMove}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+        />
+      </div>
+      <p className="fx-label">{name}</p>
     </div>
   );
 };

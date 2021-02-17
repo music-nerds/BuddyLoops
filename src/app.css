@@ -10,12 +10,12 @@
   --blueGradient: linear-gradient(
     180deg,
     rgba(26, 139, 157, 1) 0%,
-    rgba(9, 53, 60, 1) 100%
+    rgb(15, 72, 80) 100%
   );
   --blueGradientHL: linear-gradient(
     180deg,
     rgba(87, 206, 223, 1) 0%,
-    rgba(18, 84, 94, 1) 100%
+    rgb(22, 101, 113) 100%
   );
   --blue: #1a8b9d;
   --highlight: #68c4d2;

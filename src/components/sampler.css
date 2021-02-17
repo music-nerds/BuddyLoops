@@ -53,7 +53,7 @@
   align-items: center;
   width: inherit;
   max-width: 95%;
-  background-color: var(--sampler);
+  background-color: #111;
   flex-shrink: 0;
 }
 
@@ -71,7 +71,7 @@
   height: 64px;
   padding: 5px 10px;
   border: 1px solid black;
-  background-color: var(--sampler);
+  background-color: #111;
   color: var(--text);
   box-sizing: border-box;
   display: flex;

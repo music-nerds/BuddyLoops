@@ -11,7 +11,7 @@ export class AnalogDelay {
     this.delay = this.context.createDelay();
     this.delay.delayTime.setValueAtTime(delayTime, this.context.currentTime);
     this.feedback = context.createGain();
-    this.feedback.gain.value = 0.3;
+    this.feedback.gain.value = 0;
     this.filter = context.createBiquadFilter();
     this.filter.type = "lowpass";
     this.filter.frequency.value = 2500;
@@ -20,7 +20,7 @@ export class AnalogDelay {
     this.hp.frequency.value = 250;
     this.input = this.context.createGain();
     this.output = this.context.createGain();
-    this.output.gain.value = 0.25;
+    this.output.gain.value = 0;
 
     // wet signal
     this.input.connect(this.filter);
