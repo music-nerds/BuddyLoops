@@ -4,14 +4,15 @@
   width: inherit;
   max-width: 25%;
   max-height: 25%;
-  /* max-height: calc(25% - 1em); */
   padding-top: 25%;
   box-sizing: border-box;
   color: var(--text);
   border: 2px solid var(--gray);
+  border-radius: 10px;
   touch-action: none;
   user-select: none;
   position: relative;
+  background-color: var(--sampler);
 }
 
 .aud-square.active {
@@ -41,6 +42,7 @@
 
 .seq-square[aria-checked="true"] {
   background-color: var(--blue);
+  background: var(--blueGradient);
 }
 
 .active-beat {
@@ -87,6 +89,8 @@
   width: 96px;
   outline: none;
   background-color: var(--bg);
+  background: var(--blueGradient);
+
   color: var(--text);
   border: 2px solid var(--gray);
   user-select: none;

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { ReactAudioContext } from "../app";
-
+import "./stepRow.css";
 interface Props {
   selectPattern: (pattern: number) => void;
   currPattern: number;
@@ -30,10 +30,10 @@ const SampleSelector: React.FC<Props> = ({
             data-pattern={idx}
             onClick={togglePattern}
             style={{
-              backgroundColor: `${
+              background: `${
                 context.sequencers[idx].pattern[beat] === 1
-                  ? "var(--highlight)"
-                  : "var(--blue)"
+                  ? "var(--blueGradientHL)"
+                  : "var(--blueGradient)"
               }`,
             }}
             className={

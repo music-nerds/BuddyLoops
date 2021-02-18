@@ -8,7 +8,7 @@
   padding-bottom: 50px;
 }
 #synth {
-  width: 95%;
+  width: 90%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -94,6 +94,7 @@
 
 .synth-square.active-square {
   background-color: var(--synth);
+  background: var(--blueGradient);
 }
 .synth-square.active-beat,
 .synth-square.synth-square.active-beat.on-beat {
@@ -110,7 +111,7 @@
   align-items: center;
   text-transform: uppercase;
   border: 1px solid #000;
-  /* background-color: var(--gray); */
+  /* background-color: var(--sampler); */
   z-index: 2;
 }
 .chevron {
@@ -137,6 +138,7 @@ div.controls {
 .synth-launch,
 .clear-synth-pattern {
   background-color: var(--synth);
+  background: var(--blueGradient);
   padding: 0.25rem 1.5rem;
   border-radius: 5px;
   color: whitesmoke;
@@ -144,6 +146,7 @@ div.controls {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 3rem;
 }
 .clear-synth-pattern {
   padding: 1rem;
@@ -165,17 +168,20 @@ div.controls {
   height: 15vh;
   flex-basis: 33.3333%;
   box-sizing: border-box;
-  border: 1px solid black;
+  border: 3px solid black;
   background-color: var(--synth);
+  background: var(--blueGradient);
   transition: 100ms;
   touch-action: none;
   user-select: none;
+  border-radius: 10px;
 }
 .arp-square.root {
   background-color: var(--synthHL);
 }
 .arp-square.selected {
   background-color: var(--synthContrast);
+  background: var(--blueGradientHL);
 }
 .arp-square.selected.root {
   background-color: var(--synthContrastHL);
@@ -187,15 +193,31 @@ div.controls {
   justify-content: space-between;
   padding: 4px;
 }
+.hold,
 .hold-btn {
-  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+}
+.hold-btn {
+  margin-top: 1rem;
+  flex: 1;
+  border-radius: 5px;
+  padding: 1rem;
   background-color: var(--synth);
+  background: var(--blueGradient);
+
   width: 4rem;
+  height: 2rem;
   color: #eee;
 }
 .hold-btn.enabled {
   background-color: var(--synthContrast);
+  background: var(--blueGradientHL);
 }
+
 .synth-tabs {
   height: 3rem;
   width: 100%;
@@ -214,8 +236,56 @@ div.controls {
 }
 .synth-tabs > div.selected {
   background-color: var(--sampler);
+  background: linear-gradient(
+    180deg,
+    rgba(119, 119, 119, 1) 0%,
+    rgba(35, 35, 35, 1) 100%
+  );
 }
 
+.synth-effects-playground {
+  width: 100%;
+}
+.xy-pads {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+.preset-select select {
+  font-size: 1rem;
+  padding: 0.25rem 2rem 0.25rem 0.5rem;
+  background: var(--gray);
+  color: whitesmoke;
+  border: none;
+  -webkit-appearance: none;
+}
+.preset-select {
+  position: relative;
+}
+span.select-arrow {
+  display: block;
+  background: #111;
+  width: 2rem;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  pointer-events: none;
+}
+span.select-arrow::before,
+span.select-arrow::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+span.select-arrow::before {
+  top: 0.5rem;
+  left: 0.5rem;
+  border-left: 0.5rem solid transparent;
+  border-right: 0.5rem solid transparent;
+  border-top: 0.5rem solid var(--blue);
+}
 @media (max-width: 768px) {
   .synth-squares {
     /* width: 500px; */
@@ -292,17 +362,31 @@ div.controls {
   .synth-square-row {
     margin: 0.5rem 0;
   }
+  .clear-synth-pattern {
+    font-size: 0.5rem;
+    height: 2.5rem;
+  }
+  .synth-launch {
+    padding: 0.5rem 1rem;
+    height: 2.5rem;
+  }
 }
 @media (max-width: 375px) {
+  .synth-effects-playground {
+    flex-direction: column;
+  }
+  .xy-pads,
+  .hold {
+    margin: 0.5rem 0;
+  }
   .synth-square {
     height: 24px;
   }
-
+  .synth-launch,
   .clear-synth-pattern {
-    font-size: 0.5rem;
-    height: 100%;
+    height: 2rem;
   }
-  .synth-launch {
-    padding: 0.5rem 1.5rem;
+  .preset-select select {
+    font-size: 0.75rem;
   }
 }

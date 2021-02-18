@@ -92,20 +92,9 @@ const MonoSynthSquares: React.SFC<MonoSynthSquaresProps> = ({
       onTouchStart={touchDown}
       onTouchMove={touchMove}
       onTouchEnd={touchEnd}
-      style={{
-        userSelect: "none",
-        touchAction: "none",
-      }}
     >
       {synth.pattern.map((row, i) => (
-        <div
-          className="synth-square-row"
-          key={i}
-          style={{
-            userSelect: "none",
-            touchAction: "none",
-          }}
-        >
+        <div className="synth-square-row" key={i}>
           {row.map((col, j) => (
             <div
               className={`synth-square ${col === 1 ? "active-square" : ""} ${

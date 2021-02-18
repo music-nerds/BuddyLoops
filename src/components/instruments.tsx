@@ -17,6 +17,11 @@ export interface InstrumentsProps {
   synth: MonoSynth;
 }
 
+interface XYParams {
+  x: number;
+  y: number;
+}
+
 interface PatternChange {
   name: string;
   pattern: (0 | 1)[];
@@ -46,33 +51,22 @@ const Instruments: React.FC<InstrumentsProps> = ({
         seq.pattern = data.pattern;
       }
       if (!context.isPlaying) {
-        // causes bug if isPlaying is true
-        // stop button loses reference to context
         setContext({ ...context });
       }
     });
-
     socket.on("receiveRowLaunch", (name: string) => {
-      // if(name === context.sequencers[currPattern].name){
-      //   sequencer.shouldPlayNextLoop = !row.shouldPlayNextLoop;
-      //   // setLaunchEnabled(row.shouldPlayNextLoop);
-      // }
       const sequencer = context.sequencers.find((seq) => seq.name === name)!;
       sequencer.shouldPlayNextLoop = !sequencer.shouldPlayNextLoop;
     });
-
     socket.on("receiveDrumToggle", () => {
       context.toggleSequencersEnabled();
     });
-
     socket.on("receiveMomentaryOn", (id: number) => {
       context.setAudition(id);
     });
-
     socket.on("receiveMomentaryOff", (id: number) => {
       context.endAudition(id);
     });
-
     return () => {
       socket.off("patternChange");
       socket.off("receiveRowLaunch");
@@ -80,7 +74,6 @@ const Instruments: React.FC<InstrumentsProps> = ({
       socket.off("sendMomentaryOn");
       socket.off("sendMomentaryOff");
     };
-    // }, [context, context.sequencers, row])
   }, [context, context.sequencers, setContext, socket]);
 
   useEffect(() => {
@@ -120,16 +113,72 @@ const Instruments: React.FC<InstrumentsProps> = ({
   }, [synth, socket, hold, holdNotes, setHold]);
 
   useEffect(() => {
+    socket.on("clearSynthPattern", () => {
+      synth.clearPattern();
+      if (!context.isPlaying) {
+        setContext({ ...context });
+      }
+    });
     socket.on("synthPatternChange", (pattern: (0 | 1)[][]) => {
       synth.pattern = pattern;
       if (!context.isPlaying) {
         setContext({ ...context });
       }
     });
+    socket.on("changePreset", (name: string) => {
+      synth.changePreset(name);
+      console.log(synth.name);
+      if (!context.isPlaying) {
+        setContext({ ...context });
+      }
+    });
     return () => {
+      socket.off("clearSynthPattern");
       socket.off("synthPatternChange");
     };
-  }, [socket, context, setContext, synth]);
+  }, [socket, synth, setContext, context]);
+  useEffect(() => {
+    socket.on("sendFilter", (params: XYParams) => {
+      const freq = Math.pow(10, 2 * params.x + 2); // scales 0 - 1 logarithmically between 100 and 10000
+      const q = 12 / (params.y * 11 + 1); // scales 0 - 1 to 1 - 12
+      synth.filter.frequency.linearRampToValueAtTime(
+        freq,
+        synth.context.currentTime + 0.0001
+      );
+      synth.filter.Q.linearRampToValueAtTime(
+        q,
+        synth.context.currentTime + 0.0001
+      );
+    });
+    socket.on("sendEnvelope", (params: XYParams) => {
+      const time = 0.95 * params.x + 0.05;
+      const length = 1 - 0.75 * params.y;
+      synth.releaseTime = time;
+      synth.noteLength = length;
+    });
+    socket.on("sendDelay", (params: XYParams) => {
+      const feedback = params.x * 0.75; // limit max to .75
+      const gain = 1 - params.y; // invert value
+      synth.delay.feedback.gain.linearRampToValueAtTime(
+        feedback,
+        synth.context.currentTime + 0.0001
+      );
+      synth.delay.output.gain.linearRampToValueAtTime(
+        gain,
+        synth.context.currentTime + 0.0001
+      );
+    });
+    socket.on("synthLaunch", () => {
+      synth.shouldPlayNextLoop = !synth.shouldPlayNextLoop;
+    });
+
+    return () => {
+      socket.off("setFilter");
+      socket.off("setEnvelope");
+      socket.off("setDelay");
+      socket.off("synthLaunch");
+    };
+  }, [socket, synth]);
   return (
     <div style={{ width: "100%" }}>
       {instrument === "sampler" ? (

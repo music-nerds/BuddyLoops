@@ -58,6 +58,7 @@ io.on("connection", (socket) => {
     this.rooms.forEach((room) => {
       io.to(room).emit("userLeft", socket.client.id);
     });
+    console.log(`${socket.client.id} LEFT`);
   });
   socket.on("getOffset", (id, timeObj) => {
     // get time data
@@ -127,20 +128,17 @@ io.on("connection", (socket) => {
   socket.on("synthPatternChange", (id, pattern) => {
     socket.to(id).emit("synthPatternChange", pattern);
   });
-  const synthParams = [
-    "swingChange",
-    "tempoChange",
-    "synthWave",
-    "synthNoteLength",
-    "synthAttack",
-    "synthRelease",
-    "synthFreq",
-    "synthQ",
-  ];
-  synthParams.forEach((param) => {
-    socket.on(param, (id, value) => {
-      socket.to(id).emit(param, value);
-    });
+  socket.on("clearSynthPattern", (id) => {
+    socket.to(id).emit("clearSynthPattern");
+  });
+  socket.on("setFilter", (id, x, y) => {
+    socket.to(id).emit("sendFilter", { x, y });
+  });
+  socket.on("setEnvelope", (id, x, y) => {
+    socket.to(id).emit("sendEnvelope", { x, y });
+  });
+  socket.on("setDelay", (id, x, y) => {
+    socket.to(id).emit("sendDelay", { x, y });
   });
   socket.on("synthLaunch", (id) => {
     socket.to(id).emit("synthLaunch");
@@ -153,6 +151,9 @@ io.on("connection", (socket) => {
   });
   socket.on("arpHoldOn", (id) => {
     socket.to(id).emit("arpHoldOn");
+  });
+  socket.on("changePreset", (id, name) => {
+    socket.to(id).emit("changePreset", name);
   });
 });
 

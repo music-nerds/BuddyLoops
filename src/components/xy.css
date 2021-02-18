@@ -1,0 +1,31 @@
+.xy {
+  width: 8rem;
+  height: 8rem;
+  background-color: #111;
+  box-shadow: 0px 0px 4px #ccc;
+  position: relative;
+  margin: 1rem 0;
+}
+
+.xy-ball {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: var(--blue);
+  background: linear-gradient(
+    180deg,
+    rgba(26, 139, 157, 1) 0%,
+    rgba(9, 53, 60, 1) 100%
+  );
+  position: absolute;
+}
+p.fx-label {
+  color: whitesmoke;
+  text-align: center;
+}
+@media (max-width: 375px) {
+  .xy {
+    width: 96px;
+    height: 96px;
+  }
+}

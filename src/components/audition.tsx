@@ -174,16 +174,18 @@ const Audition: React.FC<Props> = ({ selectPattern, beat, currPattern }) => {
             onTouchMove={touchMove}
             onTouchEnd={touchEnd}
             style={{
-              backgroundColor: `${
-                context.sequencers[idx].pattern[beat] === 1 &&
-                context.sequencersArePlaying
-                  ? "var(--highlight)"
-                  : "var(--blue)"
+              background: `${
+                selectedNum === idx
+                  ? "var(--blueGradientHL)"
+                  : context.sequencers[idx].pattern[beat] === 1 &&
+                    context.sequencersArePlaying
+                  ? "var(--blueGradientHL)"
+                  : "var(--blueGradient)"
               }`,
             }}
             className={`aud-square ${
               idx === currPattern ? "active-beat" : ""
-            } ${selectedNum === idx ? "active" : ""}`}
+            } `}
             data-index={idx}
           >
             {/* 
