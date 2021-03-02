@@ -175,7 +175,7 @@ const Audition: React.FC<Props> = ({ selectPattern, beat, currPattern }) => {
             onTouchEnd={touchEnd}
             style={{
               background: `${
-                selectedNum === idx
+                (selectedNum === idx || context.audition[idx])
                   ? "var(--blueGradientHL)"
                   : context.sequencers[idx].pattern[beat] === 1 &&
                     context.sequencersArePlaying

@@ -3,13 +3,16 @@ import { useHistory } from "react-router-dom";
 import { ReactAudioContext, SocketContext } from "../app";
 import PlayArrowSharpIcon from "@material-ui/icons/PlayArrowSharp";
 import PauseIcon from "@material-ui/icons/Pause";
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import "./sampler.css";
 
 interface Props {
   currPattern: number;
+  selectPattern: (pattern: number) => void;
 }
 
-const PatternFxPanel: React.FC<Props> = ({ currPattern }) => {
+const PatternFxPanel: React.FC<Props> = ({ currPattern, selectPattern }) => {
   const { context, setContext } = useContext(ReactAudioContext);
   const {
     location: { pathname },
@@ -44,15 +47,45 @@ const PatternFxPanel: React.FC<Props> = ({ currPattern }) => {
     socket.emit("clearSamplerPattern", socketID, currPattern);
   };
 
+  const downButton = () => {
+    currPattern === 15
+    ? selectPattern(0)
+    : selectPattern((currPattern+1));
+  }
+
+  const upButton = () => {
+    currPattern === 0
+    ? selectPattern(15)
+    : selectPattern((currPattern -1));
+  }
+
   return (
     <div className="pattern-fx-panel">
-      <div
-        onClick={clearRow}
-        onTouchEnd={clearRow}
-        className="fx-panel-launch"
-        id="clear-button"
-      >
-        <span>CLEAR TRACK</span>
+      <div className="pattern-fx-left">
+        <div
+          onClick={clearRow}
+          onTouchEnd={clearRow}
+          className="fx-panel-launch"
+          id="clear-button"
+        >
+          <span>CLEAR TRACK</span>
+        </div>
+        <div className="pattern-fx-name">
+          <span>
+            {
+              (currPattern+1 <= 9)
+              ? '0'
+              : null
+            }
+            {currPattern+1}
+            {'.'}
+            {context.sequencers[currPattern].name}
+          </span>
+        </div>
+        <div className='fx-panel-pattern-selector'>
+          <ArrowDropUpIcon onClick={upButton} />
+          <ArrowDropDownIcon onClick={downButton} />
+        </div>
       </div>
       <div
         className="fx-panel-launch"

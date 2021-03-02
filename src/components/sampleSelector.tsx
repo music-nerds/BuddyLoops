@@ -20,7 +20,7 @@ const SampleSelector: React.FC<Props> = ({
     setSelected(Number(target.dataset.pattern));
     selectPattern(Number(target.dataset.pattern));
   };
-
+   
   return (
     <div>
       {new Array(16).fill(null).map((n, idx) =>
