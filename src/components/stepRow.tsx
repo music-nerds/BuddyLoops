@@ -87,6 +87,7 @@ const Row: React.FC<RowProps> = ({ row, id, beat }) => {
     curDiv.current = null;
     prevDiv.current = null;
   };
+  console.log('STEP ROW');
   return (
     <div
       ref={div}

@@ -63,7 +63,7 @@ const Sampler: React.FC<Props> = ({
       {view === "soundbank" && (
         <SoundbankFxPanel audition={audition} toggleAudition={toggleAudition} />
       )}
-      {view === "pattern" && <PatternFxPanel currPattern={currPattern} />}
+      {view === "pattern" && <PatternFxPanel currPattern={currPattern} selectPattern={selectPattern} />}
       <div className="sampler-view">
         {view === "pattern" && (
           <StepRow

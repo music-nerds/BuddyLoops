@@ -86,6 +86,51 @@
   cursor: pointer;
 }
 
+.pattern-fx-left {
+  display: flex;
+  height: 95%;
+}
+
+.pattern-fx-name {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 1rem;
+  font-size: 1rem;
+  margin-left: 1rem;
+  width: 300px;
+  border: 1px inset var(--sampler);
+  border-radius: 5px;
+  overflow: hidden;
+  background: repeating-linear-gradient(
+    to bottom,
+    #202020,
+    #202020 1px,
+    #101010 1px,
+    #101010 2px
+  );
+  color: var(--blue);
+  font-family: "Press Start 2P";
+  text-shadow: 0px 0px 2px rgba(255,255,255, 0.4);
+}
+
+.fx-panel-pattern-selector {
+  display: flex;
+  flex-direction: column;
+  margin-left: .5rem;
+  font-size: 1.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.fx-panel-pattern-selector > svg {
+  font-size: 2rem;
+}
+
+.fx-panel-pattern-selector > svg:hover {
+  cursor: pointer;
+}
+
 .fx-panel-launch {
   background-color: var(--blue);
   background: var(--blueGradient);
@@ -113,13 +158,58 @@
 
 @media (max-width: 768px) {
   .sampler-fx-panel > div > span,
-  .pattern-fx-panel > div > span {
+  .pattern-fx-panel > div > div > span {
     font-size: 0.75rem;
   }
+
+  .pattern-fx-name {
+    width: 250px;
+    max-width: 250px;
+  }
 }
+
+@media (max-width: 600px) {
+  .pattern-fx-name {
+    /* width: 230px;
+    max-width: 230px; */
+    padding: .5rem;
+  }
+
+  .fx-panel-launch {
+    min-width: max-content;
+  }
+}
+
+@media (max-width: 550px) {
+  .pattern-fx-name {
+    max-width: 200px;
+    width: 200px;
+    /* width: 150px; */
+    font-size: .5rem; 
+  }
+}
+
+@media (max-width: 500px) {
+  .pattern-fx-name {
+    max-width: 175px;
+    width: 175px;
+  }
+
+  .fx-panel-pattern-selector {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 460px) {
+  .pattern-fx-name {
+    max-width: 140px;
+    width: 140px;
+  }
+}
+
 @media (max-width: 420px) {
   .sampler-fx-panel > div > span,
-  .pattern-fx-panel > div > span {
+  .pattern-fx-panel > div > div > span {
     font-size: 0.5rem;
   }
 }
