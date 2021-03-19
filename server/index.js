@@ -92,6 +92,13 @@ io.on("connection", (socket) => {
     // stop playing
     io.to(id).emit("receiveStop");
   });
+
+  socket.on("tempoChange", (id, tempo) => {
+    socket.to(id).emit("tempoChange", tempo);
+  });
+  socket.on("swingChange", (id, swing) => {
+    socket.to(id).emit("swingChange", swing);
+  });
   /*
     SAMPLER MESSAGES
   */

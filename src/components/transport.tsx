@@ -130,12 +130,10 @@ const Transport: React.FC<Props> = ({
 
   useEffect(() => {
     socket.on("swingChange", (value: number) => {
-      console.log("SWING CHANGE");
       setSwing(value);
       context.updateSwing(value);
     });
     socket.on("tempoChange", (value: number) => {
-      console.log("TEMPO CHANGE");
       setTempo(value);
       context.updateTempo(value);
     });
