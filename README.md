@@ -2,7 +2,9 @@
 
 **BuddyLoops** is a **real-time, interactive music-making tool** that combines a **drum sequencer, synth sequencer, and live performance controls** into an intuitive **loop-based instrument**. Built with the **Web Audio API, React, and WebSockets**, BuddyLoops enables musicians to **create, modify, and perform music in sync across multiple devices**.
 
-![BuddyLoops Video](/public/images/BuddyLoops.mp4)
+## Demo Video 👇
+
+[![Watch the Demo](https://img.youtube.com/vi/n7B5eQSpOto/hqdefault.jpg)](https://www.youtube.com/watch?v=n7B5eQSpOto)
 
 ---
 
